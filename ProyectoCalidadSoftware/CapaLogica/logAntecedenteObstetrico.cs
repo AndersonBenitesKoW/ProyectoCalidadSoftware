@@ -4,10 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CapaAccesoDatos;
 
 namespace CapaLogica
 {
-    public class logAntecendeObstetrico
+    public class logAntecedenteObstetrico
     {
 
         #region Singleton
