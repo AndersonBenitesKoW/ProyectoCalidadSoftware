@@ -8,12 +8,7 @@ GO
 USE ProyectoCalidad;
 GO
 
--- Cámbiate a master para evitar locks
-USE master;
-GO
--- Cambia el owner de la base
-ALTER AUTHORIZATION ON DATABASE::ProyectoCalidad TO sa;
-GO
+
 
 /* ==================  SEGURIDAD / USUARIOS  ================== */
 CREATE TABLE Rol(
