@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace CapaLogica
 {
-    internal class ControlParental
+    public class ControlParental
     {
+
+
+
     }
 }

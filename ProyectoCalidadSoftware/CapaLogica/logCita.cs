@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapaAccesoDatos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,29 @@ using System.Threading.Tasks;
 
 namespace CapaLogica
 {
-    internal class logCita
+    public class logCita
     {
+        #region Singleton
+        private static readonly logCita UnicaInstancia = new logCita();
+        public static logCita Instancia
+        {
+            get { return logCita.UnicaInstancia; }
+        }
+        private logCita() { }
+        #endregion
+
+        // LISTAR
+        public List<entCita> ListarCita()
+        {
+            return DA_Cita.Instancia.Listar();
+        }
+
+        // INSERTAR
+        public int InsertarCita(entCita entidad)
+        {
+            return DA_Cita.Instancia.Insertar(entidad);
+        }
+
+
     }
 }

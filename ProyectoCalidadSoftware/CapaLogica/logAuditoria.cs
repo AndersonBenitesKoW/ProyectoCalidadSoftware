@@ -12,28 +12,24 @@ namespace CapaLogica
     {
 
         #region Singleton
-        private static readonly logAuditoria _instancia = new logAuditoria();
+        private static readonly logAuditoria UnicaInstancia = new logAuditoria();
         public static logAuditoria Instancia
         {
-            get { return logAuditoria._instancia; }
+            get { return logAuditoria.UnicaInstancia; }
         }
         #endregion
 
-        #region Métodos
-
-        public DataTable ListarAuditoria()
+        // LISTAR
+        public List<entAuditoria> ListarAuditoria()
         {
             return DA_Auditoria.Instancia.Listar();
         }
 
-        public bool InsertarAuditoria(int? idUsuario, string accion, string entidad, int? idRegistro,
-                                      string antes, string despues, string ipCliente)
+        // INSERTAR
+        public int InsertarAuditoria(entAuditoria entidad)
         {
-            return DA_Auditoria.Instancia.Insertar(idUsuario, accion, entidad, idRegistro, antes, despues, ipCliente);
+            return DA_Auditoria.Instancia.Insertar(entidad);
         }
-
-        #endregion
-
 
     }
 }

@@ -12,29 +12,24 @@ namespace CapaLogica
     {
 
         #region Singleton
-        private static readonly logAntecedenteObstetrico _instancia = new logAntecedenteObstetrico();
+        private static readonly logAntecedenteObstetrico UnicaInstancia = new logAntecedenteObstetrico();
         public static logAntecedenteObstetrico Instancia
         {
-            get { return logAntecedenteObstetrico._instancia; }
+            get { return logAntecedenteObstetrico.UnicaInstancia; }
         }
         #endregion
 
-        #region Métodos
-
-        public DataTable ListarAntecedenteObstetrico()
+        // LISTAR
+        public List<entAntecedenteObstetrico> ListarAntecedenteObstetrico()
         {
             return DA_AntecedenteObstetrico.Instancia.Listar();
         }
 
-        public bool InsertarAntecedenteObstetrico(int idPaciente, short? menarquia, short? cicloDias, short? gestas,
-                                                  short? partos, short? abortos, string observacion, bool estado)
+        // INSERTAR
+        public int InsertarAntecedenteObstetrico(entAntecedenteObstetrico entidad)
         {
-            return DA_AntecedenteObstetrico.Instancia.Insertar(
-                idPaciente, menarquia, cicloDias, gestas, partos, abortos, observacion, estado
-            );
+            return DA_AntecedenteObstetrico.Instancia.Insertar(entidad);
         }
-
-        #endregion
 
 
     }
