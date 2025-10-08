@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    internal class FileName
+    public class FactorRiesgoCat
     {
+        public int IdFactorCat { get; set; }
+        public string Nombre { get; set; } = null!;
     }
 }
