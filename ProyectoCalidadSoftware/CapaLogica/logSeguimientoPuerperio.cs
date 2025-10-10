@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarSeguimientoPuerperio(entSeguimientoPuerperio entidad)
+        public bool InsertarSeguimientoPuerperio(entSeguimientoPuerperio entidad)
         {
             return DA_SeguimientoPuerperio.Instancia.Insertar(entidad);
         }

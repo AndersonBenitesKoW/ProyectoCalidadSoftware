@@ -27,7 +27,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarAuditoria(entAuditoria entidad)
+        public bool InsertarAuditoria(entAuditoria entidad)
         {
             return DA_Auditoria.Instancia.Insertar(entidad);
         }

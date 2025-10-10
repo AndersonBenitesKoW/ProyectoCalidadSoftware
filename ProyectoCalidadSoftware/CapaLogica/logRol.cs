@@ -8,7 +8,7 @@ using CapaEntidad;
 namespace CapaLogica
 {
     internal class logRol
-    {
+{
         #region Singleton
         private static readonly logRol UnicaInstancia = new logRol();
         public static logRol Instancia
@@ -24,7 +24,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarRol(entRol entidad)
+        public bool InsertarRol(entRol entidad)
         {
             return DA_Rol.Instancia.Insertar(entidad);
         }

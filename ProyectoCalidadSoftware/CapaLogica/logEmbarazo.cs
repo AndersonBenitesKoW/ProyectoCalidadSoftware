@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarEmbarazo(entEmbarazo entidad)
+        public bool InsertarEmbarazo(entEmbarazo entidad)
         {
             return DA_Embarazo.Instancia.Insertar(entidad);
         }

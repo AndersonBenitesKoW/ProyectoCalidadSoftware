@@ -16,17 +16,18 @@ namespace CapaAccesoDatos
             {
                 get { return Conexion.unicaInstancia; }
             }
-            #endregion
-
-            public SqlConnection Conectar()
-            {
-                SqlConnection cn = new SqlConnection();
-                cn.ConnectionString = "Data Source=\\SQLEXPRESS02;" +
-                                      "Initial Catalog=ProyectoCalidad;" +
-                                      "Integrated Security=True;";
-                return cn;
-            }
+        #endregion
+        public SqlConnection Conectar()
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = "Data Source=ANDERSON\\SQL2024;" +
+                                  "Initial Catalog=ProyectoCalidad;" +
+                                  "User ID=sa;" +
+                                  "Password=anderson123;";
+            return cn;
         }
+
+    }
 
 
 }

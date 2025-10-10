@@ -25,7 +25,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarPacienteEmail(entPacienteEmail entidad)
+        public bool InsertarPacienteEmail(entPacienteEmail entidad)
         {
             return DA_PacienteEmail.Instancia.Insertar(entidad);
         }

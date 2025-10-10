@@ -27,7 +27,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarPacienteFactorRiesgo(entPacienteFactorRiesgo entidad)
+        public bool InsertarPacienteFactorRiesgo(entPacienteFactorRiesgo entidad)
         {
             return DA_PacienteFactorRiesgo.Instancia.Insertar(entidad);
         }

@@ -25,7 +25,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarTipoEncuentro(entTipoEncuentro entidad)
+        public bool InsertarTipoEncuentro(entTipoEncuentro entidad)
         {
             return DA_TipoEncuentro.Instancia.Insertar(entidad);
         }

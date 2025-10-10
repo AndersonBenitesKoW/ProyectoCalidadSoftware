@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarMetodoPF(entMetodoPF entidad)
+        public bool InsertarMetodoPF(entMetodoPF entidad)
         {
             return DA_MetodoPF.Instancia.Insertar(entidad);
         }

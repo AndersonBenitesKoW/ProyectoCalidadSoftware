@@ -25,7 +25,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarCita(entCita entidad)
+        public bool InsertarCita(entCita entidad)
         {
             return DA_Cita.Instancia.Insertar(entidad);
         }

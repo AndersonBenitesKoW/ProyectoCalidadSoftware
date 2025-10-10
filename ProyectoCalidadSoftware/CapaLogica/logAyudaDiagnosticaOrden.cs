@@ -27,7 +27,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarAyudaDiagnosticaOrden(entAyudaDiagnosticaOrden entidad)
+        public bool InsertarAyudaDiagnosticaOrden(entAyudaDiagnosticaOrden entidad)
         {
             return DA_AyudaDiagnosticaOrden.Instancia.Insertar(entidad);
         }

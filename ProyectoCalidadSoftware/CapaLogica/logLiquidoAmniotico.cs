@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarLiquidoAmniotico(entLiquidoAmniotico entidad)
+        public bool InsertarLiquidoAmniotico(entLiquidoAmniotico entidad)
         {
             return DA_LiquidoAmniotico.Instancia.Insertar(entidad);
         }

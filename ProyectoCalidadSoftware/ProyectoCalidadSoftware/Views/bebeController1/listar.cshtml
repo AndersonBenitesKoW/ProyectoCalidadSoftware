@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CapaEntidad.entBebe>
+
+@{
+    ViewData["Title"] = "listar";
+}
+
+<h1>listar</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdBebe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdParto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoBebe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sexo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apgar1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apgar5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PesoGr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TallaCm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PerimetroCefalico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EG_Semanas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reanimacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observaciones)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdBebe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdParto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoBebe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sexo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apgar1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apgar5)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PesoGr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TallaCm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PerimetroCefalico)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EG_Semanas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reanimacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Observaciones)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

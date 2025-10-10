@@ -28,7 +28,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarPacienteTelefono(entPacienteTelefono entidad)
+        public bool InsertarPacienteTelefono(entPacienteTelefono entidad)
         {
             return DA_PacienteTelefono.Instancia.Insertar(entidad);
         }

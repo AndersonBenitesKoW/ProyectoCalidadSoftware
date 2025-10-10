@@ -25,7 +25,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarPartoIntervencion(entPartoIntervencion entidad)
+        public bool InsertarPartoIntervencion(entPartoIntervencion entidad)
         {
             return DA_PartoIntervencion.Instancia.Insertar(entidad);
         }

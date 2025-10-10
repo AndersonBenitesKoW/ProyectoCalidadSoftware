@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarResultadoDiagnostico(entResultadoDiagnostico entidad)
+        public bool InsertarResultadoDiagnostico(entResultadoDiagnostico entidad)
         {
             return DA_ResultadoDiagnostico.Instancia.Insertar(entidad);
         }
