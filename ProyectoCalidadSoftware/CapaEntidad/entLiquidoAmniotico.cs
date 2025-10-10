@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class TipoEncuentro
+    public class entLiquidoAmniotico
     {
-        public short IdTipoEncuentro { get; set; }
+        public short IdLiquido { get; set; }
         public string Codigo { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
     }

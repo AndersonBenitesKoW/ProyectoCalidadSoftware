@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,28 +18,41 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entFactorRiesgoCat> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entFactorRiesgoCat> lista = new List<entFactorRiesgoCat>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarFactorRiesgoCat", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var factor = new entFactorRiesgoCat
+                        {
+                            IdFactorCat = Convert.ToInt32(dr["IdFactorCat"]),
+                            Nombre = dr["Nombre"].ToString()
+                        };
+
+                        lista.Add(factor);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(string nombre)
+        public bool Insertar(entFactorRiesgoCat entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombre", nombre);
+                cmd.Parameters.AddWithValue("@Nombre", entidad.Nombre);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

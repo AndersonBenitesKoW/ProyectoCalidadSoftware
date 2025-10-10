@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class MetodoPF
+    public class entTipoAyudaDiagnostica
     {
-        public short IdMetodoPF { get; set; }
+        public short IdTipoAyuda { get; set; }
         public string Nombre { get; set; } = null!;
     }
 }

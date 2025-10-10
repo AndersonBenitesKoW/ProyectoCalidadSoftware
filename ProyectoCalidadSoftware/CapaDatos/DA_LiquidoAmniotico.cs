@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,28 +18,42 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entLiquidoAmniotico> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entLiquidoAmniotico> lista = new List<entLiquidoAmniotico>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarLiquidoAmniotico", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarLiquidoAmniotico", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var liquido = new entLiquidoAmniotico
+                        {
+                            IdLiquido = Convert.ToInt16(dr["IdLiquido"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString()
+                        };
+
+                        lista.Add(liquido);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(string descripcion)
+        public bool Insertar(entLiquidoAmniotico entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarLiquidoAmniotico", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+                cmd.Parameters.AddWithValue("@Descripcion", entidad.Descripcion);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

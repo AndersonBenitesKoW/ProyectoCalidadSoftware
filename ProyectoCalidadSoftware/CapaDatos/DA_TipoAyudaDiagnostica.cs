@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,30 +18,43 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entTipoAyudaDiagnostica> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entTipoAyudaDiagnostica> lista = new List<entTipoAyudaDiagnostica>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarTipoAyudaDiagnostica", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarTipoAyudaDiagnostica", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var tipoAyuda = new entTipoAyudaDiagnostica
+                        {
+                            IdTipoAyuda = Convert.ToInt16(dr["IdTipoAyuda"]),
+                            Nombre = dr["Nombre"].ToString()
+                        };
+
+                        lista.Add(tipoAyuda);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(string nombre, string descripcion, bool estado)
+        public bool Insertar(entTipoAyudaDiagnostica entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarTipoAyudaDiagnostica", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombre", (object)nombre ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Descripcion", (object)descripcion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
+                cmd.Parameters.AddWithValue("@Nombre", entidad.Nombre);
+                cmd.Parameters.AddWithValue("@Descripcion", "");
+                cmd.Parameters.AddWithValue("@Estado", true);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

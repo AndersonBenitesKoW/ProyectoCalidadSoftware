@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CapaEntidad;
 namespace CapaLogica
 {
     public class logUsuarioRol
     {
 
         #region Singleton
-        private static readonly logUsuario UnicaInstancia = new logUsuario();
-        public static logUsuario Instancia
+        private static readonly logUsuarioRol UnicaInstancia = new logUsuarioRol();
+        public static logUsuarioRol Instancia
         {
-            get { return logUsuario.UnicaInstancia; }
+            get { return logUsuarioRol.UnicaInstancia; }
         }
-        private logUsuario() { }
+        public logUsuarioRol() { }
         #endregion
 
         // LISTAR
@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarUsuario(entUsuario entidad)
+        public bool InsertarUsuario(entUsuario entidad)
         {
             return DA_Usuario.Instancia.Insertar(entidad);
         }

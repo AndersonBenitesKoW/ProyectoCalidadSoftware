@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,35 +18,54 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entAuditoria> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entAuditoria> lista = new List<entAuditoria>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarAuditoria", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarAuditoria", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var auditoria = new entAuditoria
+                        {
+                            IdAuditoria = Convert.ToInt32(dr["IdAuditoria"]),
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                            Accion = dr["Accion"].ToString(),
+                            Entidad = dr["Entidad"].ToString(),
+                            IdRegistro = dr["IdRegistro"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdRegistro"]) : null,
+                            Antes = dr["Antes"].ToString(),
+                            Despues = dr["Despues"].ToString(),
+                            IpCliente = dr["IpCliente"].ToString(),
+                            FechaHora = Convert.ToDateTime(dr["FechaHora"])
+                        };
+
+                        lista.Add(auditoria);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int? idUsuario, string accion, string entidad, int? idRegistro,
-                             string antes, string despues, string ipCliente)
+        public bool Insertar(entAuditoria entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarAuditoria", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdUsuario", (object)idUsuario ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Accion", accion);
-                cmd.Parameters.AddWithValue("@Entidad", (object)entidad ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdRegistro", (object)idRegistro ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Antes", (object)antes ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Despues", (object)despues ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IpCliente", (object)ipCliente ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdUsuario", (object)entidad.IdUsuario ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Accion", entidad.Accion);
+                cmd.Parameters.AddWithValue("@Entidad", (object)entidad.Entidad ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdRegistro", (object)entidad.IdRegistro ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Antes", (object)entidad.Antes ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Despues", (object)entidad.Despues ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IpCliente", (object)entidad.IpCliente ?? DBNull.Value);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

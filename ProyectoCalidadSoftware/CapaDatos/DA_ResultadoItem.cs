@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,33 +18,51 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entResultadoItem> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entResultadoItem> lista = new List<entResultadoItem>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarResultadoItem", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarResultadoItem", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var item = new entResultadoItem
+                        {
+                            IdResultadoItem = Convert.ToInt32(dr["IdResultadoItem"]),
+                            IdResultado = Convert.ToInt32(dr["IdResultado"]),
+                            Parametro = dr["Parametro"].ToString(),
+                            ValorNumerico = dr["ValorNumerico"] != DBNull.Value ? Convert.ToDecimal(dr["ValorNumerico"]) : null,
+                            ValorTexto = dr["ValorTexto"].ToString(),
+                            Unidad = dr["Unidad"].ToString(),
+                            RangoRef = dr["RangoRef"].ToString()
+                        };
+
+                        lista.Add(item);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idResultado, string nombre, string valor, string unidad, string observaciones, bool estado)
+        public bool Insertar(entResultadoItem entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarResultadoItem", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdResultado", idResultado);
-                cmd.Parameters.AddWithValue("@Nombre", (object)nombre ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Valor", (object)valor ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Unidad", (object)unidad ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Observaciones", (object)observaciones ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
+                cmd.Parameters.AddWithValue("@IdResultado", entidad.IdResultado);
+                cmd.Parameters.AddWithValue("@Nombre", entidad.Parametro);
+                cmd.Parameters.AddWithValue("@Valor", (object)entidad.ValorTexto ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Unidad", (object)entidad.Unidad ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Observaciones", (object)entidad.RangoRef ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Estado", true);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

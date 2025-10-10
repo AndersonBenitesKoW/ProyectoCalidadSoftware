@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class ControlPrenatal
+    public class entControlPrenatal
     {
         public int IdControl { get; set; }
         public int IdEmbarazo { get; set; }

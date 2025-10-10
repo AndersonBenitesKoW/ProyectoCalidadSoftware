@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,30 +18,45 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entPacienteEmail> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entPacienteEmail> lista = new List<entPacienteEmail>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPacienteEmail", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarPacienteEmail", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var email = new entPacienteEmail
+                        {
+                            IdPacienteEmail = Convert.ToInt32(dr["IdPacienteEmail"]),
+                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                            Email = dr["Email"].ToString(),
+                            EsPrincipal = Convert.ToBoolean(dr["EsPrincipal"])
+                        };
+
+                        lista.Add(email);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idPaciente, string email, bool principal)
+        public bool Insertar(entPacienteEmail entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarPacienteEmail", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@Email", (object)email ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Principal", principal);
+                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                cmd.Parameters.AddWithValue("@Email", entidad.Email);
+                cmd.Parameters.AddWithValue("@Principal", entidad.EsPrincipal);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

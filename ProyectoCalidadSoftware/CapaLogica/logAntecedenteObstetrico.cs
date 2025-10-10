@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CapaAccesoDatos;
+using CapaEntidad; 
 
 namespace CapaLogica
 {
@@ -26,7 +27,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarAntecedenteObstetrico(entAntecedenteObstetrico entidad)
+        public bool InsertarAntecedenteObstetrico(entAntecedenteObstetrico entidad)
         {
             return DA_AntecedenteObstetrico.Instancia.Insertar(entidad);
         }

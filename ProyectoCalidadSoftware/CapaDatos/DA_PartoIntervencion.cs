@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,31 +18,45 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entPartoIntervencion> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entPartoIntervencion> lista = new List<entPartoIntervencion>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPartoIntervencion", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarPartoIntervencion", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var intervencion = new entPartoIntervencion
+                        {
+                            IdPartoIntervencion = Convert.ToInt32(dr["IdPartoIntervencion"]),
+                            IdParto = Convert.ToInt32(dr["IdParto"]),
+                            Intervencion = dr["Intervencion"].ToString()
+                        };
+
+                        lista.Add(intervencion);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idParto, string intervencion, string descripcion, bool estado)
+        public bool Insertar(entPartoIntervencion entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarPartoIntervencion", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdParto", idParto);
-                cmd.Parameters.AddWithValue("@Intervencion", (object)intervencion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Descripcion", (object)descripcion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
+                cmd.Parameters.AddWithValue("@IdParto", entidad.IdParto);
+                cmd.Parameters.AddWithValue("@Intervencion", entidad.Intervencion);
+                cmd.Parameters.AddWithValue("@Descripcion", "");
+                cmd.Parameters.AddWithValue("@Estado", true);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

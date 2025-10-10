@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CapaEntidad;
 namespace CapaLogica
 {
     public class logTipoAyudaDiagnostica
@@ -26,7 +26,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public int InsertarTipoAyudaDiagnostica(entTipoAyudaDiagnostica entidad)
+        public bool InsertarTipoAyudaDiagnostica(entTipoAyudaDiagnostica entidad)
         {
             return DA_TipoAyudaDiagnostica.Instancia.Insertar(entidad);
         }
