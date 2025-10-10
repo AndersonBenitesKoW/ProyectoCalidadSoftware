@@ -113,6 +113,35 @@ namespace CapaAccesoDatos
             }
         }
 
+        public entUsuario VerificarLogin(string username, string passwordHash)
+        {
+            entUsuario usuario = null;
+
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("SELECT IdUsuario, NombreUsuario, ClaveHash, Estado FROM Usuario WHERE NombreUsuario = @Username AND ClaveHash = @PasswordHash AND Estado = 1", cn))
+            {
+                cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        usuario = new entUsuario
+                        {
+                            IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
+                            NombreUsuario = dr["NombreUsuario"].ToString(),
+                            ClaveHash = dr["ClaveHash"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
+            }
+
+            return usuario;
+        }
+
         #endregion
     }
 

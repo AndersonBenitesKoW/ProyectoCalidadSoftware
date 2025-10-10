@@ -1,6 +1,6 @@
 /* =========================================================
    PROYECTO: Obstetricia (ProyectoCalidad)
-   Versión con GO tras cada bloque
+   Versiï¿½n con GO tras cada bloque
    ========================================================= */
 
 CREATE DATABASE ProyectoCalidad;
@@ -14,7 +14,7 @@ GO
 CREATE TABLE Rol(
   IdRol INT IDENTITY(1,1) PRIMARY KEY,
   NombreRol NVARCHAR(50) NOT NULL UNIQUE,
-  Descripcion NVARCHAR(200) NULL,
+  Descripcion NVARCHAR(50) NULL,
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
@@ -22,8 +22,8 @@ GO
 CREATE TABLE Usuario(
   IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
   NombreUsuario NVARCHAR(50) NOT NULL UNIQUE,
-  ClaveHash NVARCHAR(200) NOT NULL,
-  Estado BIT NOT NULL DEFAULT 1
+  ClaveHash NVARCHAR(50) NOT NULL,
+  Estado BIT NOT NULL DEFAULT 1s
 );
 GO
 
@@ -48,7 +48,7 @@ CREATE TABLE Auditoria(
 );
 GO
 
-/* ================  CATÁLOGOS  ================== */
+/* ================  CATï¿½LOGOS  ================== */
 CREATE TABLE TipoEncuentro(
   IdTipoEncuentro SMALLINT IDENTITY(1,1) PRIMARY KEY,
   Codigo NVARCHAR(20) NOT NULL UNIQUE,  
@@ -89,30 +89,30 @@ CREATE TABLE MetodoPF(
 );
 GO
 
-/* Semillas (catálogos) */
+/* Semillas (catï¿½logos) */
 INSERT INTO TipoEncuentro (Codigo,Descripcion)
-VALUES (N'ANC',N'Atención prenatal'),
+VALUES (N'ANC',N'Atenciï¿½n prenatal'),
        (N'INTRAPARTO',N'Trabajo de parto/Parto'),
-       (N'PNC',N'Atención posnatal/Puerperio');
+       (N'PNC',N'Atenciï¿½n posnatal/Puerperio');
 GO
 
 INSERT INTO EstadoCita (Codigo,Descripcion)
 VALUES (N'Programada',N'Cita programada'),
        (N'Atendida',N'Cita atendida'),
-       (N'NoAsistio',N'Paciente no asistió'),
+       (N'NoAsistio',N'Paciente no asistiï¿½'),
        (N'Anulada',N'Cita anulada');
 GO
 
 INSERT INTO ViaParto (Codigo,Descripcion)
-VALUES (N'EUTOCICO',N'Vaginal eutócico'),
+VALUES (N'EUTOCICO',N'Vaginal eutï¿½cico'),
        (N'INSTRUMENTAL',N'Vaginal instrumental'),
-       (N'CESAREA',N'Cesárea');
+       (N'CESAREA',N'Cesï¿½rea');
 GO
 
 INSERT INTO LiquidoAmniotico (Codigo,Descripcion)
 VALUES (N'CLARO',N'Claro'),
        (N'MECONIAL',N'Meconial'),
-       (N'HEMATICO',N'Hemático'),
+       (N'HEMATICO',N'Hemï¿½tico'),
        (N'ESCASO',N'Escaso');
 GO
 
@@ -121,7 +121,7 @@ CREATE TABLE Paciente(
   IdPaciente INT IDENTITY(1,1) PRIMARY KEY,
   IdUsuario INT NULL UNIQUE FOREIGN KEY REFERENCES Usuario(IdUsuario),
   Nombres NVARCHAR(100) NOT NULL,
-  Apellidos NVARCHAR(100) NOT NULL,
+  Apellidos NVARCHAR(50) NOT NULL,
   DNI NVARCHAR(15) NULL UNIQUE,
   FechaNacimiento DATE NULL,
   Estado BIT NOT NULL DEFAULT 1
@@ -131,7 +131,7 @@ GO
 CREATE TABLE PacienteEmail(
   IdPacienteEmail INT IDENTITY(1,1) PRIMARY KEY,
   IdPaciente INT NOT NULL FOREIGN KEY REFERENCES Paciente(IdPaciente),
-  Email NVARCHAR(150) NOT NULL,
+  Email NVARCHAR(100) NOT NULL,
   EsPrincipal BIT NOT NULL DEFAULT 0,
   CONSTRAINT UQ_PacienteEmail UNIQUE(IdPaciente, Email)
 );
@@ -153,7 +153,7 @@ CREATE TABLE ProfesionalSalud(
   CMP NVARCHAR(20) NULL,
   Especialidad NVARCHAR(80) NULL,
   Nombres NVARCHAR(100) NULL,
-  Apellidos NVARCHAR(100) NULL,
+  Apellidos NVARCHAR(50) NULL,
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
@@ -193,7 +193,7 @@ CREATE TABLE Cita(
   IdProfesional INT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
   IdEmbarazo INT NULL FOREIGN KEY REFERENCES Embarazo(IdEmbarazo),
   FechaCita DATETIME2 NOT NULL,
-  Motivo NVARCHAR(200) NULL,
+  Motivo NVARCHAR(150) NULL,
   IdEstadoCita SMALLINT NOT NULL FOREIGN KEY REFERENCES EstadoCita(IdEstadoCita) DEFAULT 1,
   Observacion NVARCHAR(300) NULL,
   FechaAnulacion DATETIME2 NULL,
@@ -329,7 +329,7 @@ GO
 CREATE INDEX IX_Puerperio_EmbarazoFecha ON SeguimientoPuerperio(IdEmbarazo, Fecha);
 GO
 
-/* ============  AYUDAS DIAGNÓSTICAS (ORDEN + RESULTADO)  ============ */
+/* ============  AYUDAS DIAGNï¿½STICAS (ORDEN + RESULTADO)  ============ */
 CREATE TABLE AyudaDiagnosticaOrden(
   IdAyuda INT IDENTITY(1,1) PRIMARY KEY,
   IdPaciente INT NOT NULL FOREIGN KEY REFERENCES Paciente(IdPaciente),
@@ -425,7 +425,7 @@ JOIN Embarazo em ON em.IdEmbarazo = sp.IdEmbarazo
 JOIN Paciente pa ON pa.IdPaciente = em.IdPaciente;
 GO
 
-/* ==================  ÍNDICES EXTRA ================== */
+/* ==================  ï¿½NDICES EXTRA ================== */
 CREATE INDEX IX_Paciente_DNI ON Paciente(DNI) WHERE DNI IS NOT NULL;
 GO
 CREATE INDEX IX_Ayuda_PacienteFecha ON AyudaDiagnosticaOrden(IdPaciente, FechaOrden);

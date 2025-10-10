@@ -116,6 +116,37 @@ namespace CapaAccesoDatos
             }
         }
 
+        public entProfesionalSalud VerificarProfesionalPorUsuario(int idUsuario)
+        {
+            entProfesionalSalud profesional = null;
+
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("SELECT IdProfesional, IdUsuario, CMP, Especialidad, Nombres, Apellidos, Estado FROM ProfesionalSalud WHERE IdUsuario = @IdUsuario AND Estado = 1", cn))
+            {
+                cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        profesional = new entProfesionalSalud
+                        {
+                            IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                            CMP = dr["CMP"].ToString(),
+                            Especialidad = dr["Especialidad"].ToString(),
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
+            }
+
+            return profesional;
+        }
+
         #endregion
     }
 

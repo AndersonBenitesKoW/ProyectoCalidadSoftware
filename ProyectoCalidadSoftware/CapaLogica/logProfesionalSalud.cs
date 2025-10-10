@@ -32,6 +32,20 @@ namespace CapaLogica
             return DA_ProfesionalSalud.Instancia.Insertar(entidad);
         }
 
+        // VERIFICAR STAFF LOGIN
+        public entProfesionalSalud VerificarStaffLogin(string username, string password)
+        {
+            // First, verify the user
+            var usuario = logUsuario.Instancia.VerificarUsuario(username, password);
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            // Then, check if the user is a professional
+            return DA_ProfesionalSalud.Instancia.VerificarProfesionalPorUsuario(usuario.IdUsuario);
+        }
+
 
     }
 }

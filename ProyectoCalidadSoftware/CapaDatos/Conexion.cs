@@ -20,10 +20,9 @@ namespace CapaAccesoDatos
         public SqlConnection Conectar()
         {
             SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = "Data Source=ANDERSON\\SQL2024;" +
+            cn.ConnectionString = "Data Source=LAPTOP-HBAEIJGS\\SQLEXPRESS;" +
                                   "Initial Catalog=ProyectoCalidad;" +
-                                  "User ID=sa;" +
-                                  "Password=anderson123;";
+                                  "Integrated Security=True;";
             return cn;
         }
 

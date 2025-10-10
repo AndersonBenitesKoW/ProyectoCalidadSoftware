@@ -8,6 +8,9 @@ namespace CapaAccesoDatos
 {
     public class DA_Cita
     {
+        
+        
+        
         #region Singleton
         private static readonly DA_Cita _instancia = new DA_Cita();
         public static DA_Cita Instancia
@@ -16,7 +19,6 @@ namespace CapaAccesoDatos
         }
         #endregion
 
-        #region Métodos
 
         public List<entCita> Listar()
         {
@@ -35,14 +37,14 @@ namespace CapaAccesoDatos
                         {
                             IdCita = Convert.ToInt32(dr["IdCita"]),
                             IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            IdRecepcionista = dr["IdRecepcionista"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdRecepcionista"]) : null,
-                            IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,
-                            IdEmbarazo = dr["IdEmbarazo"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdEmbarazo"]) : null,
+                            IdRecepcionista = dr["IdRecepcionista"] != DBNull.Value ? Convert.ToInt32(dr["IdRecepcionista"]) : (int?)null,
+                            IdProfesional = dr["IdProfesional"] != DBNull.Value ? Convert.ToInt32(dr["IdProfesional"]) : (int?)null,
+                            IdEmbarazo = dr["IdEmbarazo"] != DBNull.Value ? Convert.ToInt32(dr["IdEmbarazo"]) : (int?)null,
                             FechaCita = Convert.ToDateTime(dr["FechaCita"]),
                             Motivo = dr["Motivo"].ToString(),
                             IdEstadoCita = Convert.ToInt16(dr["IdEstadoCita"]),
                             Observacion = dr["Observacion"].ToString(),
-                            FechaAnulacion = dr["FechaAnulacion"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaAnulacion"]) : null,
+                            FechaAnulacion = dr["FechaAnulacion"] != DBNull.Value ? Convert.ToDateTime(dr["FechaAnulacion"]) : (DateTime?)null,
                             MotivoAnulacion = dr["MotivoAnulacion"].ToString()
                         };
 
@@ -133,7 +135,7 @@ namespace CapaAccesoDatos
             }
         }
 
-        #endregion
+      
     }
 
 

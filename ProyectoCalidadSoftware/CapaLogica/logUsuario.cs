@@ -29,5 +29,23 @@ namespace CapaLogica
             return DA_Usuario.Instancia.Insertar(entidad);
         }
 
+        // VERIFICAR LOGIN
+        public entUsuario VerificarUsuario(string username, string password)
+        {
+            // Hash the password (assuming SHA256)
+            string passwordHash = HashPassword(password);
+            return DA_Usuario.Instancia.VerificarLogin(username, passwordHash);
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = System.Text.Encoding.UTF8.GetBytes(password);
+                var hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash).Substring(0, 50); // Truncate to 50 chars as per DB
+            }
+        }
+
     }
 }
