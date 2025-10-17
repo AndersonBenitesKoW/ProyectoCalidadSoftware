@@ -33,5 +33,20 @@ namespace CapaLogica
         }
 
 
+        public entAntecedenteObstetrico BuscarAntecedenteObstetrico(int id)
+          => DA_AntecedenteObstetrico.Instancia.BuscarPorId(id);
+
+        public bool ActualizarAntecedenteObstetrico(entAntecedenteObstetrico entidad)
+            => DA_AntecedenteObstetrico.Instancia.Actualizar(entidad);
+
+        public bool AnularAntecedenteObstetrico(int id)
+            => DA_AntecedenteObstetrico.Instancia.Anular(id);
+
+        public bool EliminarAntecedenteObstetrico(int id)
+            => DA_AntecedenteObstetrico.Instancia.Eliminar(id);
+
+
+
+
     }
 }

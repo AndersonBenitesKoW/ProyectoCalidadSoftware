@@ -87,6 +87,22 @@ namespace CapaAccesoDatos
             }
         }
 
+        public bool Inhabilitar(int idPuerperio)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_InhabilitarSeguimientoPuerperio", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdPuerperio", idPuerperio);
+                    cn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+
+
         public bool Editar(int idSeguimiento, int idParto, DateTime fecha, string hallazgos, string indicaciones, bool estado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())

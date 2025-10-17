@@ -34,5 +34,19 @@ namespace CapaLogica
         #endregion
 
 
+        // NUEVO: Buscar devuelve entidad
+        public entPacienteFactorRiesgo BuscarPacienteFactorRiesgo(int id)
+            => DA_PacienteFactorRiesgo.Instancia.BuscarPorId(id);
+
+        // NUEVO: Editar con objeto
+        public bool EditarPacienteFactorRiesgo(entPacienteFactorRiesgo entidad)
+            => DA_PacienteFactorRiesgo.Instancia.Editar(entidad);
+
+        public bool EliminarPacienteFactorRiesgo(int id)
+            => DA_PacienteFactorRiesgo.Instancia.Eliminar(id);
+
+
+
+
     }
 }

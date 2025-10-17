@@ -1,0 +1,87 @@
+﻿@model IEnumerable<CapaEntidad.entAntecedenteObstetrico>
+
+@{
+    ViewData["Title"] = "Listar Antecedentes Obstétricos";
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0"><i class="bi bi-list-ul"></i> Antecedentes Obstétricos</h1>
+            <p class="text-muted mb-0">Gestión de antecedentes obstétricos de pacientes</p>
+        </div>
+        <a asp-action="Registrar" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo Antecedente
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-hash"></i> ID Antecedente</th>
+                    <th><i class="bi bi-person"></i> ID Paciente</th>
+                    <th><i class="bi bi-calendar-event"></i> Menarquía</th>
+                    <th><i class="bi bi-clock"></i> Ciclo (Días)</th>
+                    <th><i class="bi bi-plus-square"></i> Gestas</th>
+                    <th><i class="bi bi-heart"></i> Partos</th>
+                    <th><i class="bi bi-x-circle"></i> Abortos</th>
+                    <th><i class="bi bi-chat-text"></i> Observación</th>
+                    <th><i class="bi bi-check-circle"></i> Estado</th>
+                    <th><i class="bi bi-gear"></i> Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.IdAntecedente)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdPaciente)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Menarquia)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CicloDias)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Gestas)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Partos)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Abortos)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Observacion)) {
+                                <span title="@item.Observacion">@(item.Observacion.Length > 30 ? item.Observacion.Substring(0, 30) + "..." : item.Observacion)</span>
+                            } else {
+                                <span class="text-muted">Sin observación</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Estado) {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>
+                            } else {
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Actualizar" asp-route-id="@item.IdAntecedente" class="btn btn-sm btn-outline-primary" title="Actualizar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@item.IdAntecedente" class="btn btn-sm btn-outline-warning" title="Modificar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Anular" asp-route-id="@item.IdAntecedente" class="btn btn-sm btn-outline-danger" title="Anular">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any()) {
+        <div class="text-center py-5">
+            <i class="bi bi-info-circle text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No hay antecedentes obstétricos registrados</h4>
+            <p class="text-muted">Comience registrando un nuevo antecedente obstétrico.</p>
+            <a asp-action="Registrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Registrar Primer Antecedente
+            </a>
+        </div>
+    }
+</div>

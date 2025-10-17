@@ -22,7 +22,7 @@ namespace CapaAccesoDatos
             SqlConnection cn = new SqlConnection();
             cn.ConnectionString = "Data Source=LAPTOP-HBAEIJGS\\SQLEXPRESS;" +
                                   "Initial Catalog=ProyectoCalidad;" +
-                                  "Integrated Security=True;";
+                                  "User ID=ANDERSON\\SQL2024;" + "Password=anderson123;";
             return cn;
         }
 

@@ -8,7 +8,7 @@ using CapaEntidad;
 namespace CapaLogica
 {
     internal class logRol
-{
+    {
         #region Singleton
         private static readonly logRol UnicaInstancia = new logRol();
         public static logRol Instancia

@@ -89,6 +89,20 @@ namespace CapaAccesoDatos
             }
         }
 
+
+        public bool Inhabilitar(int idControl)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_InhabilitarControlPrenatal", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdControl", idControl);
+
+                cn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
         public bool Editar(int idControl, int idEmbarazo, int? idEncuentro, int? idProfesional, DateTime fecha,
                            decimal? pesoKg, decimal? tallaM, byte? paSistolica, byte? paDiastolica,
                            decimal? alturaUterinaCm, byte? fcfBpm, string presentacion,

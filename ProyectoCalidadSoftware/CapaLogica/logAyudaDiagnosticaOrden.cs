@@ -5,7 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CapaEntidad;  
+using CapaEntidad;
+using System.Numerics;
 
 namespace CapaLogica
 {
@@ -31,5 +32,11 @@ namespace CapaLogica
         {
             return DA_AyudaDiagnosticaOrden.Instancia.Insertar(entidad);
         }
+
+
+
+        public bool Inhabilitar(int idAyuda)
+            => DA_AyudaDiagnosticaOrden.Instancia.Inhabilitar(idAyuda);
+
     }
 }

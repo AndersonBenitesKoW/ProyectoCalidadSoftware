@@ -30,6 +30,9 @@ namespace CapaLogica
         {
             return DA_SeguimientoPuerperio.Instancia.Insertar(entidad);
         }
+        public bool Inhabilitar(int idPuerperio)
+            => DA_SeguimientoPuerperio.Instancia.Inhabilitar(idPuerperio);
+
 
     }
 }

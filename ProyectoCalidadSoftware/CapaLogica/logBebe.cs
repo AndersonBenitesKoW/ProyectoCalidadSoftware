@@ -32,5 +32,10 @@ namespace CapaLogica
         }
 
 
+        public entBebe BuscarBebe(int idBebe)
+        {
+            return DA_Bebe.Instancia.BuscarBebe(idBebe);
+        }
+
     }
 }

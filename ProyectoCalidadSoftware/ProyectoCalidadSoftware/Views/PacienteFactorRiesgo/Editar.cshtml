@@ -1,0 +1,84 @@
+﻿@model CapaEntidad.entPacienteFactorRiesgo
+
+@{
+    ViewData["Title"] = "Editar Factor de Riesgo";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-pencil-square"></i> Editar Factor de Riesgo</h1>
+        <h4>Modificar factor de riesgo del paciente</h4>
+    </div>
+
+    <form asp-action="Editar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdPacienteFactor" class="control-label">
+                        <i class="bi bi-hash"></i> ID Factor Paciente
+                    </label>
+                    <input asp-for="IdPacienteFactor" class="form-control" readonly />
+                    <span asp-validation-for="IdPacienteFactor" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdPaciente" class="control-label">
+                        <i class="bi bi-person"></i> ID Paciente
+                    </label>
+                    <input asp-for="IdPaciente" class="form-control" />
+                    <span asp-validation-for="IdPaciente" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdFactorCat" class="control-label">
+                        <i class="bi bi-diagram-3"></i> Categoría de Factor
+                    </label>
+                    <input asp-for="IdFactorCat" class="form-control" />
+                    <span asp-validation-for="IdFactorCat" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaRegistro" class="control-label">
+                        <i class="bi bi-calendar-date"></i> Fecha de Registro
+                    </label>
+                    <input asp-for="FechaRegistro" class="form-control" type="date" />
+                    <span asp-validation-for="FechaRegistro" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Detalle" class="control-label">
+                <i class="bi bi-chat-text"></i> Detalle del Factor de Riesgo
+            </label>
+            <textarea asp-for="Detalle" class="form-control" rows="3" placeholder="Describa el factor de riesgo específico..."></textarea>
+            <span asp-validation-for="Detalle" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check mb-4">
+            <input class="form-check-input" asp-for="Estado" />
+            <label class="form-check-label" asp-for="Estado">
+                <i class="bi bi-check-circle"></i> Activo
+            </label>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a la Lista
+            </a>
+            <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -66,47 +66,68 @@ namespace CapaAccesoDatos
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
-
-        public bool Editar(int idPacienteFactor, int idPaciente, int idFactorCat, string detalle, DateTime? fechaRegistro, bool estado)
+        /// Actualiza usando un OBJETO (sin DataTable).
+        /// </summary>
+        public bool Editar(entPacienteFactorRiesgo entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_EditarPacienteFactorRiesgo", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_EditarPacienteFactorRiesgo", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdPacienteFactor", idPacienteFactor);
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@IdFactorCat", idFactorCat);
-                cmd.Parameters.AddWithValue("@Detalle", (object)detalle ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FechaRegistro", (object)fechaRegistro ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
+                cmd.Parameters.AddWithValue("@IdPacienteFactor", entidad.IdPacienteFactor);
+                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                cmd.Parameters.AddWithValue("@IdFactorCat", entidad.IdFactorCat);
+                cmd.Parameters.AddWithValue("@Detalle", (object)entidad.Detalle ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaRegistro", entidad.FechaRegistro == default ? (object)DBNull.Value : entidad.FechaRegistro);
+                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
-        public DataTable BuscarPorId(int idPacienteFactor)
+        /// <summary>
+        /// Buscar por Id: devuelve la ENTIDAD (no DataTable).
+        /// </summary>
+        public entPacienteFactorRiesgo BuscarPorId(int idPacienteFactor)
         {
-            DataTable dt = new DataTable();
+            entPacienteFactorRiesgo entidad = null;
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_BuscarPacienteFactorRiesgo", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_BuscarPacienteFactorRiesgo", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdPacienteFactor", idPacienteFactor);
 
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        entidad = new entPacienteFactorRiesgo
+                        {
+                            IdPacienteFactor = Convert.ToInt32(dr["IdPacienteFactor"]),
+                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                            IdFactorCat = Convert.ToInt32(dr["IdFactorCat"]),
+                            Detalle = dr["Detalle"] == DBNull.Value ? null : dr["Detalle"].ToString(),
+                            FechaRegistro = dr["FechaRegistro"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
             }
-            return dt;
+
+            return entidad;
         }
 
+        /// Eliminar lógico o físico según tu SP. Mantiene parámetro simple (int).
+        /// </summary>
         public bool Eliminar(int idPacienteFactor)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_EliminarPacienteFactorRiesgo", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarPacienteFactorRiesgo", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdPacienteFactor", idPacienteFactor);
 
@@ -114,6 +135,10 @@ namespace CapaAccesoDatos
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
+
+
+
+
 
         #endregion
     }

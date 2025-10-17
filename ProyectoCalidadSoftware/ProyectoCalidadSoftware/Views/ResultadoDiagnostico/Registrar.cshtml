@@ -1,0 +1,85 @@
+﻿@model CapaEntidad.entResultadoDiagnostico
+
+@{
+    ViewData["Title"] = "Registrar Resultado Diagnóstico";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-file-earmark-medical"></i> Registrar Resultado Diagnóstico</h1>
+        <h4>Ingreso de resultados de exámenes diagnósticos</h4>
+    </div>
+
+    <form asp-action="Registrar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdResultado" class="control-label">
+                        <i class="bi bi-hash"></i> ID Resultado
+                    </label>
+                    <input asp-for="IdResultado" class="form-control" />
+                    <span asp-validation-for="IdResultado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdAyuda" class="control-label">
+                        <i class="bi bi-clipboard-data"></i> ID Ayuda Diagnóstica
+                    </label>
+                    <input asp-for="IdAyuda" class="form-control" />
+                    <span asp-validation-for="IdAyuda" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaResultado" class="control-label">
+                        <i class="bi bi-calendar-date"></i> Fecha del Resultado
+                    </label>
+                    <input asp-for="FechaResultado" class="form-control" type="date" />
+                    <span asp-validation-for="FechaResultado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Estado" class="control-label">
+                        <i class="bi bi-check-circle"></i> Estado
+                    </label>
+                    <input asp-for="Estado" class="form-control" />
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Resumen" class="control-label">
+                <i class="bi bi-chat-text"></i> Resumen del Resultado
+            </label>
+            <textarea asp-for="Resumen" class="form-control" rows="4" placeholder="Describa los resultados del examen diagnóstico..."></textarea>
+            <span asp-validation-for="Resumen" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check mb-4">
+            <input class="form-check-input" asp-for="Critico" />
+            <label class="form-check-label" asp-for="Critico">
+                <i class="bi bi-exclamation-triangle"></i> Resultado Crítico
+            </label>
+            <small class="form-text text-muted">Marque si el resultado requiere atención médica inmediata</small>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a la Lista
+            </a>
+            <input type="submit" value="Registrar Resultado" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

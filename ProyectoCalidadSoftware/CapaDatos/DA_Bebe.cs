@@ -110,22 +110,60 @@ namespace CapaAccesoDatos
             }
         }
 
-        public DataTable BuscarPorId(int idBebe)
+        public entBebe BuscarBebe(int idBebe)
         {
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            SqlCommand cmd = null;
+            entBebe bebe = null;
+
+            try
             {
-                SqlCommand cmd = new SqlCommand("sp_BuscarBebe", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdBebe", idBebe);
+                using (SqlConnection cn = Conexion.Instancia.Conectar())
+                {
+                    cmd = new SqlCommand("sp_BuscarBebe", cn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdBebe", idBebe);
 
-                cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            // Helpers para leer nulos de forma segura
+                            int Ord(string name) => dr.GetOrdinal(name);
+                            bool Nul(string name) => dr.IsDBNull(Ord(name));
+
+                            bebe = new entBebe
+                            {
+                                IdBebe = Nul("IdBebe") ? 0 : dr.GetInt32(Ord("IdBebe")),
+                                IdParto = Nul("IdParto") ? 0 : dr.GetInt32(Ord("IdParto")),
+                                EstadoBebe = Nul("EstadoBebe") ? string.Empty : dr.GetString(Ord("EstadoBebe")),
+                                Sexo = Nul("Sexo") ? null : dr.GetString(Ord("Sexo")),
+                                Apgar1 = Nul("Apgar1") ? (byte?)null : Convert.ToByte(dr["Apgar1"]),
+                                Apgar5 = Nul("Apgar5") ? (byte?)null : Convert.ToByte(dr["Apgar5"]),
+                                PesoGr = Nul("PesoGr") ? (int?)null : dr.GetInt32(Ord("PesoGr")),
+                                TallaCm = Nul("TallaCm") ? (decimal?)null : dr.GetDecimal(Ord("TallaCm")),
+                                PerimetroCefalico = Nul("PerimetroCefalico") ? (decimal?)null : dr.GetDecimal(Ord("PerimetroCefalico")),
+                                EG_Semanas = Nul("EG_Semanas") ? (decimal?)null : dr.GetDecimal(Ord("EG_Semanas")),
+                                Reanimacion = Nul("Reanimacion") ? (bool?)null : dr.GetBoolean(Ord("Reanimacion")),
+                                Observaciones = Nul("Observaciones") ? null : dr.GetString(Ord("Observaciones")),
+                                Estado = Nul("Estado") ? false : dr.GetBoolean(Ord("Estado"))
+                            };
+                        }
+                    }
+                }
             }
-            return dt;
-        }
+            catch (SqlException e)
+            {
+                throw new Exception("Error al buscar bebé: " + e.Message, e);
+            }
+            finally
+            {
+                // Si no usas 'using' en cmd, asegúrate de cerrar la conexión:
+                cmd?.Connection?.Close();
+            }
 
+            return bebe;
+        }
         public bool Eliminar(int idBebe)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())

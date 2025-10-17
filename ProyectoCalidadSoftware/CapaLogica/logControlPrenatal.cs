@@ -26,10 +26,17 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public bool  InsertarControlPrenatal(entControlPrenatal entidad)
+        public bool InsertarControlPrenatal(entControlPrenatal entidad)
         {
             return DA_ControlPrenatal.Instancia.Insertar(entidad);
         }
+
+        public bool Inhabilitar(int id)
+        {
+            return DA_ControlPrenatal.Instancia.Inhabilitar(id);
+        }
+
+
 
     }
 }

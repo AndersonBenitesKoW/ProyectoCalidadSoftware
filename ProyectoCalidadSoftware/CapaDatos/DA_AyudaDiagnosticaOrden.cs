@@ -73,6 +73,21 @@ namespace CapaAccesoDatos
             }
         }
 
+
+        public bool Inhabilitar(int idAyuda)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_InhabilitarAyudaDiagnosticaOrden", cn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
+                cn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+
+
         public bool Editar(int idAyuda, int idPaciente, int? idEmbarazo, int? idProfesional, short? idTipoAyuda,
                            string descripcion, bool urgente, DateTime? fechaOrden, string estado)
         {

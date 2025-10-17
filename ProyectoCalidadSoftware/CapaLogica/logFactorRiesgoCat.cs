@@ -30,5 +30,16 @@ namespace CapaLogica
             return DA_FactorRiesgoCat.Instancia.Insertar(entidad);
         }
 
+        public entFactorRiesgoCat BuscarFactorRiesgoCat(int id)
+            => DA_FactorRiesgoCat.Instancia.BuscarPorId(id);
+
+        public bool ActualizarFactorRiesgoCat(entFactorRiesgoCat entidad)
+            => DA_FactorRiesgoCat.Instancia.Actualizar(entidad);
+
+        public bool EliminarFactorRiesgoCat(int id)
+            => DA_FactorRiesgoCat.Instancia.Eliminar(id);
+
+
+
     }
 }
