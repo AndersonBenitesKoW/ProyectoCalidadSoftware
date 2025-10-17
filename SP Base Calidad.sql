@@ -140,6 +140,20 @@ BEGIN
 END
 GO
 
+
+CREATE PROCEDURE sp_InhabilitarControlPrenatal
+    @IdControl INT
+AS
+BEGIN
+    UPDATE ControlPrenatal
+    SET Estado = 0
+    WHERE IdControl = @IdControl;
+END
+GO
+
+
+
+
 --AntecedenteObstetrico
 CREATE PROCEDURE sp_InsertarAntecedenteObstetrico
   @IdPaciente INT,
@@ -292,6 +306,20 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE sp_InhabilitarSeguimientoPuerperio
+    @IdPuerperio INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE SeguimientoPuerperio
+    SET Estado = 0
+    WHERE IdPuerperio = @IdPuerperio;
+END
+GO
+
+
+
 --AyudaDiagnosticaOrden
 CREATE PROCEDURE sp_InsertarAyudaDiagnosticaOrden
   @IdPaciente INT,
@@ -317,6 +345,19 @@ CREATE PROCEDURE sp_ListarAyudasDiagnosticasPendientes
 AS
 BEGIN
   SELECT * FROM vw_AyudasPendientes;
+END
+GO
+
+
+CREATE PROCEDURE sp_InhabilitarAyudaDiagnosticaOrden
+    @IdAyuda INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE AyudaDiagnosticaOrden
+    SET Estado = 'INACTIVO'
+    WHERE IdAyuda = @IdAyuda;
 END
 GO
 
