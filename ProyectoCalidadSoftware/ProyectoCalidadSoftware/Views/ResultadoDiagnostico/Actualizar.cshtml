@@ -1,0 +1,32 @@
+﻿@model CapaAccesoDatos.DA_ResultadoDiagnostico
+
+@{
+    ViewData["Title"] = "Actualizar Resultado Diagnóstico";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-arrow-repeat"></i> Actualizar Resultado Diagnóstico</h1>
+        <h4>Actualizar información del resultado diagnóstico</h4>
+    </div>
+
+    <form asp-action="Actualizar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Información:</strong> Esta vista está en desarrollo. Los campos específicos del modelo DA_ResultadoDiagnostico serán agregados próximamente.
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a la Lista
+            </a>
+            <input type="submit" value="Actualizar" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

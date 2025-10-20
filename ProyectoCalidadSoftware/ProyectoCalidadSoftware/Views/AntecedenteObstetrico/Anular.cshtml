@@ -1,0 +1,86 @@
+﻿@model CapaEntidad.entAntecedenteObstetrico
+
+@{
+    ViewData["Title"] = "Anular Antecedente Obstétrico";
+}
+
+<div class="delete-confirmation">
+    <div class="delete-header">
+        <h1><i class="bi bi-exclamation-triangle"></i> Confirmar Anulación</h1>
+        <h3>¿Está seguro de que desea anular este antecedente obstétrico?</h3>
+    </div>
+
+    <div class="p-4">
+        <h4 class="mb-4"><i class="bi bi-info-circle"></i> Detalles del Antecedente Obstétrico</h4>
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-hash"></i> ID Antecedente
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdAntecedente)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-person"></i> ID Paciente
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdPaciente)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-calendar-event"></i> Menarquía
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Menarquia)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-clock"></i> Ciclo (Días)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CicloDias)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-plus-square"></i> Gestas
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Gestas)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-heart"></i> Partos
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Partos)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-x-circle"></i> Abortos
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Abortos)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-chat-text"></i> Observación
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Observacion)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-check-circle"></i> Estado
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Estado)
+            </dd>
+        </dl>
+
+        <div class="alert alert-warning mt-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>Advertencia:</strong> Esta acción no se puede deshacer. El antecedente obstétrico será anulado permanentemente.
+        </div>
+
+        <form asp-action="Anular" class="mt-4">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+                <input type="submit" value="Anular Antecedente" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>

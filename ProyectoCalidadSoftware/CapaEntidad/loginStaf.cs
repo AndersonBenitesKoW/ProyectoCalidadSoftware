@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapaAccesoDatos
+namespace CapaEntidad
 {
-    internal class DA_MetrodoPF
+    public class loginStaf
     {
+
+
+
+
     }
 }

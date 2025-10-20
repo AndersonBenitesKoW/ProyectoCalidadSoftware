@@ -1,0 +1,104 @@
+﻿@model IEnumerable<CapaEntidad.entControlPrenatal>
+
+@{
+    ViewData["Title"] = "Listar Controles Prenatales";
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0"><i class="bi bi-clipboard-data"></i> Controles Prenatales</h1>
+            <p class="text-muted mb-0">Gestión de controles prenatales de pacientes</p>
+        </div>
+        <a asp-action="Registrar" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo Control
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-hash"></i> ID Control</th>
+                    <th><i class="bi bi-heart-pulse"></i> Embarazo</th>
+                    <th><i class="bi bi-calendar-event"></i> Encuentro</th>
+                    <th><i class="bi bi-person-badge"></i> Profesional</th>
+                    <th><i class="bi bi-calendar-date"></i> Fecha</th>
+                    <th><i class="bi bi-speedometer"></i> Peso (Kg)</th>
+                    <th><i class="bi bi-rulers"></i> Talla (m)</th>
+                    <th><i class="bi bi-heart-half"></i> PA (mmHg)</th>
+                    <th><i class="bi bi-bullseye"></i> AU (cm)</th>
+                    <th><i class="bi bi-activity"></i> FCF (bpm)</th>
+                    <th><i class="bi bi-body-text"></i> Presentación</th>
+                    <th><i class="bi bi-droplet"></i> Proteinuria</th>
+                    <th><i class="bi bi-check-circle"></i> Estado</th>
+                    <th><i class="bi bi-gear"></i> Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.IdControl)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdEncuentro)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdProfesional)</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@(item.PesoKg.HasValue ? item.PesoKg.Value.ToString("N2") : "-")</td>
+                        <td>@(item.TallaM.HasValue ? item.TallaM.Value.ToString("N2") : "-")</td>
+                        <td>
+                            @(item.PA_Sistolica.HasValue && item.PA_Diastolica.HasValue ?
+                              $"{item.PA_Sistolica}/{item.PA_Diastolica}" : "-")
+                        </td>
+                        <td>@(item.AlturaUterina_cm.HasValue ? item.AlturaUterina_cm.Value.ToString("N1") : "-")</td>
+                        <td>@(item.FCF_bpm.HasValue ? item.FCF_bpm.Value.ToString() : "-")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Presentacion)) {
+                                <span class="badge bg-info">@item.Presentacion</span>
+                            } else {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Proteinuria)) {
+                                <span class="badge bg-warning">@item.Proteinuria</span>
+                            } else {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Estado) {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>
+                            } else {
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Actualizar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-primary" title="Actualizar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-warning" title="Modificar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Inhabilitar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any()) {
+        <div class="text-center py-5">
+            <i class="bi bi-clipboard-x text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No hay controles prenatales registrados</h4>
+            <p class="text-muted">Comience registrando un nuevo control prenatal.</p>
+            <a asp-action="Registrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Registrar Primer Control
+            </a>
+        </div>
+    }
+</div>

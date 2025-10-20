@@ -1,0 +1,78 @@
+﻿@model IEnumerable<CapaEntidad.entPacienteFactorRiesgo>
+
+@{
+    ViewData["Title"] = "Listar Factores de Riesgo";
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0"><i class="bi bi-shield-exclamation"></i> Factores de Riesgo</h1>
+            <p class="text-muted mb-0">Gestión de factores de riesgo asociados a pacientes</p>
+        </div>
+        <a asp-action="Agregar" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Agregar Factor
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-hash"></i> ID Factor</th>
+                    <th><i class="bi bi-person"></i> ID Paciente</th>
+                    <th><i class="bi bi-diagram-3"></i> Categoría</th>
+                    <th><i class="bi bi-chat-text"></i> Detalle</th>
+                    <th><i class="bi bi-calendar-date"></i> Fecha Registro</th>
+                    <th><i class="bi bi-check-circle"></i> Estado</th>
+                    <th><i class="bi bi-gear"></i> Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.IdPacienteFactor)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdPaciente)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdFactorCat)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Detalle)) {
+                                <span title="@item.Detalle">@(item.Detalle.Length > 30 ? item.Detalle.Substring(0, 30) + "..." : item.Detalle)</span>
+                            } else {
+                                <span class="text-muted">Sin detalle</span>
+                            }
+                        </td>
+                        <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (item.Estado) {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>
+                            } else {
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Editar" asp-route-id="@item.IdPacienteFactor" class="btn btn-sm btn-outline-primary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Eliminar" asp-route-id="@item.IdPacienteFactor" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any()) {
+        <div class="text-center py-5">
+            <i class="bi bi-shield-x text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No hay factores de riesgo registrados</h4>
+            <p class="text-muted">Comience agregando factores de riesgo a los pacientes.</p>
+            <a asp-action="Agregar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Agregar Primer Factor
+            </a>
+        </div>
+    }
+</div>

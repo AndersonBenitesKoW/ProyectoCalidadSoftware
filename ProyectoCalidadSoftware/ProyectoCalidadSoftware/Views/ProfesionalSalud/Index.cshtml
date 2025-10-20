@@ -1,0 +1,88 @@
+﻿@model IEnumerable<CapaEntidad.entProfesionalSalud>
+
+@{
+    ViewData["Title"] = "Listado de Profesionales de Salud";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="InsertarProfesional" class="btn btn-success">Registrar Nuevo Profesional</a>
+</p>
+
+<div class="mb-3">
+    @{
+        bool mostrandoActivos = ViewBag.MostrandoActivos ?? true;
+
+        string botonTexto;
+        string botonClase;
+        bool proximoEstado; 
+
+        if (mostrandoActivos)
+        {
+            botonTexto = "Mostrar Inhabilitados";
+            botonClase = "btn btn-outline-danger"; 
+            proximoEstado = false; 
+        }
+        else
+        {
+            botonTexto = "Mostrar Habilitados";
+            botonClase = "btn btn-outline-primary"; 
+            proximoEstado = true; 
+        }
+    }
+
+    <a asp-action="Index" asp-route-mostrarActivos="@proximoEstado" class="@botonClase">
+        @botonTexto
+    </a>
+</div>
+@* Muestra mensajes de éxito después de una redirección *@
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensajeExito"]
+    </div>
+}
+
+@* Muestra mensajes de error generales del controlador *@
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.IdProfesional)</th>
+            <th>@Html.DisplayNameFor(model => model.IdUsuario)</th>
+            <th>@Html.DisplayNameFor(model => model.Nombres)</th>
+            <th>@Html.DisplayNameFor(model => model.Apellidos)</th>
+            <th>@Html.DisplayNameFor(model => model.CMP)</th>
+            <th>@Html.DisplayNameFor(model => model.Especialidad)</th>
+            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdProfesional)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdUsuario)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nombres)</td>
+                <td>@Html.DisplayFor(modelItem => item.Apellidos)</td>
+                <td>@Html.DisplayFor(modelItem => item.CMP)</td>
+                <td>@Html.DisplayFor(modelItem => item.Especialidad)</td>
+                <td>
+                    @(item.Estado ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <a asp-action="EditarProfesional" asp-route-id="@item.IdProfesional" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="DetallesProfesional" asp-route-id="@item.IdProfesional" class="btn btn-sm btn-info">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
