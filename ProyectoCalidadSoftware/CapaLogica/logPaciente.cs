@@ -58,6 +58,12 @@ public bool ActualizarPaciente(entPaciente entidad)
                                        entidad.FechaNacimiento.Value, "", "", "", "", entidad.Estado);
 }
 
+// INHABILITAR
+public bool InhabilitarPaciente(int id)
+{
+    return DA_Paciente.Instancia.Eliminar(id);
+}
+
 
 }
 }

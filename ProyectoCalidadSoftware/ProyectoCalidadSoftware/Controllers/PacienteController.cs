@@ -103,5 +103,29 @@ namespace ProyectoCalidadSoftware.Controllers
                 return View(entidad);
             }
         }
+
+        // Alias: /Paciente/Actualizar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Actualizar(entPaciente entidad) => Modificar(entidad);
+
+        // POST: /Paciente/Inhabilitar/5
+        [HttpPost]
+        public IActionResult Inhabilitar(int id)
+        {
+            try
+            {
+                bool ok = logPaciente.Instancia.InhabilitarPaciente(id);
+                if (ok) return RedirectToAction(nameof(Listar));
+
+                TempData["Error"] = "No se pudo inhabilitar el paciente.";
+                return RedirectToAction(nameof(Listar));
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al inhabilitar: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
+        }
     }
 }
