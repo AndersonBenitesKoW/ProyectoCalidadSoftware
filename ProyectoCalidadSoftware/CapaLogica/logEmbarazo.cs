@@ -20,17 +20,6 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-<<<<<<< HEAD
-        public List<entEmbarazo> ListarEmbarazo()
-        {
-            return DA_Embarazo.Instancia.Listar();
-        }
-
-        // INSERTAR
-        public bool InsertarEmbarazo(entEmbarazo entidad)
-        {
-            return DA_Embarazo.Instancia.Insertar(entidad);
-=======
         public List<entEmbarazo> ListarEmbarazosPorEstado(bool estado)
         {
             return DA_Embarazo.Instancia.ListarPorEstado(estado);
@@ -58,7 +47,6 @@ namespace CapaLogica
                 return null; 
             }
             return DA_Embarazo.Instancia.BuscarPorId(idEmbarazo);
->>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
         }
 
     }

@@ -21,26 +21,16 @@ namespace CapaAccesoDatos
         public List<entViaParto> Listar()
         {
             List<entViaParto> lista = new List<entViaParto>();
-<<<<<<< HEAD
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             using (SqlCommand cmd = new SqlCommand("sp_ListarViaParto", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-=======
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
-            {
-                SqlCommand cmd = new SqlCommand("sp_ListarViaParto", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cn.Open();
-
->>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-<<<<<<< HEAD
                         var via = new entViaParto
                         {
                             IdViaParto = Convert.ToInt16(dr["IdViaParto"]),
@@ -53,17 +43,6 @@ namespace CapaAccesoDatos
                 }
             }
 
-=======
-                        lista.Add(new entViaParto
-                        {
-                            IdViaParto = Convert.ToInt16(dr["IdViaParto"]),
-                            Codigo = dr["Codigo"].ToString() ?? string.Empty,
-                            Descripcion = dr["Descripcion"].ToString() ?? string.Empty
-                        });
-                    }
-                }
-            }
->>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
             return lista;
         }
 
