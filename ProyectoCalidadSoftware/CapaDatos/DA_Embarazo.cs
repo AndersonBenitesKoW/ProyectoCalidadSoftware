@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,36 +18,53 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entEmbarazo> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entEmbarazo> lista = new List<entEmbarazo>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarEmbarazo", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarEmbarazo", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var embarazo = new entEmbarazo
+                        {
+                            IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
+                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                            FUR = dr["FUR"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FUR"]) : null,
+                            FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
+                            Riesgo = dr["Riesgo"].ToString(),
+                            FechaApertura = Convert.ToDateTime(dr["FechaApertura"]),
+                            FechaCierre = dr["FechaCierre"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaCierre"]) : null,
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+
+                        lista.Add(embarazo);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idPaciente, DateTime? fur, DateTime? fpp,
-                             string riesgo, DateTime? fechaApertura,
-                             DateTime? fechaCierre, bool estado)
+        public bool Insertar(entEmbarazo entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarEmbarazo", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@FUR", (object)fur ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FPP", (object)fpp ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Riesgo", (object)riesgo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FechaApertura", (object)fechaApertura ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FechaCierre", (object)fechaCierre ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
+                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                cmd.Parameters.AddWithValue("@FUR", (object)entidad.FUR ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FPP", (object)entidad.FPP ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Riesgo", (object)entidad.Riesgo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaApertura", entidad.FechaApertura);
+                cmd.Parameters.AddWithValue("@FechaCierre", (object)entidad.FechaCierre ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

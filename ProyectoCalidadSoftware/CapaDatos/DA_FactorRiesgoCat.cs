@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,78 +18,100 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entFactorRiesgoCat> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entFactorRiesgoCat> lista = new List<entFactorRiesgoCat>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarFactorRiesgoCat", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var factor = new entFactorRiesgoCat
+                        {
+                            IdFactorCat = Convert.ToInt32(dr["IdFactorCat"]),
+                            Nombre = dr["Nombre"].ToString()
+                        };
+
+                        lista.Add(factor);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(string nombre)
+        public bool Insertar(entFactorRiesgoCat entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombre", nombre);
+                cmd.Parameters.AddWithValue("@Nombre", entidad.Nombre);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
-        public bool Editar(int idFactorCat, string nombre)
+        // ACTUALIZAR (con entidad)
+        public bool Actualizar(entFactorRiesgoCat entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_EditarFactorRiesgoCat", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_EditarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@IdFactorCat", idFactorCat);
-                cmd.Parameters.AddWithValue("@Nombre", nombre);
-
+                cmd.Parameters.AddWithValue("@IdFactorCat", entidad.IdFactorCat);
+                cmd.Parameters.AddWithValue("@Nombre", entidad.Nombre);
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
-        public DataTable BuscarPorId(int idFactorCat)
+        // BUSCAR POR ID → ENTIDAD (sin DataTable)
+        public entFactorRiesgoCat BuscarPorId(int idFactorCat)
         {
-            DataTable dt = new DataTable();
+            entFactorRiesgoCat entidad = null;
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_BuscarFactorRiesgoCat", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_BuscarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdFactorCat", idFactorCat);
 
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        entidad = new entFactorRiesgoCat
+                        {
+                            IdFactorCat = Convert.ToInt32(dr["IdFactorCat"]),
+                            Nombre = dr["Nombre"].ToString()
+                        };
+                    }
+                }
             }
-            return dt;
+            return entidad;
         }
 
+        // ELIMINAR (por id)
         public bool Eliminar(int idFactorCat)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_EliminarFactorRiesgoCat", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarFactorRiesgoCat", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdFactorCat", idFactorCat);
-
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
-
         #endregion
     }
 

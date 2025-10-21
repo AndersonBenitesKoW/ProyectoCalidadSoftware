@@ -1,0 +1,336 @@
+@model CapaEntidad.entLogin
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Maternal - Portal de Pacientes</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<div class="container">
+    <!-- Background elements -->
+    <div class="bg-pattern"></div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Left side - Clinic branding -->
+        <div class="branding-section">
+            <div class="clinic-header">
+                <div class="clinic-logo">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="clinic-info">
+                    <h1>Clínica Maternal</h1>
+                    <p>Especialistas en Obstetricia</p>
+                </div>
+            </div>
+
+            <div class="clinic-description">
+                <p>Cuidando de ti y tu bebé con la más alta calidad médica y calidez humana. Accede a tu portal de paciente de forma segura.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="feature-content">
+                        <h3>Seguridad Garantizada</h3>
+                        <p>Tus datos están protegidos con encriptación de nivel médico</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="feature-content">
+                        <h3>Acceso 24/7</h3>
+                        <p>Consulta tus citas y resultados cuando lo necesites</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side - Auth card -->
+        <div class="auth-section">
+            <div class="auth-card">
+                <!-- Mobile header -->
+                <div class="mobile-header">
+                    <div class="mobile-clinic-info">
+                        <i class="fas fa-heart"></i>
+                        <h1>Clínica Maternal</h1>
+                    </div>
+                    <p>Especialistas en Obstetricia</p>
+                </div>
+
+                <!-- Form navigation -->
+                <div class="form-tabs">
+                    <button class="tab-btn active" data-form="login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Iniciar Sesión</span>
+                    </button>
+                    <button class="tab-btn" data-form="register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Registrarse</span>
+                    </button>
+                </div>
+
+                <!-- Timer display (when blocked) -->
+                <div id="timer-display" class="timer-display hidden">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Intenta nuevamente en: <span id="timer-countdown">00:00</span></span>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <!-- Agregando sección de credenciales de demostración -->
+                    <div class="demo-credentials">
+                        <div class="demo-header">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Credenciales de Prueba</span>
+                            <button type="button" class="demo-toggle" onclick="toggleDemoCredentials()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="demo-list" id="demo-credentials" style="display: none;">
+                            <div class="demo-item">
+                                <strong>paciente1</strong> / <span>test123</span>
+                            </div>
+                            <div class="demo-item">
+                                <strong>cliente1</strong> / <span>demo123</span>
+                            </div>
+                            <div class="demo-item">
+                                <strong>usuario1</strong> / <span>prueba123</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-username">
+                            <i class="fas fa-user"></i>
+                            Usuario
+                        </label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">
+                            <i class="fas fa-lock"></i>
+                            Contraseña
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="login-password" name="password" required>
+                            <button type="button" class="toggle-password" data-target="login-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visual Captcha -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-shield-alt"></i>
+                            Captcha Visual
+                        </label>
+                        <div class="captcha-container">
+                            <canvas id="captcha-canvas" width="280" height="80"></canvas>
+                            <div class="captcha-input-group">
+                                <input type="text" id="captcha-answer" name="captcha" placeholder="Escribe los caracteres" required>
+                                <button type="button" class="refresh-captcha" onclick="generateVisualCaptcha()" title="Generar nuevo captcha">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me">
+                            <span class="checkmark"></span>
+                            <i class="fas fa-memory"></i>
+                            Recordar contraseña
+                        </label>
+                        <button type="button" class="forgot-password-btn">
+                            <i class="fas fa-question-circle"></i>
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label privacy-label">
+                            <input type="checkbox" id="privacy-login" required>
+                            <span class="checkmark"></span>
+                            <i class="fas fa-file-contract"></i>
+                            Acepto la <button type="button" class="privacy-link">Declaratoria de Privacidad</button>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </button>
+
+                    <div class="attempts-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="login-attempts">Intentos restantes: 3</span>
+                    </div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-username">
+                            <i class="fas fa-user"></i>
+                            Usuario
+                        </label>
+                        <input type="text" id="register-username" name="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-email">
+                            <i class="fas fa-envelope"></i>
+                            Correo Electrónico
+                        </label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">
+                            <i class="fas fa-lock"></i>
+                            Contraseña
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="register-password" name="password" required>
+                            <button type="button" class="toggle-password" data-target="register-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="password-strength"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">
+                            <i class="fas fa-lock"></i>
+                            Confirmar Contraseña
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="confirm-password" name="confirmPassword" required>
+                            <button type="button" class="toggle-password" data-target="confirm-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- reCAPTCHA placeholder -->
+                    <div class="form-group">
+                        <div class="recaptcha-placeholder">
+                            <div class="recaptcha-box">
+                                <input type="checkbox" id="recaptcha-check">
+                                <label for="recaptcha-check">
+                                    <i class="fas fa-robot"></i>
+                                    No soy un robot
+                                </label>
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="recaptcha-logo">reCAPTCHA</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label privacy-label">
+                            <input type="checkbox" id="privacy-register" required>
+                            <span class="checkmark"></span>
+                            <i class="fas fa-file-contract"></i>
+                            Acepto la <button type="button" class="privacy-link">Declaratoria de Privacidad</button>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Registrarse
+                    </button>
+                </form>
+
+                <!-- Forgot Password Form -->
+                <form id="forgot-form" class="auth-form">
+                    <div class="forgot-header">
+                        <i class="fas fa-key"></i>
+                        <h3>Recuperar Contraseña</h3>
+                        <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="forgot-email">
+                            <i class="fas fa-envelope"></i>
+                            Correo Electrónico
+                        </label>
+                        <input type="email" id="forgot-email" name="email" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="back-btn">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Volver</span>
+                        </button>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Enviar Enlace</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-file-contract"></i>
+                    Declaratoria de Privacidad
+                </h2>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>Clínica Maternal - Aviso de Privacidad</h3>
+                <p><strong>Responsable:</strong> Clínica Maternal S.A. de C.V.</p>
+
+                <h4>Datos Personales que Recabamos</h4>
+                <p>Recabamos los siguientes datos personales necesarios para brindar nuestros servicios médicos:</p>
+                <ul>
+                    <li>Datos de identificación (nombre, apellidos, fecha de nacimiento)</li>
+                    <li>Datos de contacto (correo electrónico, teléfono, dirección)</li>
+                    <li>Datos de acceso (usuario y contraseña)</li>
+                    <li>Historial médico y datos de salud</li>
+                </ul>
+
+                <h4>Finalidades del Tratamiento</h4>
+                <p>Sus datos personales serán utilizados para:</p>
+                <ul>
+                    <li>Brindar servicios médicos especializados en obstetricia</li>
+                    <li>Gestionar citas y seguimiento médico</li>
+                    <li>Mantener historial clínico actualizado</li>
+                    <li>Comunicación relacionada con su atención médica</li>
+                </ul>
+
+                <h4>Derechos ARCO</h4>
+                <p>Usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento de sus datos personales.</p>
+
+                <h4>Contacto</h4>
+                <p>Para ejercer sus derechos o dudas sobre este aviso: privacidad@clinicamaternal.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="message-container"></div>
+</div>
+
+@section Scripts {
+    <script src="/js/script.js"></script>
+}

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,29 +18,43 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entEstadoCita> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entEstadoCita> lista = new List<entEstadoCita>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarEstadoCita", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarEstadoCita", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var estadoCita = new entEstadoCita
+                        {
+                            IdEstadoCita = Convert.ToInt16(dr["IdEstadoCita"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString()
+                        };
+
+                        lista.Add(estadoCita);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(string codigo, string descripcion)
+        public bool Insertar(entEstadoCita entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarEstadoCita", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Codigo", codigo);
-                cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+                cmd.Parameters.AddWithValue("@Codigo", entidad.Codigo);
+                cmd.Parameters.AddWithValue("@Descripcion", entidad.Descripcion);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

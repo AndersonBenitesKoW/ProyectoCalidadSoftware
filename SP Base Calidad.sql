@@ -1,3 +1,4 @@
+use ProyectoCalidad;
 --Paciente
 CREATE PROCEDURE sp_InsertarPaciente
   @IdUsuario INT,
@@ -138,6 +139,20 @@ BEGIN
   SELECT * FROM vw_ControlesPrenatales;
 END
 GO
+
+
+CREATE PROCEDURE sp_InhabilitarControlPrenatal
+    @IdControl INT
+AS
+BEGIN
+    UPDATE ControlPrenatal
+    SET Estado = 0
+    WHERE IdControl = @IdControl;
+END
+GO
+
+
+
 
 --AntecedenteObstetrico
 CREATE PROCEDURE sp_InsertarAntecedenteObstetrico
@@ -291,6 +306,20 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE sp_InhabilitarSeguimientoPuerperio
+    @IdPuerperio INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE SeguimientoPuerperio
+    SET Estado = 0
+    WHERE IdPuerperio = @IdPuerperio;
+END
+GO
+
+
+
 --AyudaDiagnosticaOrden
 CREATE PROCEDURE sp_InsertarAyudaDiagnosticaOrden
   @IdPaciente INT,
@@ -319,6 +348,19 @@ BEGIN
 END
 GO
 
+
+CREATE PROCEDURE sp_InhabilitarAyudaDiagnosticaOrden
+    @IdAyuda INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE AyudaDiagnosticaOrden
+    SET Estado = 'INACTIVO'
+    WHERE IdAyuda = @IdAyuda;
+END
+GO
+
 --ResultadoDiagnostico
 CREATE PROCEDURE sp_InsertarResultadoDiagnostico
   @IdAyuda INT,
@@ -344,3 +386,31 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE sp_ListarBebe
+    @IdParto     INT = NULL,   -- opcional: filtra por parto
+    @SoloActivos BIT = 1       -- 1 = solo Estado=1; 0 = todos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        b.IdBebe,
+        b.IdParto,
+        b.EstadoBebe,
+        b.Sexo,
+        b.Apgar1,
+        b.Apgar5,
+        b.PesoGr,
+        b.TallaCm,
+        b.PerimetroCefalico,
+        b.EG_Semanas,
+        b.Reanimacion,
+        b.Observaciones,
+        b.Estado
+    FROM dbo.Bebe AS b
+    WHERE
+        (@IdParto IS NULL OR b.IdParto = @IdParto)
+        AND (@SoloActivos = 0 OR b.Estado = 1)
+    ORDER BY b.IdBebe DESC;
+END
+GO

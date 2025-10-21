@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,30 +18,46 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entPacienteTelefono> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entPacienteTelefono> lista = new List<entPacienteTelefono>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPacienteTelefono", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarPacienteTelefono", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var telefono = new entPacienteTelefono
+                        {
+                            IdPacienteTelefono = Convert.ToInt32(dr["IdPacienteTelefono"]),
+                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                            Telefono = dr["Telefono"].ToString(),
+                            Tipo = dr["Tipo"].ToString(),
+                            EsPrincipal = Convert.ToBoolean(dr["EsPrincipal"])
+                        };
+
+                        lista.Add(telefono);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idPaciente, string telefono, bool principal)
+        public bool Insertar(entPacienteTelefono entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarPacienteTelefono", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@Telefono", (object)telefono ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Principal", principal);
+                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                cmd.Parameters.AddWithValue("@Telefono", entidad.Telefono);
+                cmd.Parameters.AddWithValue("@Principal", entidad.EsPrincipal);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

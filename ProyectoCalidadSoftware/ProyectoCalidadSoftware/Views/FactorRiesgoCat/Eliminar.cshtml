@@ -1,0 +1,49 @@
+﻿@model CapaEntidad.entFactorRiesgoCat
+
+@{
+    ViewData["Title"] = "Eliminar Factor de Riesgo Categoría";
+}
+
+<div class="delete-confirmation">
+    <div class="delete-header">
+        <h1><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h1>
+        <h3>¿Está seguro de que desea eliminar esta categoría de factor de riesgo?</h3>
+    </div>
+
+    <div class="p-4">
+        <h4 class="mb-4"><i class="bi bi-info-circle"></i> Detalles de la Categoría</h4>
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-hash"></i> ID Factor Categoría
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdFactorCat)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-tag"></i> Nombre de la Categoría
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+        </dl>
+
+        <div class="alert alert-danger mt-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>Advertencia:</strong> Esta acción eliminará permanentemente la categoría de factor de riesgo. Si hay pacientes asociados a esta categoría, considere las implicaciones antes de proceder.
+        </div>
+
+        <div class="alert alert-info mt-3" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Nota:</strong> Asegúrese de que no haya factores de riesgo de pacientes asociados a esta categoría antes de eliminarla.
+        </div>
+
+        <form asp-action="Eliminar" class="mt-4">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+                <input type="submit" value="Eliminar Categoría" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>

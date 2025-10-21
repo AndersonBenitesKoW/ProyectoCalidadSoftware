@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,29 +18,43 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public DataTable Listar()
+        public List<entUsuarioRol> Listar()
         {
-            DataTable dt = new DataTable();
+            List<entUsuarioRol> lista = new List<entUsuarioRol>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarUsuarioRol", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarUsuarioRol", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var usuarioRol = new entUsuarioRol
+                        {
+                            IdUsuarioRol = Convert.ToInt32(dr["IdUsuarioRol"]),
+                            IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
+                            IdRol = Convert.ToInt32(dr["IdRol"])
+                        };
+
+                        lista.Add(usuarioRol);
+                    }
+                }
             }
-            return dt;
+
+            return lista;
         }
 
-        public bool Insertar(int idUsuario, int idRol)
+        public bool Insertar(entUsuarioRol entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarUsuarioRol", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                cmd.Parameters.AddWithValue("@IdRol", idRol);
+                cmd.Parameters.AddWithValue("@IdUsuario", entidad.IdUsuario);
+                cmd.Parameters.AddWithValue("@IdRol", entidad.IdRol);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

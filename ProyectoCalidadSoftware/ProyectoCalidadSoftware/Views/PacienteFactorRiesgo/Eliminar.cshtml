@@ -1,0 +1,68 @@
+﻿@model CapaEntidad.entPacienteFactorRiesgo
+
+@{
+    ViewData["Title"] = "Eliminar Factor de Riesgo";
+}
+
+<div class="delete-confirmation">
+    <div class="delete-header">
+        <h1><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h1>
+        <h3>¿Está seguro de que desea eliminar este factor de riesgo?</h3>
+    </div>
+
+    <div class="p-4">
+        <h4 class="mb-4"><i class="bi bi-info-circle"></i> Detalles del Factor de Riesgo</h4>
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-hash"></i> ID Factor Paciente
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdPacienteFactor)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-person"></i> ID Paciente
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdPaciente)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-diagram-3"></i> Categoría de Factor
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.IdFactorCat)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-chat-text"></i> Detalle
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Detalle)
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-calendar-date"></i> Fecha de Registro
+            </dt>
+            <dd class="col-sm-9">
+                @Model.FechaRegistro.ToString("dd/MM/yyyy")
+            </dd>
+            <dt class="col-sm-3 fw-bold">
+                <i class="bi bi-check-circle"></i> Estado
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Estado)
+            </dd>
+        </dl>
+
+        <div class="alert alert-danger mt-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>Advertencia:</strong> Esta acción eliminará permanentemente el factor de riesgo del paciente. Esta acción no se puede deshacer.
+        </div>
+
+        <form asp-action="Eliminar" class="mt-4">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+                <input type="submit" value="Eliminar Factor" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>

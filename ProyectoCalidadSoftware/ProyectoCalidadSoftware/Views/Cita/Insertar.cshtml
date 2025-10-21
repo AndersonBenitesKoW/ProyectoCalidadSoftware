@@ -1,0 +1,114 @@
+@model CapaEntidad.entCita
+
+@{
+    ViewData["Title"] = "Insertar Cita";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-calendar-plus"></i> Insertar Cita Médica</h1>
+        <h4>Programación de nueva cita para paciente</h4>
+    </div>
+
+    <form asp-action="Insertar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdPaciente" class="control-label">
+                        <i class="bi bi-person"></i> ID Paciente
+                    </label>
+                    <input asp-for="IdPaciente" class="form-control" type="number" placeholder="Ingrese ID del paciente" />
+                    <span asp-validation-for="IdPaciente" class="text-danger"></span>
+                    <small class="form-text text-muted">Identificador único del paciente</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdRecepcionista" class="control-label">
+                        <i class="bi bi-person-badge"></i> ID Recepcionista (Opcional)
+                    </label>
+                    <input asp-for="IdRecepcionista" class="form-control" type="number" placeholder="Ingrese ID del recepcionista" />
+                    <span asp-validation-for="IdRecepcionista" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdProfesional" class="control-label">
+                        <i class="bi bi-person-lines-fill"></i> ID Profesional (Opcional)
+                    </label>
+                    <input asp-for="IdProfesional" class="form-control" type="number" placeholder="Ingrese ID del profesional" />
+                    <span asp-validation-for="IdProfesional" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdEmbarazo" class="control-label">
+                        <i class="bi bi-heart-pulse"></i> ID Embarazo (Opcional)
+                    </label>
+                    <input asp-for="IdEmbarazo" class="form-control" type="number" placeholder="Ingrese ID del embarazo" />
+                    <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaCita" class="control-label">
+                        <i class="bi bi-calendar-event"></i> Fecha de la Cita
+                    </label>
+                    <input asp-for="FechaCita" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="FechaCita" class="text-danger"></span>
+                    <small class="form-text text-muted">Seleccione fecha y hora de la cita</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdEstadoCita" class="control-label">
+                        <i class="bi bi-flag"></i> Estado de la Cita
+                    </label>
+                    <input asp-for="IdEstadoCita" class="form-control" type="number" placeholder="Ingrese estado de la cita" />
+                    <span asp-validation-for="IdEstadoCita" class="text-danger"></span>
+                    <small class="form-text text-muted">Código del estado de la cita</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Motivo" class="control-label">
+                        <i class="bi bi-chat-text"></i> Motivo de la Cita
+                    </label>
+                    <textarea asp-for="Motivo" class="form-control" rows="3" placeholder="Describa el motivo de la cita"></textarea>
+                    <span asp-validation-for="Motivo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Observacion" class="control-label">
+                        <i class="bi bi-sticky"></i> Observación (Opcional)
+                    </label>
+                    <textarea asp-for="Observacion" class="form-control" rows="3" placeholder="Observaciones adicionales"></textarea>
+                    <span asp-validation-for="Observacion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a la Lista
+            </a>
+            <input type="submit" value="Insertar Cita" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
