@@ -15,5 +15,6 @@ namespace CapaEntidad
         public string? DNI { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public bool Estado { get; set; }
+        public string NombreCompleto => $"{Apellidos}, {Nombres}";
     }
 }

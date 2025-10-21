@@ -20,7 +20,11 @@ namespace CapaAccesoDatos
         public SqlConnection Conectar()
         {
             SqlConnection cn = new SqlConnection();
+<<<<<<< HEAD
             cn.ConnectionString = "Data Source=DESKTOP-TMU82JN\\SQLEXPRESS;" +
+=======
+            cn.ConnectionString = "Data Source=DESKTOP-BLFSTC3\\SQLEXPRESS;" +
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
                                   "Initial Catalog=ProyectoCalidad;" +
                                   "Integrated Security=True;";
             return cn;

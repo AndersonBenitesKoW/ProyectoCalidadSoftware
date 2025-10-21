@@ -1,0 +1,84 @@
+﻿@model CapaEntidad.entParto
+
+@{
+    ViewData["Title"] = "Detalles del Parto";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Parto ID: @Model.IdParto</h4>
+    <hr />
+
+    <dl class="row">
+
+        <dt class="col-sm-3">Paciente</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombrePaciente)</dd>
+
+        <dt class="col-sm-3">Embarazo ID</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEmbarazo)</dd>
+
+        <dt class="col-sm-3">Encuentro ID</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEncuentro)</dd>
+
+        <dt class="col-sm-3">Fecha del Parto</dt>
+        <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3">Profesional</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreProfesional)</dd> @* 👈 CORREGIDO *@
+
+        <dt class="col-sm-3">Hora Ingreso</dt>
+        <dd class="col-sm-9">@Model.HoraIngreso?.ToString("g")</dd>
+
+        <dt class="col-sm-3">Hora Inicio Trabajo</dt>
+        <dd class="col-sm-9">@Model.HoraInicioTrabajo?.ToString("g")</dd>
+
+        <dt class="col-sm-3">Membranas</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Membranas)</dd>
+
+        <dt class="col-sm-3">Líquido Amniótico</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DescripcionLiquido)</dd> @* 👈 CORREGIDO *@
+
+        <dt class="col-sm-3">Vía de Parto</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DescripcionViaParto)</dd>
+
+        <dt class="col-sm-3">Analgesia</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Analgesia)</dd>
+
+        <dt class="col-sm-3">Pérdida Sanguínea (mL)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PerdidasML)</dd>
+
+        <dt class="col-sm-3">Desgarro</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Desgarro)</dd>
+
+        <dt class="col-sm-3">Indicación Cesárea</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.IndicacionCesarea)</dd>
+
+        <dt class="col-sm-3">Complicaciones</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Complicaciones)</dd>
+
+        <dt class="col-sm-3">Estado</dt>
+        <dd class="col-sm-9">@(Model.Estado ? "Activo" : "Anulado")</dd>
+
+        <dt class="col-sm-3">Intervenciones</dt>
+        <dd class="col-sm-9">
+            @if (Model.Intervenciones != null && Model.Intervenciones.Any())
+            {
+                <ul>
+                    @foreach (var intervencion in Model.Intervenciones)
+                    {
+                        <li>@intervencion.Intervencion</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <text>Ninguna registrada</text>
+            }
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+</div>

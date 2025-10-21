@@ -21,16 +21,26 @@ namespace CapaAccesoDatos
         public List<entLiquidoAmniotico> Listar()
         {
             List<entLiquidoAmniotico> lista = new List<entLiquidoAmniotico>();
+<<<<<<< HEAD
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             using (SqlCommand cmd = new SqlCommand("sp_ListarLiquidoAmniotico", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
+=======
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_ListarLiquidoAmniotico", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cn.Open();
+
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
+<<<<<<< HEAD
                         var liquido = new entLiquidoAmniotico
                         {
                             IdLiquido = Convert.ToInt16(dr["IdLiquido"]),
@@ -43,6 +53,17 @@ namespace CapaAccesoDatos
                 }
             }
 
+=======
+                        lista.Add(new entLiquidoAmniotico
+                        {
+                            IdLiquido = Convert.ToInt16(dr["IdLiquido"]),
+                            Codigo = dr["Codigo"].ToString() ?? string.Empty,
+                            Descripcion = dr["Descripcion"].ToString() ?? string.Empty
+                        });
+                    }
+                }
+            }
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
             return lista;
         }
 

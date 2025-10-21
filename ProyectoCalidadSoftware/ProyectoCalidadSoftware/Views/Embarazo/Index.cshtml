@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CapaEntidad.entEmbarazo>
+
+@{
+    ViewData["Title"] = "Listado de Embarazos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="RegistrarEmbarazo" class="btn btn-success">Registrar Nuevo Embarazo</a>
+</p>
+
+<div class="mb-3">
+    @{
+        bool mostrandoActivos = ViewBag.MostrandoActivos ?? true;
+        string botonTexto = mostrandoActivos ? "Mostrar Inactivos" : "Mostrar Activos";
+        string botonClase = mostrandoActivos ? "btn btn-outline-secondary" : "btn btn-outline-primary";
+        bool proximoEstado = !mostrandoActivos;
+    }
+    <a asp-action="Index" asp-route-mostrarActivos="@proximoEstado" class="@botonClase btn-sm">
+        @botonTexto
+    </a>
+</div>
+
+@* Muestra mensajes (TempData y ViewBag) *@
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success">@TempData["MensajeExito"]</div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+@if (ViewBag.Advertencia != null)
+{
+    <div class="alert alert-warning">@ViewBag.Advertencia</div>
+}
+
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID Embarazo</th>
+            <th>Paciente</th>
+            <th>FPP (Fecha Probable Parto)</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
+                <td>@Html.DisplayFor(modelItem => item.NombrePaciente)</td>
+                <td>@item.FPP?.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @(item.Estado ? "Activo" : "Cerrado/Inactivo")
+                </td>
+                <td>
+                    <a asp-action="DetallesEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-info">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

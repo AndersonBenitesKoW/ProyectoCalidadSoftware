@@ -1,8 +1,11 @@
 ﻿using System;
+<<<<<<< HEAD
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+=======
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
 
 namespace CapaEntidad
 {
@@ -16,5 +19,12 @@ namespace CapaEntidad
         public DateTime FechaApertura { get; set; }
         public DateTime? FechaCierre { get; set; }
         public bool Estado { get; set; }
+<<<<<<< HEAD
     }
 }
+=======
+
+        public string NombrePaciente { get; set; } = string.Empty;
+    }
+}
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89

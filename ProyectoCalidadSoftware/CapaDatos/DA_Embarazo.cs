@@ -18,56 +18,62 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public List<entEmbarazo> Listar()
+        public List<entEmbarazo> ListarPorEstado(bool estado) 
         {
             List<entEmbarazo> lista = new List<entEmbarazo>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarEmbarazo", cn))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("sp_ListarEmbarazosActivos", cn))
                 {
-                    while (dr.Read())
-                    {
-                        var embarazo = new entEmbarazo
-                        {
-                            IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
-                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            FUR = dr["FUR"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FUR"]) : null,
-                            FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
-                            Riesgo = dr["Riesgo"].ToString(),
-                            FechaApertura = Convert.ToDateTime(dr["FechaApertura"]),
-                            FechaCierre = dr["FechaCierre"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaCierre"]) : null,
-                            Estado = Convert.ToBoolean(dr["Estado"])
-                        };
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Estado", estado);
 
-                        lista.Add(embarazo);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entEmbarazo
+                            {
+                                IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
+                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                                NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty,
+                                FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
+                                Estado = Convert.ToBoolean(dr["Estado"]) // Leemos el estado
+                            });
+                        }
                     }
                 }
             }
-
             return lista;
         }
 
-        public bool Insertar(entEmbarazo entidad)
+        public int Insertar(entEmbarazo entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_InsertarEmbarazo", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlCommand cmd = new SqlCommand("sp_InsertarEmbarazo", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
-                cmd.Parameters.AddWithValue("@FUR", (object)entidad.FUR ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FPP", (object)entidad.FPP ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Riesgo", (object)entidad.Riesgo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FechaApertura", entidad.FechaApertura);
-                cmd.Parameters.AddWithValue("@FechaCierre", (object)entidad.FechaCierre ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+                    cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                    cmd.Parameters.AddWithValue("@FUR", (object)entidad.FUR ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@FPP", (object)entidad.FPP ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Riesgo", (object)entidad.Riesgo ?? DBNull.Value);
 
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                    cn.Open();
+
+                    object idGenerado = cmd.ExecuteScalar();
+
+                    if (idGenerado != null)
+                    {
+                        return Convert.ToInt32(idGenerado);
+                    }
+                    else
+                    {
+                        return 0; 
+                    }
+                }
             }
         }
 
@@ -94,20 +100,38 @@ namespace CapaAccesoDatos
             }
         }
 
-        public DataTable BuscarPorId(int idEmbarazo)
+        public entEmbarazo? BuscarPorId(int idEmbarazo)
         {
-            DataTable dt = new DataTable();
+            entEmbarazo? embarazo = null;
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_BuscarEmbarazo", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
+                using (SqlCommand cmd = new SqlCommand("sp_BuscarEmbarazoPorId", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
 
-                cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            embarazo = new entEmbarazo
+                            {
+                                IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
+                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                                FUR = dr["FUR"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FUR"]) : null,
+                                FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
+                                Riesgo = dr["Riesgo"]?.ToString(),
+                                FechaApertura = Convert.ToDateTime(dr["FechaApertura"]),
+                                FechaCierre = dr["FechaCierre"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaCierre"]) : null,
+                                Estado = Convert.ToBoolean(dr["Estado"]),
+                                NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty
+                            };
+                        }
+                    }
+                }
             }
-            return dt;
+            return embarazo; 
         }
 
         public bool Eliminar(int idEmbarazo)

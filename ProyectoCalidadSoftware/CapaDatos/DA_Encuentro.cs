@@ -18,6 +18,7 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
+<<<<<<< HEAD
         public List<entEncuentro> Listar()
         {
             List<entEncuentro> lista = new List<entEncuentro>();
@@ -68,6 +69,58 @@ namespace CapaAccesoDatos
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
+=======
+        public List<entEncuentro> ListarPorEmbarazoYTipo(int idEmbarazo, string codigoTipo)
+        {
+            List<entEncuentro> lista = new List<entEncuentro>();
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_ListarEncuentrosPorEmbarazoYTipo", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
+                    cmd.Parameters.AddWithValue("@CodigoTipo", codigoTipo);
+
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entEncuentro
+                            {
+                                IdEncuentro = Convert.ToInt32(dr["IdEncuentro"]),
+                                FechaHoraInicio = Convert.ToDateTime(dr["FechaHoraInicio"]),
+                                Estado = dr["Estado"].ToString() ?? string.Empty
+                            });
+                        }
+                    }
+                }
+            }
+            return lista;
+        }
+
+        public int Insertar(entEncuentro entidad)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_InsertarEncuentro", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", entidad.IdEmbarazo);
+                    cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@IdTipoEncuentro", entidad.IdTipoEncuentro);
+                    cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
+                    cmd.Parameters.AddWithValue("@FechaHoraFin", (object)entidad.FechaHoraFin ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+                    cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
+
+                    cn.Open();
+
+                    object idGenerado = cmd.ExecuteScalar();
+                    return (idGenerado != null) ? Convert.ToInt32(idGenerado) : 0;
+                }
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
             }
         }
 

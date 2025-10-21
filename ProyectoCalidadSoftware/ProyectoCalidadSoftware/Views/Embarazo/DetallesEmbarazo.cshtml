@@ -1,0 +1,40 @@
+﻿@model CapaEntidad.entEmbarazo
+
+@{
+    ViewData["Title"] = "Detalles del Embarazo";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Embarazo ID: @Model.IdEmbarazo</h4>
+    <hr />
+
+    <dl class="row">
+
+        <dt class="col-sm-3">Paciente</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombrePaciente) (ID: @Model.IdPaciente)</dd>
+
+        <dt class="col-sm-3">FUR</dt>
+        <dd class="col-sm-9">@Model.FUR?.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3">FPP</dt>
+        <dd class="col-sm-9">@Model.FPP?.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3">Riesgo</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Riesgo)</dd>
+
+        <dt class="col-sm-3">Fecha Apertura</dt>
+        <dd class="col-sm-9">@Model.FechaApertura.ToString("g")</dd>
+
+        <dt class="col-sm-3">Fecha Cierre</dt>
+        <dd class="col-sm-9">@Model.FechaCierre?.ToString("g")</dd>
+
+        <dt class="col-sm-3">Estado</dt>
+        <dd class="col-sm-9">@(Model.Estado ? "Activo" : "Cerrado/Inactivo")</dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+</div>

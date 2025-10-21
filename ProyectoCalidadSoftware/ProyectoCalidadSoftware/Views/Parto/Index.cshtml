@@ -1,0 +1,79 @@
+﻿@model IEnumerable<CapaEntidad.entParto>
+
+@{
+    ViewData["Title"] = "Listado de Partos Registrados";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="RegistrarParto" class="btn btn-success">Registrar Nuevo Parto</a>
+</p>
+
+<div class="mb-3">
+    @{
+        bool mostrandoActivos = ViewBag.MostrandoActivos ?? true;
+        string botonTexto = mostrandoActivos ? "Mostrar Anulados" : "Mostrar Activos";
+        string botonClase = mostrandoActivos ? "btn btn-outline-danger" : "btn btn-outline-primary";
+        bool proximoEstado = !mostrandoActivos;
+    }
+    <a asp-action="Index" asp-route-mostrarActivos="@proximoEstado" class="@botonClase btn-sm">
+        @botonTexto
+    </a>
+</div>
+
+@* Muestra mensajes de éxito (TempData) *@
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensajeExito"]
+    </div>
+}
+
+@* Muestra mensajes de error (ViewBag) *@
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID Parto</th>
+            <th>Paciente</th>
+            <th>Fecha del Parto</th>
+            <th>Vía de Parto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdParto)</td>
+                <td>@Html.DisplayFor(modelItem => item.NombrePaciente)</td>
+                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                <td>@Html.DisplayFor(modelItem => item.DescripcionViaParto)</td>
+                <td>
+                    @(item.Estado ? "Activo" : "Anulado")
+                </td>
+                <td>
+                    <a asp-action="DetallesParto" asp-route-id="@item.IdParto" class="btn btn-sm btn-info">Detalles</a>
+
+                    @if (item.Estado)
+                    {
+                        <form asp-action="AnularParto" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea anular este registro de parto?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="idParto" value="@item.IdParto" />
+                            <button type="submit" class="btn btn-sm btn-danger">Anular</button>
+                        </form>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

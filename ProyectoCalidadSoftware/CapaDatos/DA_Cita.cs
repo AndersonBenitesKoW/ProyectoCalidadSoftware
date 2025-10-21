@@ -25,7 +25,11 @@ namespace CapaAccesoDatos
             List<entCita> lista = new List<entCita>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+<<<<<<< HEAD
             using (SqlCommand cmd = new SqlCommand("sp_ListarCitas", cn))
+=======
+            using (SqlCommand cmd = new SqlCommand("sp_ListarCita", cn))
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();

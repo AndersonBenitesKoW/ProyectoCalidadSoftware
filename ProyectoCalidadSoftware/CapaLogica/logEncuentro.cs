@@ -20,15 +20,32 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-        public List<entEncuentro> ListarEncuentro()
+        public List<entEncuentro> ListarPorEmbarazoYTipo(int idEmbarazo, string codigoTipo)
         {
-            return DA_Encuentro.Instancia.Listar();
+            if (idEmbarazo <= 0 || string.IsNullOrWhiteSpace(codigoTipo))
+            {
+                return new List<entEncuentro>(); 
+            }
+            return DA_Encuentro.Instancia.ListarPorEmbarazoYTipo(idEmbarazo, codigoTipo);
         }
 
         // INSERTAR
-        public bool InsertarEncuentro(entEncuentro entidad)
+        public int RegistrarEncuentro(entEncuentro encuentro)
         {
-            return DA_Encuentro.Instancia.Insertar(entidad);
+            if (encuentro.IdEmbarazo <= 0)
+            {
+                throw new ApplicationException("El IdEmbarazo es obligatorio.");
+            }
+            if (encuentro.IdTipoEncuentro <= 0)
+            {
+                throw new ApplicationException("El Tipo de Encuentro es obligatorio.");
+            }
+            if (string.IsNullOrWhiteSpace(encuentro.Estado))
+            {
+                encuentro.Estado = "Abierto"; 
+            }
+
+            return DA_Encuentro.Instancia.Insertar(encuentro);
         }
 
 

@@ -1,0 +1,65 @@
+﻿@model CapaEntidad.entProfesionalSalud
+
+@{
+    ViewData["Title"] = "Registro de Profesional de Salud";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="InsertarProfesional" method="post">
+
+            @* Muestra mensajes de error generales del controlador *@
+            @if (ViewBag.MensajeError != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.MensajeError
+                </div>
+            }
+
+            @* Campo Nombres *@
+            <div class="form-group">
+                <label asp-for="Nombres" class="control-label"></label>
+                <input asp-for="Nombres" class="form-control" />
+                <span asp-validation-for="Nombres" class="text-danger"></span>
+            </div>
+
+            @* Campo Apellidos *@
+            <div class="form-group">
+                <label asp-for="Apellidos" class="control-label"></label>
+                <input asp-for="Apellidos" class="form-control" />
+                <span asp-validation-for="Apellidos" class="text-danger"></span>
+            </div>
+
+            @* Campo CMP (Colegiatura) *@
+            <div class="form-group">
+                <label asp-for="CMP" class="control-label">CMP (Colegiatura)</label>
+                <input asp-for="CMP" class="form-control" />
+                <span asp-validation-for="CMP" class="text-danger"></span>
+            </div>
+
+            @* Campo Especialidad (Opcional) *@
+            <div class="form-group">
+                <label asp-for="Especialidad" class="control-label"></label>
+                <input asp-for="Especialidad" class="form-control" />
+                <span asp-validation-for="Especialidad" class="text-danger"></span>
+            </div>
+
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Registrar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

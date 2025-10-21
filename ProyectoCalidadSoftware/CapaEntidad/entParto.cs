@@ -24,5 +24,12 @@ namespace CapaEntidad
         public string? Desgarro { get; set; }
         public string? Complicaciones { get; set; }
         public bool Estado { get; set; }
+
+        public string NombrePaciente { get; set; } = string.Empty;
+        public string DescripcionViaParto { get; set; } = string.Empty;
+        public string NombreProfesional { get; set; } = string.Empty; 
+        public string DescripcionLiquido { get; set; } = string.Empty; 
+
+        public List<entPartoIntervencion> Intervenciones { get; set; } = new List<entPartoIntervencion>();
     }
 }

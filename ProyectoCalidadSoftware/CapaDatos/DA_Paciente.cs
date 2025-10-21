@@ -49,6 +49,36 @@ namespace CapaAccesoDatos
 
             return lista;
         }
+<<<<<<< HEAD
+=======
+        public List<entPaciente> ListarActivos()
+        {
+            List<entPaciente> lista = new List<entPaciente>();
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_ListarPacientesActivos", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entPaciente
+                            {
+                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                                Nombres = dr["Nombres"].ToString() ?? string.Empty,
+                                Apellidos = dr["Apellidos"].ToString() ?? string.Empty, // Asegúrate que el nombre coincida
+                                DNI = dr["DNI"]?.ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return lista;
+        }
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
 
         public bool Insertar(entPaciente entidad)
         {

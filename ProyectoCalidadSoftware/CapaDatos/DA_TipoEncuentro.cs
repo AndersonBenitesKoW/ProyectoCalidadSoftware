@@ -21,6 +21,7 @@ namespace CapaAccesoDatos
         public List<entTipoEncuentro> Listar()
         {
             List<entTipoEncuentro> lista = new List<entTipoEncuentro>();
+<<<<<<< HEAD
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             using (SqlCommand cmd = new SqlCommand("sp_ListarTipoEncuentro", cn))
@@ -43,6 +44,29 @@ namespace CapaAccesoDatos
                 }
             }
 
+=======
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_ListarTipoEncuentro", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entTipoEncuentro
+                            {
+                                IdTipoEncuentro = Convert.ToInt16(dr["IdTipoEncuentro"]),
+                                Codigo = dr["Codigo"].ToString() ?? string.Empty,
+                                Descripcion = dr["Descripcion"].ToString() ?? string.Empty
+                            });
+                        }
+                    }
+                }
+            }
+>>>>>>> 3d76688d0ae3b9f92704d50a832f9fdb4de0ea89
             return lista;
         }
 
