@@ -48,5 +48,24 @@ namespace ProyectoCalidadSoftware.Controllers
                 return View(entidad);
             }
         }
+
+        // POST: /Cita/Anular/5
+        [HttpPost]
+        public IActionResult Anular(int id)
+        {
+            try
+            {
+                bool ok = logCita.Instancia.AnularCita(id);
+                if (ok) return RedirectToAction(nameof(Listar));
+
+                TempData["Error"] = "No se pudo anular la cita.";
+                return RedirectToAction(nameof(Listar));
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al anular: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
+        }
     }
 }

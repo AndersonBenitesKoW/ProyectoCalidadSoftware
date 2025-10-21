@@ -30,6 +30,12 @@ namespace CapaLogica
             return DA_Cita.Instancia.Insertar(entidad);
         }
 
+        // ANULAR
+        public bool AnularCita(int id)
+        {
+            return DA_Cita.Instancia.Eliminar(id);
+        }
+
 
     }
 }
