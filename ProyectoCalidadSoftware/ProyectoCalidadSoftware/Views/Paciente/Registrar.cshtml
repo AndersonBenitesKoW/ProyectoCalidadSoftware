@@ -1,0 +1,73 @@
+@model CapaEntidad.entPaciente
+
+@{
+    ViewData["Title"] = "Registrar Paciente";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-person-plus"></i> Registrar Paciente</h1>
+        <h4>Registro de nuevo paciente en el sistema</h4>
+    </div>
+
+    <form asp-action="Registrar">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Nombres" class="control-label">
+                        <i class="bi bi-person"></i> Nombres
+                    </label>
+                    <input asp-for="Nombres" class="form-control" placeholder="Ingrese los nombres del paciente" />
+                    <span asp-validation-for="Nombres" class="text-danger"></span>
+                    <small class="form-text text-muted">Nombres completos del paciente</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Apellidos" class="control-label">
+                        <i class="bi bi-person-fill"></i> Apellidos
+                    </label>
+                    <input asp-for="Apellidos" class="form-control" placeholder="Ingrese los apellidos del paciente" />
+                    <span asp-validation-for="Apellidos" class="text-danger"></span>
+                    <small class="form-text text-muted">Apellidos completos del paciente</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="DNI" class="control-label">
+                        <i class="bi bi-card-text"></i> DNI
+                    </label>
+                    <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" />
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                    <small class="form-text text-muted">Documento Nacional de Identidad</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaNacimiento" class="control-label">
+                        <i class="bi bi-calendar-event"></i> Fecha de Nacimiento
+                    </label>
+                    <input asp-for="FechaNacimiento" class="form-control" type="date" />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                    <small class="form-text text-muted">Seleccione la fecha de nacimiento</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a la Lista
+            </a>
+            <input type="submit" value="Registrar Paciente" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
