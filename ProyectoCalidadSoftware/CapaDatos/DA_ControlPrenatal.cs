@@ -33,7 +33,7 @@ namespace CapaAccesoDatos
                     {
                         var control = new entControlPrenatal
                         {
-                            IdControl = Convert.ToInt32(dr["IdControl"]),
+                            IdControlPrenatal = Convert.ToInt32(dr["IdControl"]),
                             IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
                             IdEncuentro = dr["IdEncuentro"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdEncuentro"]) : null,
                             IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,

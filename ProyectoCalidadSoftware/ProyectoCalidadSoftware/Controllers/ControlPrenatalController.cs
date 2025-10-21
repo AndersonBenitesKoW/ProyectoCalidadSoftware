@@ -4,18 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Route("core/controles")]
     public class ControlPrenatalController : Controller
     {
-        // GET: /ControlPrenatal/Listar
+        // GET: /core/controles
+        [HttpGet("")]
         public IActionResult Listar()
         {
             var lista = logControlPrenatal.Instancia.ListarControlPrenatal();
             ViewBag.Lista = lista;
-            return View(lista);
+            return View(lista); // Views/ControlPrenatal/Listar.cshtml
         }
 
-        // GET: /ControlPrenatal/Registrar
-        [HttpGet]
+        // GET: /core/controles/registrar
+        [HttpGet("registrar")]
         public IActionResult Registrar(int? idEmbarazo)
         {
             var modelo = new entControlPrenatal
@@ -24,38 +26,33 @@ namespace ProyectoCalidadSoftware.Controllers
                 Fecha = DateTime.Now,
                 Estado = true
             };
-            return View(modelo);
+            return View(modelo); // Views/ControlPrenatal/Registrar.cshtml
         }
 
-        // POST: /ControlPrenatal/Registrar
-        [HttpPost]
+        // POST: /core/controles/registrar
+        [HttpPost("registrar")]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entControlPrenatal control)
         {
             try
             {
-                // Validación básica
                 if (control.IdEmbarazo <= 0)
                     ModelState.AddModelError(nameof(control.IdEmbarazo), "Debe seleccionar un embarazo válido.");
-
                 if (control.Fecha == default)
                     ModelState.AddModelError(nameof(control.Fecha), "Debe ingresar una fecha válida.");
 
                 if (!ModelState.IsValid)
                     return View(control);
 
-                // Estado activo por defecto
                 control.Estado = true;
 
                 bool registrado = logControlPrenatal.Instancia.InsertarControlPrenatal(control);
 
                 if (registrado)
                     return RedirectToAction(nameof(Listar));
-                else
-                {
-                    ViewBag.Error = "No se pudo registrar el control prenatal.";
-                    return View(control);
-                }
+
+                ViewBag.Error = "No se pudo registrar el control prenatal.";
+                return View(control);
             }
             catch (Exception ex)
             {
@@ -64,21 +61,38 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // POST: /ControlPrenatal/Inhabilitar/5
-        [HttpPost]
+        // GET: /core/controles/{id}/inhabilitar  -> página de confirmación
+        [HttpGet("{id:int}/inhabilitar")]
         public IActionResult Inhabilitar(int id)
+        {
+            var control = logControlPrenatal.Instancia
+                            .ListarControlPrenatal()
+                            .FirstOrDefault(c => c.IdControlPrenatal == id);
+
+            if (control == null)
+            {
+                TempData["Error"] = "Control prenatal no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+
+            return View(control); // Views/ControlPrenatal/Inhabilitar.cshtml (modelo: entControlPrenatal)
+        }
+
+        // POST: /core/controles/{id}/inhabilitar
+        [HttpPost("{id:int}/inhabilitar")]
+        [ActionName("Inhabilitar")]
+        [ValidateAntiForgeryToken]
+        public IActionResult InhabilitarConfirmado(int id)
         {
             try
             {
                 bool resultado = logControlPrenatal.Instancia.Inhabilitar(id);
 
-                if (resultado)
-                    return RedirectToAction(nameof(Listar));
-                else
-                {
-                    TempData["Error"] = "No se pudo inhabilitar el control prenatal.";
-                    return RedirectToAction(nameof(Listar));
-                }
+                TempData[resultado ? "Ok" : "Error"] = resultado
+                    ? "Control prenatal inhabilitado correctamente."
+                    : "No se pudo inhabilitar el control prenatal.";
+
+                return RedirectToAction(nameof(Listar));
             }
             catch (Exception ex)
             {
@@ -86,12 +100,5 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(Listar));
             }
         }
-
-
-
-
-
-
-
     }
 }
