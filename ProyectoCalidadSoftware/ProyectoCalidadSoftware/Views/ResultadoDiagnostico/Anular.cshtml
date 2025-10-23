@@ -67,7 +67,8 @@
             </div>
         }
 
-        <form asp-action="Anular" class="mt-4">
+        <form asp-action="Anular" asp-route-id="@Model.IdResultado" method="post" class="mt-4">
+            @Html.AntiForgeryToken()
             <div class="d-flex justify-content-between">
                 <a asp-action="Listar" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Cancelar

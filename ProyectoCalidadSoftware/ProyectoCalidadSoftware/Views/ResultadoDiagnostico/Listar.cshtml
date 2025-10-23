@@ -15,6 +15,16 @@
         </a>
     </div>
 
+    @* Mensajes de acción *@
+    @if (TempData["Ok"] != null)
+    {
+        <div class="alert alert-success"><i class="bi bi-check2-circle"></i> @TempData["Ok"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger"><i class="bi bi-x-circle"></i> @TempData["Error"]</div>
+    }
+
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
@@ -29,38 +39,56 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model) {
+                @foreach (var item in Model)
+                {
+                    var activo = string.Equals(item.Estado, "Activo", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.Estado, "1", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.Estado, "ACTIVO", StringComparison.OrdinalIgnoreCase);
+
                     <tr class="@(item.Critico ? "table-danger" : "")">
-                        <td>@Html.DisplayFor(modelItem => item.IdResultado)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IdAyuda)</td>
-                        <td>@item.FechaResultado.ToString("dd/MM/yyyy")</td>
+                        <td>@item.IdResultado</td>
+                        <td>@item.IdAyuda</td>
+                        <td>@item.FechaResultado.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>
-                            @if (!string.IsNullOrEmpty(item.Resumen)) {
-                                <span title="@item.Resumen">@(item.Resumen.Length > 40 ? item.Resumen.Substring(0, 40) + "..." : item.Resumen)</span>
-                            } else {
+                            @if (!string.IsNullOrEmpty(item.Resumen))
+                            {
+                                <span title="@item.Resumen">
+                                    @(item.Resumen.Length > 40 ? item.Resumen.Substring(0, 40) + "..." : item.Resumen)
+                                </span>
+                            }
+                            else
+                            {
                                 <span class="text-muted">Sin resumen</span>
                             }
                         </td>
                         <td>
-                            @if (item.Critico) {
+                            @if (item.Critico)
+                            {
                                 <span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill"></i> CRÍTICO</span>
-                            } else {
+                            }
+                            else
+                            {
                                 <span class="badge bg-success"><i class="bi bi-check-circle"></i> Normal</span>
                             }
                         </td>
                         <td>
-                            @if (item.Estado == "Activo" || item.Estado == "1") {
+                            @if (activo)
+                            {
                                 <span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>
-                            } else {
+                            }
+                            else
+                            {
                                 <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactivo</span>
                             }
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a asp-action="Modificar" asp-route-id="@item.IdResultado" class="btn btn-sm btn-outline-primary" title="Modificar">
+                                <a asp-action="Modificar" asp-route-id="@item.IdResultado"
+                                   class="btn btn-sm btn-outline-primary" title="Modificar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-action="Anular" asp-route-id="@item.IdResultado" class="btn btn-sm btn-outline-danger" title="Anular">
+                                <a asp-action="Anular" asp-route-id="@item.IdResultado"
+                                   class="btn btn-sm btn-outline-danger" title="Anular">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -71,7 +99,8 @@
         </table>
     </div>
 
-    @if (!Model.Any()) {
+    @if (!Model.Any())
+    {
         <div class="text-center py-5">
             <i class="bi bi-file-earmark-x text-muted" style="font-size: 3rem;"></i>
             <h4 class="text-muted mt-3">No hay resultados diagnósticos registrados</h4>
@@ -80,7 +109,9 @@
                 <i class="bi bi-plus-circle"></i> Registrar Primer Resultado
             </a>
         </div>
-    } else {
+    }
+    else
+    {
         <div class="mt-3">
             <div class="row">
                 <div class="col-md-6">
@@ -92,7 +123,7 @@
                 <div class="col-md-6">
                     <div class="alert alert-success">
                         <i class="bi bi-check-circle"></i>
-                        <strong>Total de Resultados:</strong> @Model.Count() registros activos
+                        <strong>Total de Resultados:</strong> @Model.Count() registros
                     </div>
                 </div>
             </div>

@@ -30,6 +30,14 @@
     </div>
 }
 
+@if (TempData["MensajeError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensajeError"]
+    </div>
+}
+
+
 @* Muestra mensajes de error (ViewBag) *@
 @if (ViewBag.Error != null)
 {
@@ -65,7 +73,11 @@
 
                     @if (item.Estado)
                     {
-                        <form asp-action="AnularParto" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea anular este registro de parto?');">
+                        <form asp-action="AnularParto"
+                        asp-route-id="@item.IdParto"
+                        method="post" 
+                        style="display:inline;" 
+                        onsubmit="return confirm('¿Está seguro de que desea anular este registro de parto?');">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="idParto" value="@item.IdParto" />
                             <button type="submit" class="btn btn-sm btn-danger">Anular</button>

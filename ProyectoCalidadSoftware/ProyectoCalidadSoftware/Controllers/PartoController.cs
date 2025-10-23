@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CapaLogica;
 using CapaEntidad;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Route("core/parto")]
     public class PartoController : Controller
     {
         /// <summary>
-        /// 🚀 NUEVA ACCIÓN: Muestra el listado de partos.
+        /// 🚀 Listado de partos.
+        /// GET: /core/parto
         /// </summary>
+        [HttpGet("")]
         public IActionResult Index(bool mostrarActivos = true)
         {
             List<entParto> lista;
@@ -30,8 +33,9 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         /// <summary>
-        /// GET: /Parto/RegistrarParto
+        /// GET: /core/parto/registrar
         /// </summary>
+        [HttpGet("registrar")]
         public IActionResult RegistrarParto()
         {
             CargarViewBags(null);
@@ -39,9 +43,9 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         /// <summary>
-        /// POST: /Parto/RegistrarParto
+        /// POST: /core/parto/registrar
         /// </summary>
-        [HttpPost]
+        [HttpPost("registrar")]
         [ValidateAntiForgeryToken]
         public IActionResult RegistrarParto(entParto parto, List<string> intervenciones)
         {
@@ -50,14 +54,12 @@ namespace ProyectoCalidadSoftware.Controllers
                 foreach (var intervencionTexto in intervenciones)
                 {
                     if (!string.IsNullOrWhiteSpace(intervencionTexto))
-                    {
                         parto.Intervenciones.Add(new entPartoIntervencion { Intervencion = intervencionTexto });
-                    }
                 }
             }
             parto.Estado = true;
 
-            if (ModelState.IsValid && parto.IdEmbarazo > 0 && parto.IdEncuentro > 0) 
+            if (ModelState.IsValid && parto.IdEmbarazo > 0 && parto.IdEncuentro > 0)
             {
                 try
                 {
@@ -65,7 +67,6 @@ namespace ProyectoCalidadSoftware.Controllers
                     if (idGenerado > 0)
                     {
                         TempData["MensajeExito"] = $"Parto registrado correctamente con ID: {idGenerado}.";
-
                         return RedirectToAction("Index");
                     }
                     else
@@ -81,44 +82,59 @@ namespace ProyectoCalidadSoftware.Controllers
             else
             {
                 if (parto.IdEmbarazo <= 0)
-                {
                     ViewBag.MensajeError = "Error: Debe seleccionar un embarazo de la lista.";
-                }
-                else if (parto.IdEncuentro <= 0) 
-                {
+                else if (parto.IdEncuentro <= 0)
                     ViewBag.MensajeError = "Error: Debe seleccionar un encuentro de la lista.";
-                }
                 else
-                {
                     ViewBag.MensajeError = "Datos inválidos. Revise el formulario.";
-                }
             }
 
             CargarViewBags(parto);
             return View(parto);
         }
 
-        [HttpPost]
+        /// <summary>
+        /// GET: /core/parto/{id}/anular  -> página de confirmación
+        /// </summary>
+        [HttpGet("{id:int}/anular")]
+        public IActionResult AnularParto(int id)
+        {
+            try
+            {
+                var parto = logParto.Instancia.BuscarPartoPorId(id);
+                if (parto == null)
+                {
+                    TempData["MensajeError"] = "No se encontró el registro de parto solicitado.";
+                    return RedirectToAction("Index");
+                }
+                return View(parto); // Views/Parto/Anular.cshtml (modelo: entParto)
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Error al cargar la confirmación: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        /// <summary>
+        /// POST: /core/parto/{id}/anular
+        /// </summary>
+        [HttpPost("{id:int}/anular")]
+        [ActionName("AnularParto")] // permite usar asp-action="AnularParto" o renombrar en la vista si prefieres "Anular"
         [ValidateAntiForgeryToken]
-        public IActionResult AnularParto(int idParto) 
+        public IActionResult AnularPartoPost(int idParto)
         {
             try
             {
                 if (idParto <= 0)
-                {
                     throw new ArgumentException("ID de Parto no válido.");
-                }
 
                 bool exito = logParto.Instancia.AnularParto(idParto);
 
                 if (exito)
-                {
                     TempData["MensajeExito"] = $"Parto ID {idParto} anulado correctamente.";
-                }
                 else
-                {
                     TempData["MensajeError"] = $"No se pudo anular el Parto ID {idParto}.";
-                }
             }
             catch (Exception ex)
             {
@@ -128,6 +144,10 @@ namespace ProyectoCalidadSoftware.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// GET: /core/parto/detalles/{id}
+        /// </summary>
+        [HttpGet("detalles/{id:int}")]
         public IActionResult DetallesParto(int id)
         {
             try
@@ -140,7 +160,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return View(parto); 
+                return View(parto);
             }
             catch (Exception ex)
             {
@@ -149,9 +169,10 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-
-
-        [HttpGet]
+        /// <summary>
+        /// GET: /core/parto/encuentros?idEmbarazo=123
+        /// </summary>
+        [HttpGet("encuentros")]
         public JsonResult GetEncuentros(int idEmbarazo)
         {
             try
@@ -171,7 +192,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         /// <summary>
-        /// MÉTODO PRIVADO para cargar todos los ViewBag de los Dropdowns.
+        /// Cargar dropdowns
         /// </summary>
         private void CargarViewBags(entParto? parto)
         {

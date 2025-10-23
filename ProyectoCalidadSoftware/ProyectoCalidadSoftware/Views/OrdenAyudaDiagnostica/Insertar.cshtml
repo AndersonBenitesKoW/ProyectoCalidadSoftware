@@ -10,7 +10,9 @@
         <h4>Registro de nueva orden de ayuda diagnóstica para paciente</h4>
     </div>
 
-    <form asp-action="Insertar">
+    <form asp-action="Insertar" method="post">
+        @Html.AntiForgeryToken()
+
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="row">
@@ -98,5 +100,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
