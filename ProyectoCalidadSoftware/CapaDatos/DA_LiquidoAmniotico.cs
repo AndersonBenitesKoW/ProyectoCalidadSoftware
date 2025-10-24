@@ -21,6 +21,7 @@ namespace CapaAccesoDatos
         public List<entLiquidoAmniotico> Listar()
         {
             List<entLiquidoAmniotico> lista = new List<entLiquidoAmniotico>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_ListarLiquidoAmniotico", cn);

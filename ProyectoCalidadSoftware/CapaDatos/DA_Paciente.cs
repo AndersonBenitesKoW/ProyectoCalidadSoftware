@@ -23,7 +23,7 @@ namespace CapaAccesoDatos
             List<entPaciente> lista = new List<entPaciente>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarPaciente", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPacientes", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
@@ -34,11 +34,10 @@ namespace CapaAccesoDatos
                         var paciente = new entPaciente
                         {
                             IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
                             Nombres = dr["Nombres"].ToString(),
                             Apellidos = dr["Apellidos"].ToString(),
+                            FechaNacimiento = Convert.ToDateTime(dr["FechaNacimiento"]),
                             DNI = dr["DNI"].ToString(),
-                            FechaNacimiento = dr["FechaNacimiento"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaNacimiento"]) : null,
                             Estado = Convert.ToBoolean(dr["Estado"])
                         };
 
@@ -49,33 +48,6 @@ namespace CapaAccesoDatos
 
             return lista;
         }
-        public List<entPaciente> ListarActivos()
-        {
-            List<entPaciente> lista = new List<entPaciente>();
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
-            {
-                using (SqlCommand cmd = new SqlCommand("sp_ListarPacientesActivos", cn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cn.Open();
-
-                    using (SqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            lista.Add(new entPaciente
-                            {
-                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                                Nombres = dr["Nombres"].ToString() ?? string.Empty,
-                                Apellidos = dr["Apellidos"].ToString() ?? string.Empty, // Asegúrate que el nombre coincida
-                                DNI = dr["DNI"]?.ToString()
-                            });
-                        }
-                    }
-                }
-            }
-            return lista;
-        }
 
         public bool Insertar(entPaciente entidad)
         {
@@ -84,10 +56,10 @@ namespace CapaAccesoDatos
                 SqlCommand cmd = new SqlCommand("sp_InsertarPaciente", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@DNI", (object)entidad.DNI ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Nombres", entidad.Nombres);
                 cmd.Parameters.AddWithValue("@Apellidos", entidad.Apellidos);
-                cmd.Parameters.AddWithValue("@FechaNacimiento", (object)entidad.FechaNacimiento ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaNacimiento", entidad.FechaNacimiento);
+                cmd.Parameters.AddWithValue("@DNI", entidad.DNI);
                 cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
@@ -95,8 +67,8 @@ namespace CapaAccesoDatos
             }
         }
 
-        public bool Editar(int idPaciente, string dni, string nombres, string apellidos, DateTime fechaNacimiento,
-                           string direccion, string telefono, string correo, string sexo, bool estado)
+        public bool Editar(int idPaciente, string nombres, string apellidos,
+                           DateTime fechaNacimiento, string dni, bool estado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
@@ -104,14 +76,10 @@ namespace CapaAccesoDatos
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@DNI", (object)dni ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Nombres", (object)nombres ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Apellidos", (object)apellidos ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Nombres", nombres);
+                cmd.Parameters.AddWithValue("@Apellidos", apellidos);
                 cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-                cmd.Parameters.AddWithValue("@Direccion", (object)direccion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Telefono", (object)telefono ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Correo", (object)correo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Sexo", (object)sexo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@DNI", dni);
                 cmd.Parameters.AddWithValue("@Estado", estado);
 
                 cn.Open();

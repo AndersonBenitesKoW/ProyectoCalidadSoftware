@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapaAccesoDatos;
+using System;
 using System.Collections.Generic;
 using CapaAccesoDatos;
 using CapaEntidad;
@@ -13,6 +14,7 @@ namespace CapaLogica
         {
             get { return logTipoEncuentro._instancia; }
         }
+        private logTipoEncuentro() { }
         #endregion
 
         /// <summary>
@@ -22,5 +24,12 @@ namespace CapaLogica
         {
             return DA_TipoEncuentro.Instancia.Listar();
         }
+
+        // INSERTAR
+        public bool InsertarTipoEncuentro(entTipoEncuentro entidad)
+        {
+            return DA_TipoEncuentro.Instancia.Insertar(entidad);
+        }
+
     }
 }

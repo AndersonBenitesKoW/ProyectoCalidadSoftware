@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapaAccesoDatos;
+using System;
 using System.Collections.Generic;
 using CapaAccesoDatos;
 using CapaEntidad;
@@ -7,12 +8,15 @@ namespace CapaLogica
 {
     public class logParto
     {
+
+
         #region Singleton
         private static readonly logParto _instancia = new logParto();
         public static logParto Instancia
         {
             get { return logParto._instancia; }
         }
+        private logParto() { }
         #endregion
 
         /// <summary>

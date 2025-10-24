@@ -38,7 +38,8 @@
             <tbody>
                 @foreach (var item in Model) {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.IdControl)</td>
+                        <!-- cambio mínimo: IdControl -> IdControlPrenatal -->
+                        <td>@Html.DisplayFor(modelItem => item.IdControlPrenatal)</td>
                         <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
                         <td>@Html.DisplayFor(modelItem => item.IdEncuentro)</td>
                         <td>@Html.DisplayFor(modelItem => item.IdProfesional)</td>
@@ -74,13 +75,8 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a asp-action="Actualizar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-primary" title="Actualizar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a asp-action="Modificar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-warning" title="Modificar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a asp-action="Inhabilitar" asp-route-id="@item.IdControl" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
+
+                                <a asp-action="Inhabilitar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -102,3 +98,5 @@
         </div>
     }
 </div>
+ 
+

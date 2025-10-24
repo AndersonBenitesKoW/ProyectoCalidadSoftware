@@ -55,7 +55,7 @@ namespace CapaAccesoDatos
                         cmd.Parameters.AddWithValue("@Estado", parto.Estado);
 
                         idPartoGenerado = Convert.ToInt32(cmd.ExecuteScalar());
-                    }   
+                    }
 
                     if (idPartoGenerado > 0 && parto.Intervenciones != null)
                     {
@@ -77,8 +77,8 @@ namespace CapaAccesoDatos
                 catch (Exception)
                 {
                     transaccion.Rollback();
-                    idPartoGenerado = 0; 
-                    throw; 
+                    idPartoGenerado = 0;
+                    throw;
                 }
             }
 
@@ -192,7 +192,7 @@ namespace CapaAccesoDatos
                     }
                 }
             }
-            return parto; 
+            return parto;
         }
 
 

@@ -20,9 +20,15 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-        public List<entLiquidoAmniotico> Listar()
+        public List<entLiquidoAmniotico> ListarLiquidoAmniotico()
         {
             return DA_LiquidoAmniotico.Instancia.Listar();
+        }
+
+        // LISTAR (alias para compatibilidad)
+        public List<entLiquidoAmniotico> Listar()
+        {
+            return ListarLiquidoAmniotico();
         }
 
         // INSERTAR

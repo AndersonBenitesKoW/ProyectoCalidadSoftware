@@ -21,25 +21,28 @@ namespace CapaAccesoDatos
         public List<entViaParto> Listar()
         {
             List<entViaParto> lista = new List<entViaParto>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_ListarViaParto", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_ListarViaParto", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
-
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        lista.Add(new entViaParto
+                        var via = new entViaParto
                         {
                             IdViaParto = Convert.ToInt16(dr["IdViaParto"]),
-                            Codigo = dr["Codigo"].ToString() ?? string.Empty,
-                            Descripcion = dr["Descripcion"].ToString() ?? string.Empty
-                        });
+                            Codigo = dr["Codigo"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString()
+                        };
+
+                        lista.Add(via);
                     }
                 }
             }
+
             return lista;
         }
 
