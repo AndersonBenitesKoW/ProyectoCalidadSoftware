@@ -4,80 +4,89 @@
     ViewData["Title"] = "Registrar Nuevo Encuentro";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Este formulario crea un nuevo "Encuentro" (ej. de Intraparto) que luego puede ser seleccionado en el formulario de Parto.</p>
-<hr />
-
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9 col-lg-7 mx-auto">
+        <h1 class="display-6">@ViewData["Title"]</h1>
+        <p class="lead text-muted">
+            Este formulario crea un nuevo "Encuentro" (ej. de Intraparto) que luego puede ser seleccionado en el formulario de Parto.
+        </p>
+        <hr />
 
-        <form asp-action="RegistrarEncuentro" method="post">
+        @if (ViewBag.MensajeError != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.MensajeError
+            </div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+            </div>
+        }
 
+        <form asp-action="RegistrarEncuentro" method="post" class="needs-validation" novalidate>
             @Html.AntiForgeryToken()
 
-            @* Muestra de Errores Generales *@
-            @if (ViewBag.MensajeError != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @ViewBag.MensajeError
+            <div class="card shadow-sm border-light-subtle">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-medical me-2 text-primary"></i>Datos del Encuentro</h5>
                 </div>
-            }
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @ViewBag.Error
-                </div>
-            }
-
-            <div class="card shadow-sm">
                 <div class="card-body">
+                    <div class="row g-3">
 
-                    <div class="mb-3">
-                        <label asp-for="IdEmbarazo" class="form-label">Embarazo (Paciente)</label>
-                        <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos">
-                            <option value="">-- Seleccione un Embarazo --</option>
-                        </select>
-                        <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
+                        <div class="col-md-6">
+                            <label asp-for="IdEmbarazo" class="form-label fw-bold"><i class="bi bi-person-hearts me-1"></i> Embarazo (Paciente)</label>
+                            <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                                <option value="">-- Seleccione un Embarazo --</option>
+                            </select>
+                            <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="IdTipoEncuentro" class="form-label fw-bold"><i class="bi bi-tags-fill me-1"></i> Tipo de Encuentro</label>
+                            <select asp-for="IdTipoEncuentro" class="form-select" asp-items="@ViewBag.ListaTipos" required>
+                                <option value="">-- Seleccione el Tipo --</option>
+                            </select>
+                            <span asp-validation-for="IdTipoEncuentro" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="IdProfesional" class="form-label"><i class="bi bi-person-badge me-1"></i> Profesional Asignado</label>
+                            <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                                <option value="">-- (Opcional) --</option>
+                            </select>
+                            <span asp-validation-for="IdProfesional" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="FechaHoraInicio" class="form-label"><i class="bi bi-calendar-event me-1"></i> Fecha y Hora de Inicio</label>
+                            <input asp-for="FechaHoraInicio" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="FechaHoraInicio" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Estado" class="form-label"><i class="bi bi-toggles me-1"></i> Estado del Encuentro</label>
+                            <input asp-for="Estado" type="text" class="form-control" />
+                            <span asp-validation-for="Estado" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Notas" class="form-label"><i class="bi bi-pencil-square me-1"></i> Notas (Opcional)</label>
+                            <textarea asp-for="Notas" class="form-control" rows="3"></textarea>
+                        </div>
+
                     </div>
-
-                    <div class="mb-3">
-                        <label asp-for="IdTipoEncuentro" class="form-label">Tipo de Encuentro</label>
-                        <select asp-for="IdTipoEncuentro" class="form-select" asp-items="@ViewBag.ListaTipos">
-                            <option value="">-- Seleccione el Tipo --</option>
-                        </select>
-                        <span asp-validation-for="IdTipoEncuentro" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="IdProfesional" class="form-label">Profesional Asignado</label>
-                        <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
-                            <option value="">-- (Opcional) --</option>
-                        </select>
-                        <span asp-validation-for="IdProfesional" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="FechaHoraInicio" class="form-label">Fecha y Hora de Inicio</label>
-                        <input asp-for="FechaHoraInicio" type="datetime-local" class="form-control" />
-                        <span asp-validation-for="FechaHoraInicio" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Estado" class="form-label">Estado del Encuentro</label>
-                        <input asp-for="Estado" type="text" class="form-control" />
-                        <span asp-validation-for="Estado" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Notas" class="form-label">Notas (Opcional)</label>
-                        <textarea asp-for="Notas" class="form-control" rows="3"></textarea>
-                    </div>
-
                 </div>
             </div>
 
-            <div class="mt-3">
-                <input type="submit" value="Registrar Encuentro" class="btn btn-primary" />
+            <div class="mt-4 text-end">
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary me-2">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-save me-2"></i>Registrar Encuentro
+                </button>
             </div>
 
         </form>

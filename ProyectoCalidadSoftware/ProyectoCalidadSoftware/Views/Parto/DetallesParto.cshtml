@@ -2,83 +2,144 @@
 
 @{
     ViewData["Title"] = "Detalles del Parto";
+
+    // Lógica para el color del "badge" de estado
+    var estadoClase = Model.Estado ? "bg-success" : "bg-danger";
+    var estadoTexto = Model.Estado ? "Activo" : "Anulado";
 }
 
-<h1>@ViewData["Title"]</h1>
+<style>
+    .details-list dt {
+        font-weight: 600;
+        color: #555;
+    }
 
-<div>
-    <h4>Parto ID: @Model.IdParto</h4>
-    <hr />
+    .details-list dd {
+        color: #222;
+        margin-bottom: .5rem;
+    }
 
-    <dl class="row">
+        .details-list dd:empty::after {
+            content: "-- No registrado --";
+            font-style: italic;
+            color: #999;
+        }
 
-        <dt class="col-sm-3">Paciente</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombrePaciente)</dd>
+    .card-header .bi {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+</style>
 
-        <dt class="col-sm-3">Embarazo ID</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEmbarazo)</dd>
-
-        <dt class="col-sm-3">Encuentro ID</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEncuentro)</dd>
-
-        <dt class="col-sm-3">Fecha del Parto</dt>
-        <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
-
-        <dt class="col-sm-3">Profesional</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreProfesional)</dd> @* 👈 CORREGIDO *@
-
-        <dt class="col-sm-3">Hora Ingreso</dt>
-        <dd class="col-sm-9">@Model.HoraIngreso?.ToString("g")</dd>
-
-        <dt class="col-sm-3">Hora Inicio Trabajo</dt>
-        <dd class="col-sm-9">@Model.HoraInicioTrabajo?.ToString("g")</dd>
-
-        <dt class="col-sm-3">Membranas</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Membranas)</dd>
-
-        <dt class="col-sm-3">Líquido Amniótico</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.DescripcionLiquido)</dd> @* 👈 CORREGIDO *@
-
-        <dt class="col-sm-3">Vía de Parto</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.DescripcionViaParto)</dd>
-
-        <dt class="col-sm-3">Analgesia</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Analgesia)</dd>
-
-        <dt class="col-sm-3">Pérdida Sanguínea (mL)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PerdidasML)</dd>
-
-        <dt class="col-sm-3">Desgarro</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Desgarro)</dd>
-
-        <dt class="col-sm-3">Indicación Cesárea</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.IndicacionCesarea)</dd>
-
-        <dt class="col-sm-3">Complicaciones</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Complicaciones)</dd>
-
-        <dt class="col-sm-3">Estado</dt>
-        <dd class="col-sm-9">@(Model.Estado ? "Activo" : "Anulado")</dd>
-
-        <dt class="col-sm-3">Intervenciones</dt>
-        <dd class="col-sm-9">
-            @if (Model.Intervenciones != null && Model.Intervenciones.Any())
-            {
-                <ul>
-                    @foreach (var intervencion in Model.Intervenciones)
-                    {
-                        <li>@intervencion.Intervencion</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <text>Ninguna registrada</text>
-            }
-        </dd>
-
-    </dl>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left-circle me-2"></i>Volver al Listado
+    </a>
 </div>
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="mb-0">Paciente: @Model.NombrePaciente</h4>
+            <span class="text-muted">ID de Parto: @Model.IdParto</span>
+        </div>
+        <span class="badge @estadoClase fs-6">@estadoTexto</span>
+    </div>
+    <div class="card-body">
+        <dl class="row details-list">
+            <dt class="col-sm-3">Embarazo ID</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEmbarazo)</dd>
+
+            <dt class="col-sm-3">Encuentro ID</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.IdEncuentro)</dd>
+
+            <dt class="col-sm-3">Profesional</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreProfesional)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4 h-100">
+            <div class="card-header"><i class="bi bi-clock-history"></i>Tiempos del Parto</div>
+            <div class="card-body">
+                <dl class="row details-list">
+                    <dt class="col-sm-5">Fecha del Parto</dt>
+                    <dd class="col-sm-7">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-5">Hora Ingreso</dt>
+                    <dd class="col-sm-7">@Model.HoraIngreso?.ToString("g")</dd>
+
+                    <dt class="col-sm-5">Hora Inicio Trabajo</dt>
+                    <dd class="col-sm-7">@Model.HoraInicioTrabajo?.ToString("g")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4 h-100">
+            <div class="card-header"><i class="bi bi-heart-pulse"></i>Detalles Clínicos</div>
+            <div class="card-body">
+                <dl class="row details-list">
+                    <dt class="col-sm-5">Vía de Parto</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.DescripcionViaParto)</dd>
+
+                    <dt class="col-sm-5">Membranas</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.Membranas)</dd>
+
+                    <dt class="col-sm-5">Líquido Amniótico</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.DescripcionLiquido)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header"><i class="bi bi-bandaid"></i>Hallazgos y Complicaciones</div>
+            <div class="card-body">
+                <dl class="row details-list">
+                    <dt class="col-sm-5">Analgesia</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.Analgesia)</dd>
+
+                    <dt class="col-sm-5">Pérdida Sanguínea</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.PerdidasML) mL</dd>
+
+                    <dt class="col-sm-5">Desgarro</dt>
+                    <dd class="col-sm-7">@Html.DisplayFor(model => model.Desgarro)</dd>
+
+                    <dt class="col-sm-12">Complicaciones</dt>
+                    <dd class="col-sm-12">@Html.DisplayFor(model => model.Complicaciones)</dd>
+
+                    <dt class="col-sm-12">Indicación Cesárea</dt>
+                    <dd class="col-sm-12">@Html.DisplayFor(model => model.IndicacionCesarea)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header"><i class="bi bi-scissors"></i>Intervenciones Realizadas</div>
+            <div class="card-body">
+                @if (Model.Intervenciones != null && Model.Intervenciones.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var intervencion in Model.Intervenciones)
+                        {
+                            <li class="list-group-item">@intervencion.Intervencion</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted fst-italic">Ninguna registrada</p>
+                }
+            </div>
+        </div>
+    </div>
 </div>
