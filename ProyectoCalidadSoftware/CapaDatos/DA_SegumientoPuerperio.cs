@@ -33,7 +33,7 @@ namespace CapaAccesoDatos
                     {
                         var seguimiento = new entSeguimientoPuerperio
                         {
-                            IdPuerperio = Convert.ToInt32(dr["IdPuerperio"]),
+                            //IdPuerperio = Convert.ToInt32(dr["IdPuerperio"]),
                             IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
                             IdEncuentro = dr["IdEncuentro"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdEncuentro"]) : null,
                             IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,
