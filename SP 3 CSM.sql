@@ -74,7 +74,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarProfesionales
+CREATE OR ALTER PROCEDURE sp_ListarProfesionalSalud
 (
     @Estado BIT -- Parámetro requerido: 1 para activos, 0 para inactivos
 )
@@ -86,16 +86,15 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarProfesional
-  @IdUsuario INT,
+CREATE OR ALTER PROCEDURE sp_InsertarProfesionalSalud
   @CMP NVARCHAR(20),
   @Especialidad NVARCHAR(80),
   @Nombres NVARCHAR(100),
   @Apellidos NVARCHAR(100)
 AS
 BEGIN
-  INSERT INTO ProfesionalSalud (IdUsuario, CMP, Especialidad, Nombres, Apellidos)
-  VALUES (@IdUsuario, @CMP, @Especialidad, @Nombres, @Apellidos);
+  INSERT INTO ProfesionalSalud (CMP, Especialidad, Nombres, Apellidos)
+  VALUES (@CMP, @Especialidad, @Nombres, @Apellidos);
 
   SELECT SCOPE_IDENTITY() AS IdProfesional;
 END
@@ -258,9 +257,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
     
-    -- 1. Obtener los datos principales del Parto y tablas relacionadas
+    
     SELECT 
-        pa.*, -- Todos los campos de Parto
+        pa.*, 
         p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
         pr.Nombres + ' ' + pr.Apellidos AS NombreProfesional,
         vp.Descripcion AS DescripcionViaParto,
@@ -280,7 +279,6 @@ BEGIN
     WHERE 
         pa.IdParto = @IdParto;
 
-    -- 2. Obtener las intervenciones asociadas a ese Parto
     SELECT 
         IdPartoIntervencion,
         Intervencion
@@ -302,8 +300,6 @@ BEGIN
     FROM 
         ViaParto
     WHERE 
-        -- Asumimos que también podrían tener un estado, aunque no lo veo en tu script
-        -- Si hubiera un campo "Estado", agregaríamos: WHERE Estado = 1
         1 = 1;
 END
 GO
@@ -331,11 +327,11 @@ BEGIN
         IdPaciente,
         Nombres,
         Apellidos,
-        DNI -- Incluimos DNI por si ayuda a diferenciar
+        DNI 
     FROM 
         Paciente
     WHERE 
-        Estado = 1 -- Solo pacientes activos
+        Estado = 1 
     ORDER BY
         Apellidos, Nombres;
 END
@@ -372,7 +368,6 @@ BEGIN
         @Notas
     );
     
-    -- Devolvemos el ID del Encuentro recién creado
     SELECT SCOPE_IDENTITY(); 
 END
 GO
@@ -396,7 +391,7 @@ GO
 CREATE OR ALTER PROCEDURE sp_ListarEncuentrosPorEmbarazoYTipo
 (
     @IdEmbarazo INT,
-    @CodigoTipo NVARCHAR(20) -- Ej: 'INTRAPARTO'
+    @CodigoTipo NVARCHAR(20) 
 )
 AS
 BEGIN
@@ -417,6 +412,24 @@ BEGIN
     WHERE 
         E.IdEmbarazo = @IdEmbarazo
         AND TE.Codigo = @CodigoTipo
-        AND E.Estado <> 'Cerrado'; -- O la lógica que prefieras
+        AND E.Estado <> 'Cerrado';
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_ListarPacientes
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdPaciente,
+        IdUsuario,      
+        Nombres,
+        Apellidos,
+        DNI,
+        FechaNacimiento,
+        Estado
+    FROM 
+        Paciente; 
 END
 GO

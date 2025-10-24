@@ -33,12 +33,30 @@ namespace CapaAccesoDatos
                     {
                         var paciente = new entPaciente
                         {
+                            // --- Campos que no son nulos ---
                             IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            Nombres = dr["Nombres"].ToString(),
-                            Apellidos = dr["Apellidos"].ToString(),
-                            FechaNacimiento = Convert.ToDateTime(dr["FechaNacimiento"]),
-                            DNI = dr["DNI"].ToString(),
-                            Estado = Convert.ToBoolean(dr["Estado"])
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+
+                            // --- Campos de Texto (más seguro) ---
+                            // Comprobamos si son nulos antes de convertirlos a string
+                            Nombres = dr["Nombres"] != DBNull.Value ? dr["Nombres"].ToString() : string.Empty,
+                            Apellidos = dr["Apellidos"] != DBNull.Value ? dr["Apellidos"].ToString() : string.Empty,
+                            DNI = dr["DNI"] != DBNull.Value ? dr["DNI"].ToString() : string.Empty,
+
+
+                            // --- CAMPOS CON NULOS (LA CORRECCIÓN) ---
+
+                            // 👇 CORRECCIÓN 1: Manejo de nulo para FechaNacimiento
+                            // (Asume que 'FechaNacimiento' en 'entPaciente' es de tipo 'DateTime?')
+                            FechaNacimiento = dr["FechaNacimiento"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["FechaNacimiento"])
+                                : (DateTime?)null, // Asigna null de C# si es DBNull
+
+                            // 👇 CORRECCIÓN 2: Manejo de nulo para IdUsuario
+                            // (Asume que 'IdUsuario' en 'entPaciente' es de tipo 'int?')
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value
+                                ? Convert.ToInt32(dr["IdUsuario"])
+                                : (int?)null // Asigna null de C# si es DBNull
                         };
 
                         lista.Add(paciente);
