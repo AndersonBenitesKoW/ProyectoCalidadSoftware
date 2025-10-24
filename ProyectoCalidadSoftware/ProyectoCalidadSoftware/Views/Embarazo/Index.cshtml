@@ -44,7 +44,7 @@
         }
         else
         {
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
@@ -69,9 +69,23 @@
                                 <span class="badge @estadoClase">@estadoTexto</span>
                             </td>
                             <td class="text-end">
+
                                 <a asp-action="DetallesEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-primary" title="Detalles">
                                     <i class="bi bi-search"></i> Detalles
                                 </a>
+
+                                @if (item.Estado)
+                                {
+                                    <form asp-action="CerrarEmbarazo" asp-route-id="@item.IdEmbarazo" method="post" style="display:inline;"
+                                          onsubmit="return confirm('¿Está seguro de que desea cerrar/anular este embarazo? Esta acción es irreversible.');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Cerrar / Anular">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                }
                             </td>
                         </tr>
                     }
