@@ -106,6 +106,34 @@ namespace ProyectoCalidadSoftware.Controllers
             CargarViewBags(embarazo);
             return View(embarazo);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CerrarEmbarazo(int id)
+        {
+            try
+            {
+                // 1. Llama al método que YA EXISTE en tu CapaLogica
+                bool exito = logEmbarazo.Instancia.CerrarEmbarazo(id);
+
+                if (exito)
+                {
+                    // 2. Envía un mensaje de éxito al _Layout
+                    TempData["MensajeExito"] = "El embarazo se ha cerrado/anulado correctamente.";
+                }
+                else
+                {
+                    // 3. Envía un mensaje de error
+                    TempData["MensajeError"] = "No se pudo cerrar el embarazo. Es posible que ya estuviera cerrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Error al intentar cerrar el embarazo: " + ex.Message;
+            }
+
+            // 4. Redirige de vuelta al listado
+            return RedirectToAction("Index");
+        }
 
 
         /// <summary>

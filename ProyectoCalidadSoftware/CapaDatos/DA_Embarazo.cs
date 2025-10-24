@@ -134,16 +134,19 @@ namespace CapaAccesoDatos
             return embarazo; 
         }
 
-        public bool Eliminar(int idEmbarazo)
+        public bool Cerrar(int idEmbarazo)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarEmbarazo", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
+                using (SqlCommand cmd = new SqlCommand("sp_CerrarEmbarazo", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
 
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                    cn.Open();
+                    // Devuelve true si se afectó al menos 1 fila
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 
