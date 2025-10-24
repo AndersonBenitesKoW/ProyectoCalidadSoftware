@@ -21,28 +21,27 @@ namespace CapaAccesoDatos
         public List<entTipoEncuentro> Listar()
         {
             List<entTipoEncuentro> lista = new List<entTipoEncuentro>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarTipoEncuentro", cn))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("sp_ListarTipoEncuentro", cn))
                 {
-                    while (dr.Read())
-                    {
-                        var tipoEncuentro = new entTipoEncuentro
-                        {
-                            IdTipoEncuentro = Convert.ToInt16(dr["IdTipoEncuentro"]),
-                            Codigo = dr["Codigo"].ToString(),
-                            Descripcion = dr["Descripcion"].ToString()
-                        };
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cn.Open();
 
-                        lista.Add(tipoEncuentro);
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entTipoEncuentro
+                            {
+                                IdTipoEncuentro = Convert.ToInt16(dr["IdTipoEncuentro"]),
+                                Codigo = dr["Codigo"].ToString() ?? string.Empty,
+                                Descripcion = dr["Descripcion"].ToString() ?? string.Empty
+                            });
+                        }
                     }
                 }
             }
-
             return lista;
         }
 

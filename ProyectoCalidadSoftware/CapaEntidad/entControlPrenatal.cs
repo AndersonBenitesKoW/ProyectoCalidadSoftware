@@ -8,7 +8,7 @@ namespace CapaEntidad
 {
     public class entControlPrenatal
     {
-        public int IdControl { get; set; }
+        public int IdControlPrenatal { get; set; }
         public int IdEmbarazo { get; set; }
         public int? IdEncuentro { get; set; }
         public int? IdProfesional { get; set; }

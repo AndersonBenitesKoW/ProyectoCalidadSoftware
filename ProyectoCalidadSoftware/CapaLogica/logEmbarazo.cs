@@ -20,15 +20,33 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-        public List<entEmbarazo> ListarEmbarazo()
+        public List<entEmbarazo> ListarEmbarazosPorEstado(bool estado)
         {
-            return DA_Embarazo.Instancia.Listar();
+            return DA_Embarazo.Instancia.ListarPorEstado(estado);
         }
 
         // INSERTAR
-        public bool InsertarEmbarazo(entEmbarazo entidad)
+        public int RegistrarEmbarazo(entEmbarazo embarazo)
         {
-            return DA_Embarazo.Instancia.Insertar(entidad);
+            if (embarazo.IdPaciente <= 0)
+            {
+                throw new ApplicationException("El IdPaciente es obligatorio para registrar un embarazo.");
+            }
+
+            if (embarazo.FUR.HasValue && !embarazo.FPP.HasValue)
+            {
+                embarazo.FPP = embarazo.FUR.Value.AddDays(7).AddMonths(-3).AddYears(1);
+            }
+
+            return DA_Embarazo.Instancia.Insertar(embarazo);
+        }
+        public entEmbarazo? BuscarEmbarazoPorId(int idEmbarazo)
+        {
+            if (idEmbarazo <= 0)
+            {
+                return null; 
+            }
+            return DA_Embarazo.Instancia.BuscarPorId(idEmbarazo);
         }
 
     }

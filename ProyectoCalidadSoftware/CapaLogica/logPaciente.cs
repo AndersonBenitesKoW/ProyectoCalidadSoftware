@@ -24,6 +24,12 @@ namespace CapaLogica
         {
             return DA_Paciente.Instancia.Listar();
         }
+
+        // LISTAR PACIENTES ACTIVOS (alias para compatibilidad)
+        public List<entPaciente> ListarPacientesActivos()
+        {
+            return ListarPaciente().Where(p => p.Estado).ToList();
+        }
 // INSERTAR
 public bool InsertarPaciente(entPaciente entidad)
 {
@@ -54,8 +60,8 @@ public entPaciente BuscarPaciente(int id)
 // ACTUALIZAR
 public bool ActualizarPaciente(entPaciente entidad)
 {
-    return DA_Paciente.Instancia.Editar(entidad.IdPaciente, entidad.DNI, entidad.Nombres, entidad.Apellidos,
-                                       entidad.FechaNacimiento.Value, "", "", "", "", entidad.Estado);
+    return DA_Paciente.Instancia.Editar(entidad.IdPaciente, entidad.Nombres, entidad.Apellidos,
+                                       entidad.FechaNacimiento.Value, entidad.DNI, entidad.Estado);
 }
 
 // INHABILITAR

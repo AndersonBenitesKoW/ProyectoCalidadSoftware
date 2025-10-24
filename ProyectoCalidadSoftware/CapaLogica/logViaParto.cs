@@ -21,7 +21,7 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-        public List<entViaParto> ListarViaParto()
+        public List<entViaParto> Listar()
         {
             return DA_ViaParto.Instancia.Listar();
         }

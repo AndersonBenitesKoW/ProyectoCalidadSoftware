@@ -18,56 +18,79 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public List<entEncuentro> Listar()
+        public List<entEncuentro> ListarPorEmbarazoYTipo(int idEmbarazo, string codigoTipo)
         {
             List<entEncuentro> lista = new List<entEncuentro>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarEncuentro", cn))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("sp_ListarEncuentrosPorEmbarazoYTipo", cn))
                 {
-                    while (dr.Read())
-                    {
-                        var encuentro = new entEncuentro
-                        {
-                            IdEncuentro = Convert.ToInt32(dr["IdEncuentro"]),
-                            IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
-                            IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
-                            IdTipoEncuentro = Convert.ToInt16(dr["IdTipoEncuentro"]),
-                            FechaHoraInicio = Convert.ToDateTime(dr["FechaHoraInicio"]),
-                            FechaHoraFin = Convert.ToDateTime(dr["FechaHoraFin"]),
-                            Estado = dr["Estado"].ToString(),
-                            Notas = dr["Notas"].ToString()
-                        };
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
+                    cmd.Parameters.AddWithValue("@CodigoTipo", codigoTipo);
 
-                        lista.Add(encuentro);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new entEncuentro
+                            {
+                                IdEncuentro = Convert.ToInt32(dr["IdEncuentro"]),
+                                FechaHoraInicio = Convert.ToDateTime(dr["FechaHoraInicio"]),
+                                Estado = dr["Estado"].ToString() ?? string.Empty
+                            });
+                        }
                     }
                 }
             }
-
             return lista;
         }
 
-        public bool Insertar(entEncuentro entidad)
+        public int Insertar(entEncuentro entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_InsertarEncuentro", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlCommand cmd = new SqlCommand("sp_InsertarEncuentro", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdEmbarazo", entidad.IdEmbarazo);
-                cmd.Parameters.AddWithValue("@IdProfesional", entidad.IdProfesional);
-                cmd.Parameters.AddWithValue("@IdTipoEncuentro", entidad.IdTipoEncuentro);
-                cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
-                cmd.Parameters.AddWithValue("@FechaHoraFin", entidad.FechaHoraFin);
-                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
-                cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", entidad.IdEmbarazo);
+                    cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@IdTipoEncuentro", entidad.IdTipoEncuentro);
 
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                    // --- INICIO DE LA CORRECCIÓN ---
+
+                    // 1. Corrección para FechaHoraInicio
+                    if (entidad.FechaHoraInicio == DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraInicio", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
+                    }
+
+                    // 2. Corrección para FechaHoraFin
+                    if (entidad.FechaHoraFin == DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraFin", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraFin", entidad.FechaHoraFin);
+                    }
+
+                    // --- FIN DE LA CORRECCIÓN ---
+
+                    cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+                    cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
+
+                    cn.Open();
+
+                    object idGenerado = cmd.ExecuteScalar();
+                    return (idGenerado != null) ? Convert.ToInt32(idGenerado) : 0;
+                }
             }
         }
 

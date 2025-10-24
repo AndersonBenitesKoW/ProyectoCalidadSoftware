@@ -4,17 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Route("core/puerperio")]
     public class SeguimientoPuerperioController : Controller
     {
+        // GET: /core/puerperio
+        [HttpGet("")]
         public IActionResult Listar()
         {
             var lista = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
             ViewBag.Lista = lista;
-            return View(lista);
+            return View(lista); // Views/SeguimientoPuerperio/Listar.cshtml
         }
 
-        // GET: /SeguimientoPuerperio/Registrar
-        [HttpGet]
+        // GET: /core/puerperio/registrar
+        [HttpGet("registrar")]
         public IActionResult Registrar(int? idEmbarazo)
         {
             var modelo = new entSeguimientoPuerperio
@@ -23,11 +26,11 @@ namespace ProyectoCalidadSoftware.Controllers
                 Fecha = DateTime.Now,
                 Estado = true
             };
-            return View(modelo);
+            return View(modelo); // Views/SeguimientoPuerperio/Registrar.cshtml
         }
 
-        // POST: /SeguimientoPuerperio/Registrar
-        [HttpPost]
+        // POST: /core/puerperio/registrar
+        [HttpPost("registrar")]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entSeguimientoPuerperio entidad)
         {
@@ -38,8 +41,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (entidad.Fecha == default)
                     ModelState.AddModelError(nameof(entidad.Fecha), "Debe ingresar una fecha válida.");
 
-                if (!ModelState.IsValid)
-                    return View(entidad);
+                if (!ModelState.IsValid) return View(entidad);
 
                 entidad.Estado = true;
 
@@ -56,16 +58,34 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // POST: /SeguimientoPuerperio/Inhabilitar/5
-        [HttpPost]
+        // GET: /core/puerperio/{id}/inhabilitar  -> confirmación
+        [HttpGet("{id:int}/inhabilitar")]
         public IActionResult Inhabilitar(int id)
+        {
+            var entidad = logSeguimientoPuerperio.Instancia
+                .ListarSeguimientoPuerperio()
+                .FirstOrDefault(x => x.IdSeguimientoPuerperio == id);
+
+            if (entidad == null)
+            {
+                TempData["Error"] = "Seguimiento no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(entidad); // Views/SeguimientoPuerperio/Inhabilitar.cshtml
+        }
+
+        // POST: /core/puerperio/{id}/inhabilitar
+        [HttpPost("{id:int}/inhabilitar")]
+        [ActionName("Inhabilitar")]
+        [ValidateAntiForgeryToken]
+        public IActionResult InhabilitarConfirmado(int id)
         {
             try
             {
                 bool ok = logSeguimientoPuerperio.Instancia.Inhabilitar(id);
-                if (ok) return RedirectToAction(nameof(Listar));
-
-                TempData["Error"] = "No se pudo inhabilitar el seguimiento.";
+                TempData[ok ? "Ok" : "Error"] = ok
+                    ? "Seguimiento inhabilitado correctamente."
+                    : "No se pudo inhabilitar el seguimiento.";
                 return RedirectToAction(nameof(Listar));
             }
             catch (Exception ex)
@@ -74,10 +94,5 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(Listar));
             }
         }
-
-
-
-
-
     }
 }

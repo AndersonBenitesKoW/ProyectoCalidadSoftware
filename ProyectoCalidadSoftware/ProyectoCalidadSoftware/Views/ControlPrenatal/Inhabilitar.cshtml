@@ -17,7 +17,7 @@
                 <i class="bi bi-hash"></i> ID Control
             </dt>
             <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.IdControl)
+                @Html.DisplayFor(model => model.IdControlPrenatal)
             </dd>
             <dt class="col-sm-3 fw-bold">
                 <i class="bi bi-heart-pulse"></i> ID Embarazo
@@ -117,7 +117,8 @@
             <strong>Advertencia:</strong> Esta acción inhabilitará el control prenatal. El registro quedará inactivo pero no se eliminará permanentemente.
         </div>
 
-        <form asp-action="Inhabilitar" class="mt-4">
+        <form asp-action="Inhabilitar" asp-route-id="@Model.IdControlPrenatal" method="post" class="mt-4">
+            @Html.AntiForgeryToken()
             <div class="d-flex justify-content-between">
                 <a asp-action="Listar" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Cancelar

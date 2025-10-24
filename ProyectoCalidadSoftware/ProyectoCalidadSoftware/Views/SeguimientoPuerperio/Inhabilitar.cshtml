@@ -1,0 +1,26 @@
+﻿@model CapaEntidad.entSeguimientoPuerperio
+@{
+    ViewData["Title"] = "Inhabilitar Seguimiento";
+}
+<h1><i class="bi bi-exclamation-triangle"></i> @ViewData["Title"]</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">ID</dt>
+    <dd class="col-sm-9">@Model.IdSeguimientoPuerperio</dd>
+    <dt class="col-sm-3">Embarazo</dt>
+    <dd class="col-sm-9">@Model.IdEmbarazo</dd>
+    <dt class="col-sm-3">Fecha</dt>
+    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-sm-3">Observación</dt>
+    <dd class="col-sm-9">@Model.Observaciones</dd>
+</dl>
+
+<div class="alert alert-warning">
+    Esta acción inhabilitará el seguimiento (no se elimina).
+</div>
+
+<form asp-action="Inhabilitar" asp-route-id="@Model.IdSeguimientoPuerperio" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Sí, inhabilitar</button>
+    <a asp-action="Listar" class="btn btn-secondary">Cancelar</a>
+</form>

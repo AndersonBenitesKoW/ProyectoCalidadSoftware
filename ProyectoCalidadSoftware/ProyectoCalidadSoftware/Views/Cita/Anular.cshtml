@@ -68,7 +68,8 @@
             <strong>Advertencia:</strong> Esta acción no se puede deshacer. La cita médica será anulada permanentemente.
         </div>
 
-        <form asp-action="Anular" class="mt-4">
+        <form asp-action="Anular" asp-route-id="@Model.IdCita" method="post" class="mt-4">
+            @Html.AntiForgeryToken()
             <div class="d-flex justify-content-between">
                 <a asp-action="Listar" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Cancelar

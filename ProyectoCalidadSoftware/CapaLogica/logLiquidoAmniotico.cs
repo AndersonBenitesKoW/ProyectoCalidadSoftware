@@ -25,6 +25,12 @@ namespace CapaLogica
             return DA_LiquidoAmniotico.Instancia.Listar();
         }
 
+        // LISTAR (alias para compatibilidad)
+        public List<entLiquidoAmniotico> Listar()
+        {
+            return ListarLiquidoAmniotico();
+        }
+
         // INSERTAR
         public bool InsertarLiquidoAmniotico(entLiquidoAmniotico entidad)
         {

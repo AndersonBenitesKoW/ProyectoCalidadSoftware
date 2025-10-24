@@ -23,7 +23,7 @@ namespace CapaAccesoDatos
             List<entPaciente> lista = new List<entPaciente>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarPaciente", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPacientes", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
@@ -33,13 +33,30 @@ namespace CapaAccesoDatos
                     {
                         var paciente = new entPaciente
                         {
+                            // --- Campos que no son nulos ---
                             IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
-                            Nombres = dr["Nombres"].ToString(),
-                            Apellidos = dr["Apellidos"].ToString(),
-                            DNI = dr["DNI"].ToString(),
-                            FechaNacimiento = dr["FechaNacimiento"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaNacimiento"]) : null,
-                            Estado = Convert.ToBoolean(dr["Estado"])
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+
+                            // --- Campos de Texto (más seguro) ---
+                            // Comprobamos si son nulos antes de convertirlos a string
+                            Nombres = dr["Nombres"] != DBNull.Value ? dr["Nombres"].ToString() : string.Empty,
+                            Apellidos = dr["Apellidos"] != DBNull.Value ? dr["Apellidos"].ToString() : string.Empty,
+                            DNI = dr["DNI"] != DBNull.Value ? dr["DNI"].ToString() : string.Empty,
+
+
+                            // --- CAMPOS CON NULOS (LA CORRECCIÓN) ---
+
+                            // 👇 CORRECCIÓN 1: Manejo de nulo para FechaNacimiento
+                            // (Asume que 'FechaNacimiento' en 'entPaciente' es de tipo 'DateTime?')
+                            FechaNacimiento = dr["FechaNacimiento"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["FechaNacimiento"])
+                                : (DateTime?)null, // Asigna null de C# si es DBNull
+
+                            // 👇 CORRECCIÓN 2: Manejo de nulo para IdUsuario
+                            // (Asume que 'IdUsuario' en 'entPaciente' es de tipo 'int?')
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value
+                                ? Convert.ToInt32(dr["IdUsuario"])
+                                : (int?)null // Asigna null de C# si es DBNull
                         };
 
                         lista.Add(paciente);
@@ -57,10 +74,10 @@ namespace CapaAccesoDatos
                 SqlCommand cmd = new SqlCommand("sp_InsertarPaciente", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@DNI", (object)entidad.DNI ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Nombres", entidad.Nombres);
                 cmd.Parameters.AddWithValue("@Apellidos", entidad.Apellidos);
-                cmd.Parameters.AddWithValue("@FechaNacimiento", (object)entidad.FechaNacimiento ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaNacimiento", entidad.FechaNacimiento);
+                cmd.Parameters.AddWithValue("@DNI", entidad.DNI);
                 cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
@@ -68,8 +85,8 @@ namespace CapaAccesoDatos
             }
         }
 
-        public bool Editar(int idPaciente, string dni, string nombres, string apellidos, DateTime fechaNacimiento,
-                           string direccion, string telefono, string correo, string sexo, bool estado)
+        public bool Editar(int idPaciente, string nombres, string apellidos,
+                           DateTime fechaNacimiento, string dni, bool estado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
@@ -77,14 +94,10 @@ namespace CapaAccesoDatos
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@DNI", (object)dni ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Nombres", (object)nombres ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Apellidos", (object)apellidos ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Nombres", nombres);
+                cmd.Parameters.AddWithValue("@Apellidos", apellidos);
                 cmd.Parameters.AddWithValue("@FechaNacimiento", fechaNacimiento);
-                cmd.Parameters.AddWithValue("@Direccion", (object)direccion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Telefono", (object)telefono ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Correo", (object)correo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Sexo", (object)sexo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@DNI", dni);
                 cmd.Parameters.AddWithValue("@Estado", estado);
 
                 cn.Open();

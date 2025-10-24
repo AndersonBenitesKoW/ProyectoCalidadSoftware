@@ -1,8 +1,10 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace CapaEntidad
 {
@@ -10,6 +12,7 @@ namespace CapaEntidad
     {
         public int IdEncuentro { get; set; }
         public int IdEmbarazo { get; set; }
+
         public int IdProfesional { get; set; }
         public short IdTipoEncuentro { get; set; }
         public DateTime FechaHoraInicio { get; set; }
@@ -18,3 +21,6 @@ namespace CapaEntidad
         public string? Notas { get; set; }
     }
 }
+
+
+
