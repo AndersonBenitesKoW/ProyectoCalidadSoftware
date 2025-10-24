@@ -39,7 +39,7 @@ namespace CapaAccesoDatos
                                 IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
                                 NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty,
                                 FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
-                                Estado = Convert.ToBoolean(dr["Estado"]) // Leemos el estado
+                                Estado = Convert.ToBoolean(dr["Estado"]) 
                             });
                         }
                     }

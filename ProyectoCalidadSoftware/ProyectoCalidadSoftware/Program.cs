@@ -22,6 +22,10 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
+<<<<<<< HEAD
     pattern: "{controller=SeguimientoPuerperio}/{action=Listar}/{id?}");
+=======
+    pattern: "{controller=Embarazo}/{action=Index}/{id?}");
+>>>>>>> b447e571425647127be49d6d033b0459a559055b
 
 app.Run();
