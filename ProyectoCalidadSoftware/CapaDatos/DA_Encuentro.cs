@@ -58,8 +58,31 @@ namespace CapaAccesoDatos
                     cmd.Parameters.AddWithValue("@IdEmbarazo", entidad.IdEmbarazo);
                     cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@IdTipoEncuentro", entidad.IdTipoEncuentro);
-                    cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
-                    cmd.Parameters.AddWithValue("@FechaHoraFin", (object)entidad.FechaHoraFin ?? DBNull.Value);
+
+                    // --- INICIO DE LA CORRECCIÓN ---
+
+                    // 1. Corrección para FechaHoraInicio
+                    if (entidad.FechaHoraInicio == DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraInicio", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
+                    }
+
+                    // 2. Corrección para FechaHoraFin
+                    if (entidad.FechaHoraFin == DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraFin", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@FechaHoraFin", entidad.FechaHoraFin);
+                    }
+
+                    // --- FIN DE LA CORRECCIÓN ---
+
                     cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
                     cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
 
