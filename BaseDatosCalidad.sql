@@ -158,6 +158,25 @@ CREATE TABLE ProfesionalSalud(
 );
 GO
 
+CREATE TABLE ProfesionalEmail(
+  IdProfesionalEmail INT IDENTITY(1,1) PRIMARY KEY,
+  IdProfesional INT NOT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
+  Email NVARCHAR(100) NOT NULL,
+  EsPrincipal BIT NOT NULL DEFAULT 0,
+  CONSTRAINT UQ_ProfesionalEmail UNIQUE(IdProfesional, Email)
+);
+
+CREATE TABLE ProfesionalTelefono(
+  IdProfesionalTelefono INT IDENTITY(1,1) PRIMARY KEY,
+  IdProfesional INT NOT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
+  Telefono NVARCHAR(20) NOT NULL,
+  Tipo NVARCHAR(20) NULL,
+  EsPrincipal BIT NOT NULL DEFAULT 0,
+  CONSTRAINT UQ_ProfesionalTelefono UNIQUE(IdProfesional, Telefono)
+);
+
+
+
 /* ================  EMBARAZO (EPISODIO) Y ENCUENTRO  ================= */
 CREATE TABLE Embarazo(
   IdEmbarazo INT IDENTITY(1,1) PRIMARY KEY,
