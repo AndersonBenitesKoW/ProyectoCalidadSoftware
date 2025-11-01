@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -33,11 +31,10 @@ namespace CapaAccesoDatos
                     {
                         var seguimiento = new entSeguimientoPuerperio
                         {
-<<<<<<< HEAD
-                            //IdPuerperio = Convert.ToInt32(dr["IdPuerperio"]),
-=======
+
+
                             IdSeguimientoPuerperio = Convert.ToInt32(dr["IdSeguimientoPuerperio"]),
->>>>>>> b447e571425647127be49d6d033b0459a559055b
+
                             IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
                             IdEncuentro = dr["IdEncuentro"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdEncuentro"]) : null,
                             IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,

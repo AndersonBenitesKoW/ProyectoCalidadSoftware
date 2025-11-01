@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -18,7 +16,7 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public List<entEmbarazo> ListarPorEstado(bool estado) 
+        public List<entEmbarazo> ListarPorEstado(bool estado)
         {
             List<entEmbarazo> lista = new List<entEmbarazo>();
             using (SqlConnection cn = Conexion.Instancia.Conectar())
@@ -39,7 +37,7 @@ namespace CapaAccesoDatos
                                 IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
                                 NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty,
                                 FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
-                                Estado = Convert.ToBoolean(dr["Estado"]) 
+                                Estado = Convert.ToBoolean(dr["Estado"])
                             });
                         }
                     }
@@ -71,7 +69,7 @@ namespace CapaAccesoDatos
                     }
                     else
                     {
-                        return 0; 
+                        return 0;
                     }
                 }
             }
@@ -131,7 +129,7 @@ namespace CapaAccesoDatos
                     }
                 }
             }
-            return embarazo; 
+            return embarazo;
         }
 
         public bool Eliminar(int idEmbarazo)

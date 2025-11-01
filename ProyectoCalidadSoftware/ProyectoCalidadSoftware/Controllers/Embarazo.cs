@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CapaLogica; 
-using CapaEntidad; 
-using System;
-using Microsoft.AspNetCore.Mvc.Rendering; 
-using System.Collections.Generic;
-using System.Linq; 
+﻿using CapaEntidad;
+using CapaLogica;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -41,7 +38,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return View(embarazo); 
+                return View(embarazo);
             }
             catch (Exception ex)
             {

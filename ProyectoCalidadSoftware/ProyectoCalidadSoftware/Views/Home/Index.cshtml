@@ -2,7 +2,191 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Hero principal */
+    .hero-clinica {
+        background: linear-gradient(90deg, #0d6efd 0%, #0aa1ff 100%);
+        color: #fff;
+        border-radius: 1.5rem;
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(13,110,253,0.25);
+    }
+
+        .hero-clinica h1 {
+            font-weight: 700;
+            margin-bottom: .75rem;
+        }
+
+    .hero-actions .btn {
+        margin-right: .5rem;
+        margin-bottom: .5rem;
+    }
+
+    .hero-side-card {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        max-width: 260px;
+    }
+
+    /* Tarjetas resumen */
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 1.25rem;
+        padding: 1.1rem 1.3rem;
+        border: 1px solid #e9f0ff;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+    }
+
+        .stat-card small {
+            color: #6c757d;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0d6efd;
+        }
+
+    /* Accesos rápidos */
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 1rem;
+    }
+
+    .quick-card {
+        background: #f0f6ff;
+        border: 1px solid #d6e7ff;
+        border-radius: 1rem;
+        padding: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        transition: .15s;
+    }
+
+        .quick-card:hover {
+            background: #e7f1ff;
+            text-decoration: none;
+        }
+
+    .quick-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: .85rem;
+        background: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+        color: #0d6efd;
+    }
+
+    /* Login card */
+    .login-mini {
+        background: #fff;
+        border: 1px solid #e9f0ff;
+        border-radius: 1.25rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+    }
+</style>
+
+<div class="hero-clinica">
+    <div class="flex-grow-1">
+        <h1>Hola, bienvenida/o 👋</h1>
+        <p class="mb-3">
+            @Model.MensajeBienvenida
+        </p>
+        <div class="hero-actions">
+            <a href="/core/controles" class="btn btn-light btn-sm">Ir a Controles Prenatales</a>
+            <a href="/Embarazo/Index" class="btn btn-outline-light btn-sm">Ver Embarazos</a>
+            <a href="/Parto/Index" class="btn btn-outline-light btn-sm">Partos registrados</a>
+        </div>
+    </div>
+
+    <div class="hero-side-card">
+        @if (Model.EstaLogueado)
+        {
+            <h5 class="mb-1">Sesión activa</h5>
+            <p class="mb-2">Puedes continuar registrando controles.</p>
+            <a class="btn btn-sm btn-light" href="/StaffLogin/Logout">Cerrar sesión</a>
+        }
+        else
+        {
+            <h5 class="mb-1">Acceso del personal</h5>
+            <p class="mb-2">Médicos, obstetras y administrativos.</p>
+            <a class="btn btn-sm btn-light" href="/StaffLogin/Login">Iniciar sesión</a>
+        }
+    </div>
+</div>
+
+<div class="dashboard-cards mb-4">
+    <div class="stat-card">
+        <small>Embarazos activos</small>
+        <div class="number">@Model.EmbarazosActivos</div>
+        <span class="text-muted">Gestantes en seguimiento</span>
+    </div>
+    <div class="stat-card">
+        <small>Controles este mes</small>
+        <div class="number">@Model.ControlesDelMes</div>
+        <span class="text-muted">Citas de control prenatal</span>
+    </div>
+    <div class="stat-card">
+        <small>Partos este mes</small>
+        <div class="number">@Model.PartosDelMes</div>
+        <span class="text-muted">Atenciones registradas</span>
+    </div>
+    <div class="stat-card">
+        <small>Puerperios activos</small>
+        <div class="number">@Model.PuerperiosActivos</div>
+        <span class="text-muted">Seguimiento hasta 6 meses</span>
+    </div>
+</div>
+
+<h4 class="mb-3">Accesos rápidos</h4>
+<div class="quick-links mb-4">
+    <a href="/core/controles/registrar" class="quick-card">
+        <div class="quick-icon">+</div>
+        <div>
+            <strong>Nuevo control prenatal</strong><br />
+            <small>Registrar signos y medición</small>
+        </div>
+    </a>
+
+    <a href="/Embarazo/Index" class="quick-card">
+        <div class="quick-icon"><i class="bi bi-pregnant"></i></div>
+        <div>
+            <strong>Listado de embarazos</strong><br />
+            <small>Gestantes en seguimiento</small>
+        </div>
+    </a>
+
+    <a href="/Puerperio/Listar" class="quick-card">
+        <div class="quick-icon">P</div>
+        <div>
+            <strong>Puerperio</strong><br />
+            <small>Controles postparto</small>
+        </div>
+    </a>
+
+    <a href="/Citas/Index" class="quick-card">
+        <div class="quick-icon">📅</div>
+        <div>
+            <strong>Citas</strong><br />
+            <small>Programación y control</small>
+        </div>
+    </a>
 </div>

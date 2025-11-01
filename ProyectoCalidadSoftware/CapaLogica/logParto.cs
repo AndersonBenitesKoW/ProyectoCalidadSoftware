@@ -1,7 +1,4 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using CapaAccesoDatos;
 using CapaEntidad;
 
 namespace CapaLogica

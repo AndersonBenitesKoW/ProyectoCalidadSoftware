@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Route("core/puerperio")]
+    //[Route("core/puerperio")]
     public class SeguimientoPuerperioController : Controller
     {
         // GET: /core/puerperio
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
@@ -17,7 +17,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/puerperio/registrar
-        [HttpGet("registrar")]
+        [HttpGet]
         public IActionResult Registrar(int? idEmbarazo)
         {
             var modelo = new entSeguimientoPuerperio
@@ -30,7 +30,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/puerperio/registrar
-        [HttpPost("registrar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entSeguimientoPuerperio entidad)
         {
@@ -59,7 +59,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/puerperio/{id}/inhabilitar  -> confirmación
-        [HttpGet("{id:int}/inhabilitar")]
+        [HttpGet]
         public IActionResult Inhabilitar(int id)
         {
             var entidad = logSeguimientoPuerperio.Instancia
@@ -75,8 +75,8 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/puerperio/{id}/inhabilitar
-        [HttpPost("{id:int}/inhabilitar")]
-        [ActionName("Inhabilitar")]
+        [HttpPost]
+        
         [ValidateAntiForgeryToken]
         public IActionResult InhabilitarConfirmado(int id)
         {

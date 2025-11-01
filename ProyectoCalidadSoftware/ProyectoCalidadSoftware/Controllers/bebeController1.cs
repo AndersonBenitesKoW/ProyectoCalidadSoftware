@@ -8,7 +8,7 @@ namespace ProyectoCalidadSoftware.Controllers
     {
         public IActionResult listar()
         {
-         
+
             var listaBebes = logBebe.Instancia.ListarBebe();
             ViewBag.Lista = listaBebes;
             return View(listaBebes);

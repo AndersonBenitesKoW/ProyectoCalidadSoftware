@@ -1,5 +1,4 @@
-
-
+use ProyectoCalidad; 
 CREATE OR ALTER PROCEDURE sp_InsertarEmbarazo
 (
     @IdPaciente INT,
@@ -76,7 +75,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarProfesionalSalud
+CREATE OR ALTER PROCEDURE sp_ListarProfesionales
 (
     @Estado BIT -- Parámetro requerido: 1 para activos, 0 para inactivos
 )
@@ -88,15 +87,16 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarProfesionalSalud
+CREATE OR ALTER PROCEDURE sp_InsertarProfesional
+  @IdUsuario INT,
   @CMP NVARCHAR(20),
   @Especialidad NVARCHAR(80),
   @Nombres NVARCHAR(100),
   @Apellidos NVARCHAR(100)
 AS
 BEGIN
-  INSERT INTO ProfesionalSalud (CMP, Especialidad, Nombres, Apellidos)
-  VALUES (@CMP, @Especialidad, @Nombres, @Apellidos);
+  INSERT INTO ProfesionalSalud (IdUsuario, CMP, Especialidad, Nombres, Apellidos)
+  VALUES (@IdUsuario, @CMP, @Especialidad, @Nombres, @Apellidos);
 
   SELECT SCOPE_IDENTITY() AS IdProfesional;
 END
@@ -259,9 +259,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
     
-    
+    -- 1. Obtener los datos principales del Parto y tablas relacionadas
     SELECT 
-        pa.*, 
+        pa.*, -- Todos los campos de Parto
         p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
         pr.Nombres + ' ' + pr.Apellidos AS NombreProfesional,
         vp.Descripcion AS DescripcionViaParto,
@@ -281,6 +281,7 @@ BEGIN
     WHERE 
         pa.IdParto = @IdParto;
 
+    -- 2. Obtener las intervenciones asociadas a ese Parto
     SELECT 
         IdPartoIntervencion,
         Intervencion
@@ -302,6 +303,8 @@ BEGIN
     FROM 
         ViaParto
     WHERE 
+        -- Asumimos que también podrían tener un estado, aunque no lo veo en tu script
+        -- Si hubiera un campo "Estado", agregaríamos: WHERE Estado = 1
         1 = 1;
 END
 GO
@@ -329,11 +332,11 @@ BEGIN
         IdPaciente,
         Nombres,
         Apellidos,
-        DNI 
+        DNI -- Incluimos DNI por si ayuda a diferenciar
     FROM 
         Paciente
     WHERE 
-        Estado = 1 
+        Estado = 1 -- Solo pacientes activos
     ORDER BY
         Apellidos, Nombres;
 END
@@ -370,6 +373,7 @@ BEGIN
         @Notas
     );
     
+    -- Devolvemos el ID del Encuentro recién creado
     SELECT SCOPE_IDENTITY(); 
 END
 GO
@@ -393,7 +397,7 @@ GO
 CREATE OR ALTER PROCEDURE sp_ListarEncuentrosPorEmbarazoYTipo
 (
     @IdEmbarazo INT,
-    @CodigoTipo NVARCHAR(20) 
+    @CodigoTipo NVARCHAR(20) -- Ej: 'INTRAPARTO'
 )
 AS
 BEGIN
@@ -414,24 +418,109 @@ BEGIN
     WHERE 
         E.IdEmbarazo = @IdEmbarazo
         AND TE.Codigo = @CodigoTipo
-        AND E.Estado <> 'Cerrado';
+        AND E.Estado <> 'Cerrado'; -- O la lógica que prefieras
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarPacientes
+
+-- CORE CONTROL PRENATAL--
+
+CREATE OR ALTER PROCEDURE sp_ListarControlPrenatal
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        IdPaciente,
-        IdUsuario,      
-        Nombres,
-        Apellidos,
-        DNI,
-        FechaNacimiento,
+        cp.IdControl,
+        cp.IdEmbarazo,
+        cp.IdEncuentro,
+        cp.IdProfesional,
+        cp.Fecha,
+        cp.PesoKg,
+        cp.TallaM,
+        cp.PA_Sistolica,
+        cp.PA_Diastolica,
+        cp.AlturaUterina_cm,
+        cp.FCF_bpm,
+        cp.Presentacion,
+        cp.Proteinuria,
+        cp.MovFetales,
+        cp.Consejerias,
+        cp.Observaciones,
+        cp.Estado,
+        -- Datos adicionales útiles
+        p.Nombres + ' ' + p.Apellidos AS Paciente,
+        pr.Nombres + ' ' + pr.Apellidos AS Profesional
+    FROM ControlPrenatal cp
+    JOIN Embarazo e ON e.IdEmbarazo = cp.IdEmbarazo
+    JOIN Paciente p ON p.IdPaciente = e.IdPaciente
+    LEFT JOIN ProfesionalSalud pr ON pr.IdProfesional = cp.IdProfesional
+    ORDER BY cp.Fecha DESC;
+END
+GO
+
+
+
+CREATE OR ALTER PROCEDURE sp_InsertarControlPrenatal
+(
+    @IdEmbarazo INT,
+    @IdEncuentro INT = NULL,
+    @IdProfesional INT = NULL,
+    @Fecha DATE,
+    @PesoKg DECIMAL(5,2) = NULL,
+    @TallaM DECIMAL(3,2) = NULL,
+    @PA_Sistolica TINYINT = NULL,
+    @PA_Diastolica TINYINT = NULL,
+    @AlturaUterina_cm DECIMAL(4,1) = NULL,
+    @FCF_bpm TINYINT = NULL,
+    @Presentacion NVARCHAR(50) = NULL,
+    @Proteinuria NVARCHAR(10) = NULL,
+    @MovFetales BIT = NULL,
+    @Consejerias NVARCHAR(200) = NULL,
+    @Observaciones NVARCHAR(300) = NULL,
+    @Estado BIT = 1
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO ControlPrenatal (
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PesoKg,
+        TallaM,
+        PA_Sistolica,
+        PA_Diastolica,
+        AlturaUterina_cm,
+        FCF_bpm,
+        Presentacion,
+        Proteinuria,
+        MovFetales,
+        Consejerias,
+        Observaciones,
         Estado
-    FROM 
-        Paciente; 
+    )
+    VALUES (
+        @IdEmbarazo,
+        @IdEncuentro,
+        @IdProfesional,
+        @Fecha,
+        @PesoKg,
+        @TallaM,
+        @PA_Sistolica,
+        @PA_Diastolica,
+        @AlturaUterina_cm,
+        @FCF_bpm,
+        @Presentacion,
+        @Proteinuria,
+        @MovFetales,
+        @Consejerias,
+        @Observaciones,
+        @Estado
+    );
+
+    SELECT SCOPE_IDENTITY() AS IdControlPrenatal; -- devuelve el nuevo ID
 END
 GO
