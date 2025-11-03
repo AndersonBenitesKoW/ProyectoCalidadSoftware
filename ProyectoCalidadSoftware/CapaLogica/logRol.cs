@@ -2,7 +2,7 @@
 using CapaEntidad;
 namespace CapaLogica
 {
-    internal class logRol
+    public class logRol
     {
         #region Singleton
         private static readonly logRol UnicaInstancia = new logRol();

@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    //[Route("core/controles")]
+  
     public class ControlPrenatalController : Controller
     {
-        // GET: /core/controles
+       
         [HttpGet]
         public IActionResult Listar()
         {
@@ -16,7 +16,7 @@ namespace ProyectoCalidadSoftware.Controllers
             return View(lista); // Views/ControlPrenatal/Listar.cshtml
         }
 
-        // GET: /core/controles/registrar
+      
         [HttpGet]
         public IActionResult Registrar(int? idEmbarazo)
         {
@@ -29,7 +29,7 @@ namespace ProyectoCalidadSoftware.Controllers
             return View(modelo); // Views/ControlPrenatal/Registrar.cshtml
         }
 
-        // POST: /core/controles/registrar
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entControlPrenatal control)
@@ -61,7 +61,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /core/controles/{id}/inhabilitar  -> página de confirmación
+       
         [HttpGet]
         public IActionResult Inhabilitar(int id)
         {
@@ -78,7 +78,7 @@ namespace ProyectoCalidadSoftware.Controllers
             return View(control); // Views/ControlPrenatal/Inhabilitar.cshtml (modelo: entControlPrenatal)
         }
 
-        // POST: /core/controles/{id}/inhabilitar
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult InhabilitarConfirmado(int id)

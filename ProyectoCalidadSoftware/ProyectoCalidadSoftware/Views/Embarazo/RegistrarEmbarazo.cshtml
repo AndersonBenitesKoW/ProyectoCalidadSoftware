@@ -4,83 +4,163 @@
     ViewData["Title"] = "Registrar Nuevo Embarazo";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Complete los datos para registrar un nuevo embarazo.</p>
-<hr />
-
-<div class="row">
-    <div class="col-md-6">
-
-        <form asp-action="RegistrarEmbarazo" method="post">
-
-            @Html.AntiForgeryToken()
-
-            @* Muestra de Errores Generales *@
-            @if (ViewBag.MensajeError != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @ViewBag.MensajeError
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <h3 class="mb-0 font-weight-bold">
+                        <i class="fas fa-baby fa-2x mb-2"></i><br>
+                        Registrar Nuevo Embarazo
+                    </h3>
+                    <p class="mb-0 small">Complete los datos para iniciar el seguimiento de un nuevo embarazo</p>
                 </div>
-            }
-            @* Añadir también el ViewBag.Error por si falla CargarViewBags *@
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-warning" role="alert">
-                    @ViewBag.Error
-                </div>
-            }
-            @* Mensaje de éxito *@
-            @if (TempData["MensajeExito"] != null)
-            {
-                <div class="alert alert-success" role="alert">
-                    @TempData["MensajeExito"]
-                </div>
-            }
+                <div class="card-body p-5">
+                    <form asp-action="RegistrarEmbarazo" method="post" novalidate class="needs-validation">
+                        @Html.AntiForgeryToken()
 
+                        @* Muestra de Errores Generales *@
+                        @if (ViewBag.MensajeError != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.MensajeError
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>@ViewBag.Error
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        @if (TempData["MensajeExito"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>@TempData["MensajeExito"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <select asp-for="IdPaciente" class="form-select form-select-lg" asp-items="@ViewBag.ListaPacientes" required>
+                                        <option value="">-- Seleccione una Paciente --</option>
+                                    </select>
+                                    <label asp-for="IdPaciente" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Paciente
+                                    </label>
+                                    <span asp-validation-for="IdPaciente" class="text-danger small"></span>
+                                </div>
+                            </div>
 
-                    <div class="mb-3">
-                        <label asp-for="IdPaciente" class="form-label">Seleccionar Paciente</label>
-                        <select asp-for="IdPaciente" class="form-select" asp-items="@ViewBag.ListaPacientes">
-                            <option value="">-- Seleccione una Paciente --</option>
-                        </select>
-                        <span asp-validation-for="IdPaciente" class="text-danger"></span>
-                    </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="FUR" type="date" class="form-control form-control-lg" required />
+                                    <label asp-for="FUR" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Fecha de Última Regla (FUR)
+                                    </label>
+                                    <span asp-validation-for="FUR" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label asp-for="FUR" class="form-label">Fecha de Última Regla (FUR)</label>
-                        <input asp-for="FUR" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" />
-                        <span asp-validation-for="FUR" class="text-danger"></span>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="FPP" type="date" class="form-control form-control-lg" />
+                                    <label asp-for="FPP" class="form-label">
+                                        <i class="fas fa-calendar-check me-2"></i>Fecha Probable de Parto (FPP)
+                                    </label>
+                                    <span asp-validation-for="FPP" class="text-danger small"></span>
+                                </div>
+                                <div class="form-text small text-muted mt-1">
+                                    <i class="fas fa-info-circle me-1"></i>Si dejas esto vacío, se calculará automáticamente con la FUR.
+                                </div>
+                            </div>
 
-                    <div class="mb-3">
-                        <label asp-for="FPP" class="form-label">Fecha Probable de Parto (FPP)</label>
-                        <input asp-for="FPP" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" />
-                        <span asp-validation-for="FPP" class="text-danger"></span>
-                        <div class="form-text">Si dejas esto vacío, se calculará automáticamente si la FUR está presente.</div>
-                    </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="Riesgo" type="text" class="form-control form-control-lg" placeholder="Ej: Alto Riesgo Obstétrico" />
+                                    <label asp-for="Riesgo" class="form-label">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>Nivel de Riesgo
+                                    </label>
+                                    <span asp-validation-for="Riesgo" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Riesgo" class="form-label">Nivel de Riesgo</label>
-                        <input asp-for="Riesgo" type="text" class="form-control" placeholder="Ej: Alto Riesgo Obstétrico" />
-                        <span asp-validation-for="Riesgo" class="text-danger"></span>
-                    </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-save me-2"></i>Registrar Embarazo
+                            </button>
+                            <a asp-action="Index" asp-controller="Embarazo" class="btn btn-outline-secondary btn-lg px-5">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="mt-3">
-                <input type="submit" value="Registrar Embarazo" class="btn btn-primary" />
-                <a asp-action="Index" asp-controller="Embarazo" class="btn btn-secondary">Volver al Listado</a>
-            </div>
-
-        </form>
+        </div>
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Calcular FPP automáticamente cuando se selecciona FUR
+            $('#FUR').on('change', function () {
+                var furDate = new Date($(this).val());
+                if (furDate && !isNaN(furDate.getTime())) {
+                    // Calcular FPP (FUR + 280 días = 40 semanas)
+                    var fppDate = new Date(furDate);
+                    fppDate.setDate(furDate.getDate() + 280);
+
+                    var fppFormatted = fppDate.toISOString().split('T')[0];
+                    $('#FPP').val(fppFormatted);
+                }
+            });
+        });
+    </script>
 }

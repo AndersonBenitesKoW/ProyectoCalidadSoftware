@@ -1,5 +1,6 @@
 using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
@@ -8,13 +9,14 @@ namespace ProyectoCalidadSoftware.Controllers
     public class CitaController : Controller
     {
         // GET: /core/citas
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         [HttpGet]
         public IActionResult Listar()
         {
             var lista = logCita.Instancia.ListarCita();
             return View(lista);                       // Views/Cita/Listar.cshtml
         }
-
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         // GET: /core/citas/insertar
         [HttpGet]
         public IActionResult Insertar()
@@ -56,6 +58,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/citas/{id}/anular  -> página de confirmación
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         [HttpGet]
         public IActionResult Anular(int id)
         {

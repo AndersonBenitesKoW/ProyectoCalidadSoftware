@@ -21,7 +21,7 @@ namespace CapaAccesoDatos
             List<entProfesionalSalud> lista = new List<entProfesionalSalud>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionalSalud", cn)) // Asegúrate que el SP se llame así
+            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionales", cn)) // Asegúrate que el SP se llame así
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Estado", estado);

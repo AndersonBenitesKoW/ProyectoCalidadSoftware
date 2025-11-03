@@ -29,6 +29,7 @@ BEGIN
     SELECT SCOPE_IDENTITY(); 
 END
 GO
+select * from Usuario
 
 CREATE OR ALTER PROCEDURE sp_BuscarEmbarazoPorId
 (

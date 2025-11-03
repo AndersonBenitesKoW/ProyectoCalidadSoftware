@@ -13,7 +13,7 @@
         public decimal? AlturaUterinaPP_cm { get; set; }// (4,1)
         public string? Loquios { get; set; }
         public string? Lactancia { get; set; }
-        public bool? SignosInfeccion { get; set; }
+        public bool SignosInfeccion { get; set; }
         public string? TamizajeDepresion { get; set; }
         public short? IdMetodoPF { get; set; }
         public string? Observaciones { get; set; }

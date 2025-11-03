@@ -1,107 +1,958 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ProyectoCalidadSoftware.Models.HomeDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard - Clínica Obstétrica";
+    Layout = "~/Views/Shared/_Layout.cshtml";   // 👈 usa el layout del panel de administración
 }
 
+<!-- Dashboard Moderno con Métricas Interactivas -->
+<div class="container-fluid px-4 py-5">
+    <!-- Hero Section con Gradiente Animado -->
+    <div class="hero-dashboard mb-5">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="display-4 fw-bold text-white mb-3">
+                    <i class="fas fa-heartbeat me-3"></i>Dashboard Clínico
+                </h1>
+                <p class="lead text-white-50 mb-4">
+                    Bienvenido al sistema de gestión obstétrica. Monitorea métricas clave y accede rápidamente a las funciones principales.
+                </p>
+                <div class="hero-stats d-flex gap-4 mb-4">
+                    <div class="stat-highlight">
+                        <div class="stat-number">@Model.EmbarazosActivos</div>
+                        <div class="stat-label">Embarazos Activos</div>
+                    </div>
+                    <div class="stat-highlight">
+                        <div class="stat-number">@Model.ControlesDelMes</div>
+                        <div class="stat-label">Controles del Mes</div>
+                    </div>
+                    <div class="stat-highlight">
+                        <div class="stat-number">@Model.PartosDelMes</div>
+                        <div class="stat-label">Partos del Mes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-elements">
+                    <div class="floating-circle circle-1"></div>
+                    <div class="floating-circle circle-2"></div>
+                    <div class="floating-circle circle-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métricas Principales -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="metric-card primary-card">
+                <div class="card-icon">
+                    <i class="fas fa-baby"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="metric-value">@Model.EmbarazosActivos</h3>
+                    <p class="metric-label">Embarazos Activos</p>
+                    <div class="metric-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12% este mes</span>
+                    </div>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="metric-card success-card">
+                <div class="card-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="metric-value">@Model.ControlesDelMes</h3>
+                    <p class="metric-label">Controles del Mes</p>
+                    <div class="metric-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8% vs mes anterior</span>
+                    </div>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="metric-card info-card">
+                <div class="card-icon">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="metric-value">@Model.PartosDelMes</h3>
+                    <p class="metric-label">Partos del Mes</p>
+                    <div class="metric-trend neutral">
+                        <i class="fas fa-minus"></i>
+                        <span>Estable</span>
+                    </div>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="metric-card warning-card">
+                <div class="card-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="metric-value">@Model.PuerperiosActivos</h3>
+                    <p class="metric-label">Puerperios Activos</p>
+                    <div class="metric-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5% este trimestre</span>
+                    </div>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos y Estadísticas -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="chart-card">
+                <div class="card-header-custom">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Actividad Mensual
+                    </h5>
+                    <div class="chart-controls">
+                        <button class="btn btn-sm btn-outline-primary active">Mensual</button>
+                        <button class="btn btn-sm btn-outline-primary">Trimestral</button>
+                        <button class="btn btn-sm btn-outline-primary">Anual</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-placeholder">
+                        <div class="chart-bars">
+                            <div class="bar" style="height: 60%"></div>
+                            <div class="bar" style="height: 80%"></div>
+                            <div class="bar" style="height: 40%"></div>
+                            <div class="bar" style="height: 90%"></div>
+                            <div class="bar" style="height: 70%"></div>
+                            <div class="bar" style="height: 85%"></div>
+                        </div>
+                        <div class="chart-labels">
+                            <span>Ene</span>
+                            <span>Feb</span>
+                            <span>Mar</span>
+                            <span>Abr</span>
+                            <span>May</span>
+                            <span>Jun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="stats-card">
+                <div class="card-header-custom">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pie-chart me-2"></i>Distribución por Estado
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="pie-chart-placeholder">
+                        <div class="pie-segment" style="background: #667eea; --percentage: 45%"></div>
+                        <div class="pie-segment" style="background: #764ba2; --percentage: 30%"></div>
+                        <div class="pie-segment" style="background: #f093fb; --percentage: 25%"></div>
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #667eea"></div>
+                            <span>Activos (45%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #764ba2"></div>
+                            <span>En Progreso (30%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f093fb"></div>
+                            <span>Completados (25%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Rápidos Interactivos -->
+    <div class="row g-4">
+        <div class="col-12">
+            <h4 class="section-title">
+                <i class="fas fa-bolt me-2"></i>Accesos Rápidos
+            </h4>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="/Embarazo/RegistrarEmbarazo" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-content">
+                    <h6>Registrar Embarazo</h6>
+                    <p>Iniciar seguimiento de nueva gestante</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="/ControlPrenatal/Registrar" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="action-content">
+                    <h6>Control Prenatal</h6>
+                    <p>Registrar signos vitales y mediciones</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="/Cita/Insertar" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-calendar-plus"></i>
+                </div>
+                <div class="action-content">
+                    <h6>Programar Cita</h6>
+                    <p>Agendar nueva consulta médica</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="/Paciente/Listar" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="action-content">
+                    <h6>Gestionar Pacientes</h6>
+                    <p>Ver y administrar pacientes</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
 <style>
-    /* Hero principal */
+    /* Hero Dashboard */
+    .hero-dashboard {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 4rem 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+    }
+
+    .hero-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-stats {
+        margin-top: 2rem;
+    }
+
+    .stat-highlight {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+    }
+
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .floating-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .circle-1 {
+        width: 100px;
+        height: 100px;
+        top: 20%;
+        right: 10%;
+        animation-delay: 0s;
+    }
+
+    .circle-2 {
+        width: 60px;
+        height: 60px;
+        top: 60%;
+        right: 20%;
+        animation-delay: 2s;
+    }
+
+    .circle-3 {
+        width: 80px;
+        height: 80px;
+        top: 40%;
+        right: 30%;
+        animation-delay: 4s;
+    }
+
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* Métricas Cards */
+    .metric-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: none;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .primary-card .card-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .success-card .card-icon { background: linear-gradient(135deg, #4ade80, #22c55e); }
+    .info-card .card-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .warning-card .card-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+        color: #1f2937;
+    }
+
+    .metric-label {
+        font-size: 1rem;
+        color: #6b7280;
+        margin: 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .metric-trend {
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .metric-trend.positive { color: #10b981; }
+    .metric-trend.negative { color: #ef4444; }
+    .metric-trend.neutral { color: #6b7280; }
+
+    .card-decoration {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 0 20px 0 50px;
+    }
+
+    /* Charts */
+    .chart-card, .stats-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+
+    .card-header-custom h5 {
+        color: #1f2937;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .chart-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .chart-controls .btn {
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .chart-placeholder {
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .chart-bars {
+        display: flex;
+        align-items: end;
+        gap: 2rem;
+        height: 200px;
+        align-items: flex-end;
+    }
+
+    .bar {
+        width: 40px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 4px 4px 0 0;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .bar:hover {
+        transform: scaleY(1.1);
+        filter: brightness(1.1);
+    }
+
+    .chart-labels {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .pie-chart-placeholder {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .pie-segment {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        position: absolute;
+        clip-path: polygon(50% 50%, 50% 0%, var(--percentage) 0%, var(--percentage) var(--percentage), 50% var(--percentage));
+    }
+
+    .pie-legend {
+        margin-top: 2rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+    }
+
+    /* Action Cards */
+    .action-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+        transition: left 0.6s;
+    }
+
+    .action-card:hover::before {
+        left: 100%;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
+    }
+
+    .action-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .action-card:hover .action-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-content h6 {
+        color: #1f2937;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+        transition: color 0.3s ease;
+    }
+
+    .action-card:hover .action-content h6 {
+        color: #667eea;
+    }
+
+    .action-content p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .action-arrow {
+        margin-left: auto;
+        color: #9ca3af;
+        transition: all 0.3s ease;
+    }
+
+    .action-card:hover .action-arrow {
+        color: #667eea;
+        transform: translateX(5px);
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 2rem;
+        font-size: 1.8rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-dashboard {
+            padding: 2rem 1.5rem;
+        }
+
+        .hero-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-stats {
+            justify-content: center;
+        }
+
+        .metric-card {
+            padding: 1.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+        }
+
+        .action-card {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<style>
+    /* Hero principal con animaciones profesionales */
     .hero-clinica {
-        background: linear-gradient(90deg, #0d6efd 0%, #0aa1ff 100%);
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 50%, var(--secondary-blue) 100%);
         color: #fff;
         border-radius: 1.5rem;
-        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        padding: 3rem 3rem 2.5rem 3rem;
         display: flex;
         gap: 2rem;
         align-items: center;
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(13,110,253,0.25);
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 60px rgba(30, 64, 175, 0.3);
+        position: relative;
+        overflow: hidden;
+        animation: heroSlideIn 1s ease-out;
     }
 
-        .hero-clinica h1 {
-            font-weight: 700;
-            margin-bottom: .75rem;
-        }
+    .hero-clinica::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+
+    .hero-clinica h1 {
+        font-weight: 800;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        animation: textFadeIn 1.2s ease-out 0.3s both;
+    }
+
+    .hero-clinica p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        opacity: 0.95;
+        animation: textFadeIn 1.2s ease-out 0.5s both;
+    }
+
+    .hero-actions {
+        animation: textFadeIn 1.2s ease-out 0.7s both;
+    }
 
     .hero-actions .btn {
-        margin-right: .5rem;
-        margin-bottom: .5rem;
+        margin-right: 0.75rem;
+        margin-bottom: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-actions .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .hero-actions .btn:hover::before {
+        left: 100%;
+    }
+
+    .hero-actions .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .hero-side-card {
-        background: rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.2);
         border-radius: 1rem;
-        padding: 1rem 1.25rem;
-        max-width: 260px;
+        padding: 1.5rem 1.75rem;
+        max-width: 280px;
+        animation: cardSlideIn 1s ease-out 0.8s both;
+        transition: var(--transition);
     }
 
-    /* Tarjetas resumen */
+    .hero-side-card:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+
+    /* Tarjetas resumen con animaciones */
     .dashboard-cards {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
     }
 
     .stat-card {
         background: #fff;
         border-radius: 1.25rem;
-        padding: 1.1rem 1.3rem;
+        padding: 1.5rem 1.75rem;
         border: 1px solid #e9f0ff;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        animation: cardFadeIn 0.8s ease-out both;
+        animation-delay: calc(var(--card-index, 0) * 0.1s);
     }
 
-        .stat-card small {
-            color: #6c757d;
-        }
+    .stat-card:nth-child(1) { --card-index: 1; }
+    .stat-card:nth-child(2) { --card-index: 2; }
+    .stat-card:nth-child(3) { --card-index: 3; }
+    .stat-card:nth-child(4) { --card-index: 4; }
 
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0d6efd;
-        }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary-blue), var(--primary-blue-light));
+        border-radius: 2px 0 0 2px;
+    }
 
-    /* Accesos rápidos */
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        border-color: var(--primary-blue-light);
+    }
+
+    .stat-card small {
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.8rem;
+    }
+
+    .stat-card .number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-blue);
+        margin: 0.5rem 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card span:last-child {
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* Accesos rápidos mejorados */
     .quick-links {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
     }
 
     .quick-card {
-        background: #f0f6ff;
-        border: 1px solid #d6e7ff;
-        border-radius: 1rem;
-        padding: 1.1rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 1.25rem;
+        padding: 1.5rem;
         display: flex;
         align-items: center;
-        gap: .85rem;
-        transition: .15s;
+        gap: 1rem;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        animation: cardFadeIn 0.8s ease-out both;
+        animation-delay: calc(var(--quick-index, 0) * 0.1s + 0.5s);
+        text-decoration: none;
+        color: inherit;
     }
 
-        .quick-card:hover {
-            background: #e7f1ff;
-            text-decoration: none;
-        }
+    .quick-card:nth-child(1) { --quick-index: 1; }
+    .quick-card:nth-child(2) { --quick-index: 2; }
+    .quick-card:nth-child(3) { --quick-index: 3; }
+    .quick-card:nth-child(4) { --quick-index: 4; }
+
+    .quick-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+        transition: left 0.6s;
+    }
+
+    .quick-card:hover::before {
+        left: 100%;
+    }
+
+    .quick-card:hover {
+        background: linear-gradient(135deg, #f0f6ff 0%, #e7f1ff 100%);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
+        border-color: var(--primary-blue-light);
+    }
 
     .quick-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: .85rem;
-        background: #fff;
+        width: 50px;
+        height: 50px;
+        border-radius: 1rem;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
         display: grid;
         place-items: center;
-        font-size: 1.2rem;
-        color: #0d6efd;
+        font-size: 1.4rem;
+        color: white;
+        box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+        transition: var(--transition);
+        flex-shrink: 0;
     }
 
-    /* Login card */
-    .login-mini {
-        background: #fff;
-        border: 1px solid #e9f0ff;
-        border-radius: 1.25rem;
-        padding: 1.25rem 1.5rem;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+    .quick-card:hover .quick-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 12px 30px rgba(30, 64, 175, 0.4);
     }
+
+    .quick-card strong {
+        color: var(--gray-800);
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        display: block;
+        transition: var(--transition);
+    }
+
+    .quick-card:hover strong {
+        color: var(--primary-blue);
+    }
+
+    .quick-card small {
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+
+    /* Títulos con animación */
+    h4 {
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 2rem;
+        font-size: 1.8rem;
+        text-align: center;
+        position: relative;
+        animation: titleSlideIn 1s ease-out 1.2s both;
+    }
+
+    h4::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+        border-radius: 2px;
+        animation: lineGrow 1s ease-out 1.5s both;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .hero-clinica {
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .hero-clinica h1 {
+            font-size: 2rem;
+        }
+
+        .dashboard-cards {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .quick-links {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+
 </style>
 
 <div class="hero-clinica">

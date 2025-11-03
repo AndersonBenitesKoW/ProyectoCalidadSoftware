@@ -19,13 +19,21 @@ CREATE TABLE Rol(
 );
 GO
 
+delete from Usuario
+delete from UsuarioRol
+select * from Usuario
+dbcc checkident('usuario', RESEED,0); 
+
 CREATE TABLE Usuario(
   IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
   NombreUsuario NVARCHAR(50) NOT NULL UNIQUE,
-  ClaveHash NVARCHAR(50) NOT NULL,
-  Estado BIT NOT NULL DEFAULT 1s
+  ClaveHash NVARCHAR(500) NOT NULL,
+  email NVARCHAR(100) NOT NULL,
+  Estado BIT NOT NULL DEFAULT 1
 );
 GO
+
+
 
 CREATE TABLE UsuarioRol(
   IdUsuarioRol INT IDENTITY(1,1) PRIMARY KEY,
@@ -33,6 +41,24 @@ CREATE TABLE UsuarioRol(
   IdRol INT NOT NULL FOREIGN KEY REFERENCES Rol(IdRol),
   CONSTRAINT UQ_UsuarioRol UNIQUE(IdUsuario, IdRol)
 );
+GO
+
+
+INSERT INTO Rol (NombreRol, Descripcion) VALUES
+('ADMIN', 'Administrador del sistema'),
+('PERSONAL_SALUD', 'Médicos y obstetras'),
+('SECRETARIA', 'Recepción y citas'),
+('PACIENTE', 'Portal de pacientes');
+GO
+
+-- Usuario 1: admin →ADMIN_anderson
+
+--contraseña: anderson
+
+SELECT * FROM USUARIO 
+
+INSERT INTO UsuarioRol (IdUsuario, IdRol)
+VALUES (1, (SELECT IdRol FROM Rol WHERE NombreRol='ADMIN'));
 GO
 
 CREATE TABLE Auditoria(
@@ -235,6 +261,7 @@ CREATE TABLE AntecedenteObstetrico(
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
+select  * from Usuario
 
 CREATE TABLE FactorRiesgoCat(
   IdFactorCat INT IDENTITY(1,1) PRIMARY KEY,
@@ -454,3 +481,6 @@ GO
 
 PRINT 'Esquema creado correctamente (Paciente relacionado con Usuario).';
 GO
+/* =========================================================
+   FIN DEL SCRIPT
+   ========================================================= */

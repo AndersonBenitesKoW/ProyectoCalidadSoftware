@@ -1,4 +1,5 @@
-using CapaLogica;
+ï»¿using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoCalidadSoftware.Models;
 using System.Diagnostics;
@@ -14,11 +15,10 @@ namespace ProyectoCalidadSoftware.Controllers
             _logger = logger;
         }
 
+
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Index()
         {
-            // Ojo: estas llamadas dependen de tus nombres reales en CapaLogica.
-            // Te los pongo como los que ya vi que usas: logEmbarazo, logControlPrenatal, etc.
-
             int embarazosActivos = 0;
             int controlesMes = 0;
             int partosMes = 0;
@@ -37,15 +37,22 @@ namespace ProyectoCalidadSoftware.Controllers
                     .Count();
 
                 // 3. Partos del mes actual
-                var listaPartos = logParto.Instancia.ListarPartos(true); // ya tienes SP de partos activos
+                var listaPartos = logParto.Instancia.ListarPartos(true);
                 partosMes = listaPartos
                     .Where(p => p.Fecha.Month == DateTime.Now.Month && p.Fecha.Year == DateTime.Now.Year)
                     .Count();
 
-                // 4. Puerperios activos (si tu lógica se llama distinto, cámbialo)
-                // si no tienes lógica de puerperio aún, déjalo en 0 o coméntalo
-                 var listaPuerperios = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
-                // puerperiosActivos = listaPuerperios.Count;
+                // 4. Puerperios activos (TU lÃ³gica ðŸ‘‡)
+                var listaPuerperios = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
+
+                // opciÃ³n A: solo los que estÃ¡n en Estado = 1
+                // puerperiosActivos = listaPuerperios.Where(p => p.Estado).Count();
+
+                // opciÃ³n B: activos y dentro de los Ãºltimos 6 meses
+                var seisMesesAtras = DateTime.Now.AddMonths(-6);
+                puerperiosActivos = listaPuerperios
+                    .Where(p => p.Estado && p.Fecha >= seisMesesAtras)
+                    .Count();
             }
             catch (Exception ex)
             {
@@ -58,21 +65,14 @@ namespace ProyectoCalidadSoftware.Controllers
                 ControlesDelMes = controlesMes,
                 PartosDelMes = partosMes,
                 PuerperiosActivos = puerperiosActivos,
-                MensajeBienvenida = "Sistema de Gestión Obstétrica - Control prenatal, parto y puerperio.",
-                // aquí podrías leer de sesión si hay usuario
+                MensajeBienvenida = "Sistema de GestiÃ³n ObstÃ©trica - Control prenatal, parto y puerperio.",
                 EstaLogueado = HttpContext.User?.Identity?.IsAuthenticated ?? false
             };
 
             return View(vm);
-
-
         }
         // =============== LOGIN ===============
-        // esto es solo para mostrar la vista de login en el home
-        public IActionResult Login()
-        {
-            return View();
-        }
+        
 
         // =============== PRIVACIDAD (la dejo) ===============
         public IActionResult Privacy()
