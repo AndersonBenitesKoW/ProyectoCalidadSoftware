@@ -1,21 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CapaEntidad;
 using CapaLogica;
-using CapaEntidad;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Route("core/parto")]
+    //[Route("core/parto")]
     public class PartoController : Controller
     {
         /// <summary>
         /// 🚀 Listado de partos.
         /// GET: /core/parto
         /// </summary>
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Index(bool mostrarActivos = true)
         {
             List<entParto> lista;
@@ -35,7 +32,7 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// GET: /core/parto/registrar
         /// </summary>
-        [HttpGet("registrar")]
+        [HttpGet]
         public IActionResult RegistrarParto()
         {
             CargarViewBags(null);
@@ -45,7 +42,7 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// POST: /core/parto/registrar
         /// </summary>
-        [HttpPost("registrar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult RegistrarParto(entParto parto, List<string> intervenciones)
         {
@@ -96,7 +93,7 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// GET: /core/parto/{id}/anular  -> página de confirmación
         /// </summary>
-        [HttpGet("{id:int}/anular")]
+        [HttpGet]
         public IActionResult AnularParto(int id)
         {
             try
@@ -119,8 +116,8 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// POST: /core/parto/{id}/anular
         /// </summary>
-        [HttpPost("{id:int}/anular")]
-        [ActionName("AnularParto")] // permite usar asp-action="AnularParto" o renombrar en la vista si prefieres "Anular"
+        [HttpPost]
+         // permite usar asp-action="AnularParto" o renombrar en la vista si prefieres "Anular"
         [ValidateAntiForgeryToken]
         public IActionResult AnularPartoPost(int idParto)
         {
@@ -147,7 +144,7 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// GET: /core/parto/detalles/{id}
         /// </summary>
-        [HttpGet("detalles/{id:int}")]
+        [HttpGet]
         public IActionResult DetallesParto(int id)
         {
             try
@@ -172,7 +169,7 @@ namespace ProyectoCalidadSoftware.Controllers
         /// <summary>
         /// GET: /core/parto/encuentros?idEmbarazo=123
         /// </summary>
-        [HttpGet("encuentros")]
+        [HttpGet]
         public JsonResult GetEncuentros(int idEmbarazo)
         {
             try

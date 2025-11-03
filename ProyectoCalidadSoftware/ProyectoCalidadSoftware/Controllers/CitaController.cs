@@ -1,29 +1,31 @@
 using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Route("core/citas")]
+    //[Route("core/citas")]
     public class CitaController : Controller
     {
         // GET: /core/citas
-        [HttpGet("")]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logCita.Instancia.ListarCita();
             return View(lista);                       // Views/Cita/Listar.cshtml
         }
-
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         // GET: /core/citas/insertar
-        [HttpGet("insertar")]
+        [HttpGet]
         public IActionResult Insertar()
         {
             return View(new entCita());              // Views/Cita/Insertar.cshtml
         }
 
         // POST: /core/citas/insertar
-        [HttpPost("insertar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Insertar(entCita entidad)
         {
@@ -56,7 +58,8 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/citas/{id}/anular  -> página de confirmación
-        [HttpGet("{id:int}/anular")]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
+        [HttpGet]
         public IActionResult Anular(int id)
         {
             // Trae la cita para mostrar sus detalles en la vista (tu modelo es entCita)
@@ -70,8 +73,8 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/citas/{id}/anular
-        [HttpPost("{id:int}/anular")]
-        [ActionName("Anular")]                       // permite usar asp-action="Anular" en el form
+        [HttpPost]
+                            // permite usar asp-action="Anular" en el form
         [ValidateAntiForgeryToken]
         public IActionResult AnularConfirmado(int id)
         {

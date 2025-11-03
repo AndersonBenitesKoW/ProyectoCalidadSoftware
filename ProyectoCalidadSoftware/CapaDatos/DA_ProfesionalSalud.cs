@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -23,7 +21,7 @@ namespace CapaAccesoDatos
             List<entProfesionalSalud> lista = new List<entProfesionalSalud>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionalSalud", cn)) // Asegúrate que el SP se llame así
+            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionales", cn)) // Asegúrate que el SP se llame así
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Estado", estado);
@@ -60,17 +58,17 @@ namespace CapaAccesoDatos
                 SqlCommand cmd = new SqlCommand("sp_InsertarProfesionalSalud", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value); 
+                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apellidos", (object)entidad.Apellidos ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Especialidad", (object)entidad.Especialidad ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@CMP", entidad.CMP); 
-                                                                  
+                cmd.Parameters.AddWithValue("@CMP", entidad.CMP);
+
 
                 cn.Open();
 
-                
+
                 object idGenerado = cmd.ExecuteScalar();
-                return (idGenerado != null && idGenerado != DBNull.Value) ? Convert.ToInt32(idGenerado) : 0; 
+                return (idGenerado != null && idGenerado != DBNull.Value) ? Convert.ToInt32(idGenerado) : 0;
             }
         }
 

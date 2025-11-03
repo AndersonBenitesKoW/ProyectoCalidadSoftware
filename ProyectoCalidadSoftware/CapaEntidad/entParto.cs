@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entParto
     {
@@ -27,8 +21,8 @@ namespace CapaEntidad
 
         public string NombrePaciente { get; set; } = string.Empty;
         public string DescripcionViaParto { get; set; } = string.Empty;
-        public string NombreProfesional { get; set; } = string.Empty; 
-        public string DescripcionLiquido { get; set; } = string.Empty; 
+        public string NombreProfesional { get; set; } = string.Empty;
+        public string DescripcionLiquido { get; set; } = string.Empty;
 
         public List<entPartoIntervencion> Intervenciones { get; set; } = new List<entPartoIntervencion>();
     }

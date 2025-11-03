@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CapaEntidad;
 using CapaLogica;
-using CapaEntidad;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -20,8 +17,8 @@ namespace ProyectoCalidadSoftware.Controllers
 
             var modelo = new entEncuentro
             {
-                FechaHoraInicio = DateTime.Now, 
-                Estado = "Abierto" 
+                FechaHoraInicio = DateTime.Now,
+                Estado = "Abierto"
             };
             return View(modelo);
         }

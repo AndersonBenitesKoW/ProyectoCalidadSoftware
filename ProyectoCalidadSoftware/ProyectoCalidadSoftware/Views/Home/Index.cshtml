@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ProyectoCalidadSoftware.Models.HomeDashboardViewModel
+@{
     ViewData["Title"] = "Panel de Control";
 }
 
@@ -51,75 +52,7 @@
 <h2 class="h4 mb-3" style="font-weight: 300;">Consultas Principales</h2>
 <div class="row">
 
-    <div class="col-md-6 mb-4">
-        <div class="card shadow-sm h-100 dashboard-card">
-            <div class="card-body">
-                <i class="bi bi-person-hearts card-icon" style="color: var(--bs-success);"></i>
-                <h5 class="card-title text-success">Listado de Embarazos</h5>
-                <p class="card-text">Ver y gestionar todos los embarazos activos en el sistema.</p>
-                <a asp-controller="Embarazo" asp-action="Index" class="stretched-link">
-                    Ver Listado <i class="bi bi-arrow-right-short"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-        <div class="card shadow-sm h-100 dashboard-card">
-            <div class="card-body">
-                <i class="bi bi-clipboard2-pulse card-icon" style="color: var(--bs-info);"></i>
-                <h5 class="card-title text-info">Listado de Partos</h5>
-                <p class="card-text">Consultar el historial de partos registrados.</p>
-                <a asp-controller="Parto" asp-action="Index" class="stretched-link">
-                    Ver Historial <i class="bi bi-arrow-right-short"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h2 class="h4 mb-3" style="font-weight: 300;">Gestión y Registros</h2>
-<div class="row">
-
-    <div class="col-md-6 mb-4">
-        <div class="card shadow-sm h-100 dashboard-card">
-            <div class="card-body">
-                <i class="bi bi-people-fill card-icon" style="color: var(--bs-primary);"></i>
-                <h5 class="card-title text-primary">Personal de Salud</h5>
-                <p class="card-text">Administrar médicos, enfermeras y personal autorizado.</p>
-                <a asp-controller="ProfesionalSalud" asp-action="Index" class="stretched-link">
-                    Administrar Personal <i class="bi bi-arrow-right-short"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-        <div class="card shadow-sm h-100 dashboard-card">
-            <div class="card-body">
-                <i class="bi bi-pencil-square card-icon" style="color: var(--bs-warning);"></i>
-                <h5 class="card-title text-warning">Registros Rápidos</h5>
-                <p class="card-text">Crear nuevas entradas en el sistema.</p>
-
-                <ul class="list-group list-group-flush mt-3">
-                    <li class="list-group-item">
-                        <a asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
-                            <i class="bi bi-plus-circle me-2"></i>Registrar Nuevo Embarazo
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a asp-controller="Encuentro" asp-action="RegistrarEncuentro">
-                            <i class="bi bi-plus-circle me-2"></i>Registrar Nuevo Encuentro
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a asp-controller="Parto" asp-action="RegistrarParto">
-                            <i class="bi bi-plus-circle me-2"></i>Registrar Nuevo Parto
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

@@ -1,10 +1,5 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;  
+using CapaEntidad;
 namespace CapaLogica
 {
     public class logEmbarazo
@@ -44,7 +39,7 @@ namespace CapaLogica
         {
             if (idEmbarazo <= 0)
             {
-                return null; 
+                return null;
             }
             return DA_Embarazo.Instancia.BuscarPorId(idEmbarazo);
         }

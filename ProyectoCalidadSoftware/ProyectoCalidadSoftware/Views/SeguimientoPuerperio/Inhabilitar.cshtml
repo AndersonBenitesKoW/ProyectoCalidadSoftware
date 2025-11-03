@@ -1,26 +1,236 @@
 ﻿@model CapaEntidad.entSeguimientoPuerperio
+
 @{
     ViewData["Title"] = "Inhabilitar Seguimiento";
 }
-<h1><i class="bi bi-exclamation-triangle"></i> @ViewData["Title"]</h1>
 
-<dl class="row">
-    <dt class="col-sm-3">ID</dt>
-    <dd class="col-sm-9">@Model.IdSeguimientoPuerperio</dd>
-    <dt class="col-sm-3">Embarazo</dt>
-    <dd class="col-sm-9">@Model.IdEmbarazo</dd>
-    <dt class="col-sm-3">Fecha</dt>
-    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
-    <dt class="col-sm-3">Observación</dt>
-    <dd class="col-sm-9">@Model.Observaciones</dd>
-</dl>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-danger text-white text-center py-4">
+                    <h3 class="mb-0 font-weight-bold">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i><br>
+                        Inhabilitar Seguimiento de Puerperio
+                    </h3>
+                    <p class="mb-0 small">¿Está seguro de que desea inhabilitar este seguimiento?</p>
+                </div>
+                <div class="card-body p-5">
+                    <!-- Información del seguimiento -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-hashtag me-2"></i>ID Seguimiento</h6>
+                                <p class="mb-0 fw-bold fs-5">#@Model.IdSeguimientoPuerperio</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-baby me-2"></i>ID Embarazo</h6>
+                                <p class="mb-0 fw-bold fs-5">@Model.IdEmbarazo</p>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="alert alert-warning">
-    Esta acción inhabilitará el seguimiento (no se elimina).
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-calendar me-2"></i>Fecha</h6>
+                                <p class="mb-0 fw-bold">@Model.Fecha.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-toggle-on me-2"></i>Estado Actual</h6>
+                                <p class="mb-0">
+                                    @if (Model.Estado)
+                                    {
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-check-circle me-1"></i>Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger fs-6">
+                                            <i class="fas fa-times-circle me-1"></i>Inactivo
+                                        </span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signos vitales si existen -->
+                    @if (Model.PA_Sistolica.HasValue || Model.PA_Diastolica.HasValue || Model.Temp_C.HasValue || Model.AlturaUterinaPP_cm.HasValue)
+                    {
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3"><i class="fas fa-stethoscope me-2"></i>Signos Vitales Registrados</h5>
+                            <div class="row">
+                                @if (Model.PA_Sistolica.HasValue)
+                                {
+                                    <div class="col-md-3 mb-2">
+                                        <div class="text-center p-2 border rounded">
+                                            <small class="text-muted d-block">PA Sistólica</small>
+                                            <strong class="text-primary">@Model.PA_Sistolica mmHg</strong>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.PA_Diastolica.HasValue)
+                                {
+                                    <div class="col-md-3 mb-2">
+                                        <div class="text-center p-2 border rounded">
+                                            <small class="text-muted d-block">PA Diastólica</small>
+                                            <strong class="text-primary">@Model.PA_Diastolica mmHg</strong>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.Temp_C.HasValue)
+                                {
+                                    <div class="col-md-3 mb-2">
+                                        <div class="text-center p-2 border rounded">
+                                            <small class="text-muted d-block">Temperatura</small>
+                                            <strong class="text-primary">@Model.Temp_C°C</strong>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.AlturaUterinaPP_cm.HasValue)
+                                {
+                                    <div class="col-md-3 mb-2">
+                                        <div class="text-center p-2 border rounded">
+                                            <small class="text-muted d-block">Altura Uterina</small>
+                                            <strong class="text-primary">@Model.AlturaUterinaPP_cm cm</strong>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Información adicional -->
+                    @if (!string.IsNullOrWhiteSpace(Model.Loquios) || !string.IsNullOrWhiteSpace(Model.Lactancia) ||
+                         !string.IsNullOrWhiteSpace(Model.TamizajeDepresion))
+                    {
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3"><i class="fas fa-user-md me-2"></i>Evaluación Clínica</h5>
+                            <div class="row">
+                                @if (!string.IsNullOrWhiteSpace(Model.Loquios))
+                                {
+                                    <div class="col-md-6 mb-2">
+                                        <div class="p-2 border rounded">
+                                            <small class="text-muted d-block">Loquios</small>
+                                            <strong>@Model.Loquios</strong>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.Lactancia))
+                                {
+                                    <div class="col-md-6 mb-2">
+                                        <div class="p-2 border rounded">
+                                            <small class="text-muted d-block">Lactancia</small>
+                                            <strong>@Model.Lactancia</strong>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-md-6 mb-2">
+                                    <div class="p-2 border rounded">
+                                        <small class="text-muted d-block">Signos de Infección</small>
+                                        <strong class="@(Model.SignosInfeccion ? "text-danger" : "text-success")">
+                                            @(Model.SignosInfeccion ? "Presentes" : "Ausentes")
+                                        </strong>
+                                    </div>
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(Model.TamizajeDepresion))
+                                {
+                                    <div class="col-md-6 mb-2">
+                                        <div class="p-2 border rounded">
+                                            <small class="text-muted d-block">Tamizaje Depresión</small>
+                                            <strong>@Model.TamizajeDepresion</strong>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Observaciones -->
+                    @if (!string.IsNullOrWhiteSpace(Model.Observaciones))
+                    {
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-2"><i class="fas fa-comment me-2"></i>Observaciones</h5>
+                            <div class="p-3 bg-light rounded">
+                                @Model.Observaciones
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Alerta de advertencia -->
+                    <div class="alert alert-warning border-warning" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+                            <div>
+                                <h6 class="alert-heading mb-1">¡Advertencia!</h6>
+                                <p class="mb-0">Esta acción inhabilitará el seguimiento puerperal. El registro no se eliminará permanentemente, pero quedará marcado como inactivo y no podrá ser utilizado en reportes activos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <form asp-action="Inhabilitar" asp-route-id="@Model.IdSeguimientoPuerperio" method="post" class="me-md-2">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-lg px-5">
+                                <i class="fas fa-ban me-2"></i>Sí, Inhabilitar
+                            </button>
+                        </form>
+                        <a asp-action="Listar" class="btn btn-outline-secondary btn-lg px-5">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<form asp-action="Inhabilitar" asp-route-id="@Model.IdSeguimientoPuerperio" method="post">
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-danger">Sí, inhabilitar</button>
-    <a asp-action="Listar" class="btn btn-secondary">Cancelar</a>
-</form>
+<style>
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .info-card {
+        border-left: 4px solid #667eea !important;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border-width: 2px;
+    }
+
+    .border {
+        border-color: #dee2e6 !important;
+    }
+</style>

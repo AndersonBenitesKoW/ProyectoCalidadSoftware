@@ -1,3 +1,5 @@
+
+
 CREATE OR ALTER PROCEDURE sp_InsertarEmbarazo
 (
     @IdPaciente INT,
@@ -433,3 +435,712 @@ BEGIN
         Paciente; 
 END
 GO
+
+--------------------------------STORES PARA LA VALIDACION DE LOS USUARIOS-------------
+-------------------------------                                           --------------------
+                                      
+CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerPorNombre
+  @NombreUsuario NVARCHAR(50)
+AS
+BEGIN
+    SELECT 
+        u.IdUsuario, 
+        u.NombreUsuario, 
+        u.ClaveHash, 
+        u.Email, 
+        u.Estado,
+        ur.IdRol,
+        r.NombreRol
+    FROM Usuario u
+    LEFT JOIN UsuarioRol ur ON u.IdUsuario = ur.IdUsuario
+    LEFT JOIN Rol r ON ur.IdRol = r.IdRol
+    WHERE u.NombreUsuario = @NombreUsuario AND u.Estado = 1;
+END
+GO
+
+
+
+
+
+CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerRoles
+  @IdUsuario INT
+AS
+BEGIN
+    SELECT 
+        ur.IdUsuarioRol,     -- 👈 importante
+        ur.IdUsuario,
+        r.IdRol,
+        r.NombreRol,
+        r.Descripcion,
+        r.Estado
+    FROM UsuarioRol ur
+    INNER JOIN Rol r ON ur.IdRol = r.IdRol
+    WHERE ur.IdUsuario = @IdUsuario AND r.Estado = 1;
+END
+GO
+
+
+------ SP PARA LOS ROLES -------------
+
+CREATE OR ALTER PROCEDURE sp_ListarRol
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdRol,
+        NombreRol,
+        Descripcion,
+        Estado
+    FROM Rol
+    ORDER BY IdRol;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_InsertarRol
+    @Nombre NVARCHAR(50),
+    @Descripcion NVARCHAR(100) = NULL,
+    @Estado BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Rol (NombreRol, Descripcion, Estado)
+    VALUES (@Nombre, @Descripcion, @Estado);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_EditarRol
+    @IdRol INT,
+    @Nombre NVARCHAR(50),
+    @Descripcion NVARCHAR(100) = NULL,
+    @Estado BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Rol
+    SET 
+        NombreRol = @Nombre,
+        Descripcion = @Descripcion,
+        Estado = @Estado
+    WHERE IdRol = @IdRol;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_BuscarRol
+    @IdRol INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT IdRol,
+           NombreRol,
+           Descripcion,
+           Estado
+    FROM Rol
+    WHERE IdRol = @IdRol;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_Rol_ObtenerPorNombre
+    @NombreRol NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT IdRol,
+           NombreRol,
+           Descripcion,
+           Estado
+    FROM Rol
+    WHERE UPPER(NombreRol) = UPPER(@NombreRol);
+END;
+GO
+
+
+
+
+
+
+----------------------SP DE USUARIOS-----------------------
+
+CREATE OR ALTER  PROCEDURE sp_ListarUsuario
+AS
+BEGIN 
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.IdUsuario,
+        u.NombreUsuario,
+        u.ClaveHash,
+        u.Email,
+        Ur.IdRol,
+        r.NombreRol,      -- si quieres traer el nombre del rol
+        u.Estado
+    FROM Usuario u
+    INNER JOIN UsuarioRol Ur ON u.IdUsuario = Ur.IdUsuario
+	INNER JOIN Rol r on r.IdRol = Ur.IdRol
+    ORDER BY u.IdUsuario;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertarUsuario
+    @Username      NVARCHAR(50),
+    @PasswordHash  NVARCHAR(500),
+    @Correo        NVARCHAR(100),
+    @IdRol         INT,
+    @Estado        BIT,
+    @NewIdUsuario  INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Usuario (NombreUsuario, ClaveHash, Email, Estado)
+    VALUES (@Username, @PasswordHash, @Correo, @Estado);
+
+    SET @NewIdUsuario = CAST(SCOPE_IDENTITY() AS INT);
+
+    INSERT INTO UsuarioRol (IdUsuario, IdRol)
+    VALUES (@NewIdUsuario, @IdRol);
+END;
+GO
+
+
+select * from Usuario
+
+EXEC sp_InsertarUsuario
+    @Username = 'admin2',
+    @PasswordHash = 'hash_admin2',
+    @Correo = 'admin@clinica2.com',
+    @IdRol = 1,   -- Id del rol ADMINISTRADOR
+    @Estado = 1;  -- Activo
+
+
+
+CREATE OR ALTER PROCEDURE sp_EditarUsuario
+    @IdUsuario     INT,
+    @Username      NVARCHAR(50)  = NULL,
+    @PasswordHash  NVARCHAR(500) = NULL,
+    @Correo        NVARCHAR(100) = NULL,
+    @IdRol         INT,
+    @Estado        BIT
+AS
+BEGIN
+   
+
+    -- 1) actualizar datos del usuario
+    UPDATE Usuario
+    SET
+        NombreUsuario = ISNULL(@Username, NombreUsuario),
+        ClaveHash     = ISNULL(@PasswordHash, ClaveHash),
+        Email         = ISNULL(@Correo, Email),
+        Estado        = @Estado
+    WHERE IdUsuario = @IdUsuario;
+
+    -- 2) actualizar el rol del usuario
+    -- si existe, se actualiza
+    IF EXISTS (SELECT 1 FROM UsuarioRol WHERE IdUsuario = @IdUsuario)
+    BEGIN
+        UPDATE UsuarioRol
+        SET IdRol = @IdRol
+        WHERE IdUsuario = @IdUsuario;
+    END
+    ELSE
+    BEGIN
+        -- por si acaso no existiera la fila, la creamos
+        INSERT INTO UsuarioRol (IdUsuario, IdRol)
+        VALUES (@IdUsuario, @IdRol);
+    END
+END;
+GO
+
+select * from UsuarioRol
+
+CREATE OR ALTER PROCEDURE sp_BuscarUsuario
+    @IdUsuario INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.IdUsuario,
+        u.NombreUsuario,
+        u.ClaveHash,
+        u.Email,
+        ur.IdRol,
+        r.NombreRol,
+        u.Estado
+    FROM Usuario u
+    INNER JOIN UsuarioRol ur ON u.IdUsuario = ur.IdUsuario
+    INNER JOIN Rol r ON r.IdRol = ur.IdRol
+    WHERE u.IdUsuario = @IdUsuario;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_EliminarUsuario
+    @IdUsuario INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- desactivar usuario
+    UPDATE Usuario
+    SET Estado = 0
+    WHERE IdUsuario = @IdUsuario;
+
+    -- OPCIONAL: si no quieres que aparezca en listados por rol
+    UPDATE UsuarioRol
+	 SET IdRol = NULL -- o borrar
+     WHERE IdUsuario = @IdUsuario;
+END;
+GO
+---SP CITAS ------------
+
+CREATE OR ALTER PROCEDURE sp_ListarCitas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        c.IdCita,
+        c.IdPaciente,
+        c.IdRecepcionista,
+        c.IdProfesional,
+        c.IdEmbarazo,
+        c.FechaCita,
+        c.Motivo,
+        c.IdEstadoCita,
+        c.Observacion,
+        c.FechaAnulacion,
+        c.MotivoAnulacion
+    FROM Cita c
+    ORDER BY c.FechaCita DESC;
+END;
+GO
+
+
+
+CREATE OR ALTER PROCEDURE sp_InsertarCita
+    @IdPaciente       INT,
+    @IdRecepcionista  INT = NULL,
+    @IdProfesional    INT = NULL,
+    @IdEmbarazo       INT = NULL,
+    @FechaCita        DATETIME,
+    @Motivo           NVARCHAR(200) = NULL,
+    @IdEstadoCita     SMALLINT,
+    @Observacion      NVARCHAR(250) = NULL,
+    @FechaAnulacion   DATETIME = NULL,
+    @MotivoAnulacion  NVARCHAR(200) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Cita (
+        IdPaciente,
+        IdRecepcionista,
+        IdProfesional,
+        IdEmbarazo,
+        FechaCita,
+        Motivo,
+        IdEstadoCita,
+        Observacion,
+        FechaAnulacion,
+        MotivoAnulacion
+    )
+    VALUES (
+        @IdPaciente,
+        @IdRecepcionista,
+        @IdProfesional,
+        @IdEmbarazo,
+        @FechaCita,
+        @Motivo,
+        @IdEstadoCita,
+        @Observacion,
+        @FechaAnulacion,
+        @MotivoAnulacion
+    );
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_BuscarCitaPorId
+    @IdCita INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        c.IdCita,
+        c.IdPaciente,
+        c.IdRecepcionista,
+        c.IdProfesional,
+        c.IdEmbarazo,
+        c.FechaCita,
+        c.Motivo,
+        c.IdEstadoCita,
+        c.Observacion,
+        c.FechaAnulacion,
+        c.MotivoAnulacion
+    FROM Cita c
+    WHERE c.IdCita = @IdCita;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_AnularCita
+    @IdCita INT,
+    @MotivoAnulacion NVARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Cita
+    SET 
+        IdEstadoCita = 0, -- o el id correspondiente al estado "Anulado"
+        FechaAnulacion = GETDATE(),
+        MotivoAnulacion = @MotivoAnulacion
+    WHERE IdCita = @IdCita;
+END;
+GO
+
+
+--SEGUIMIENTO PUERPERIO-----
+CREATE OR ALTER PROCEDURE sp_ListarSeguimientoPuerperio
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        IdPuerperio,
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PA_Sistolica,
+        PA_Diastolica,
+        Temp_C,
+        AlturaUterinaPP_cm,
+        Loquios,
+        Lactancia,
+        SignosInfeccion,
+        TamizajeDepresion,
+        IdMetodoPF,
+        Observaciones,
+        Estado
+    FROM SeguimientoPuerperio
+    ORDER BY Fecha DESC, IdPuerperio DESC;
+END;
+GO
+
+
+
+CREATE OR ALTER PROCEDURE sp_InsertarSeguimientoPuerperio
+    @IdEmbarazo          INT,
+    @IdEncuentro         INT         = NULL,
+    @IdProfesional       INT         = NULL,
+    @Fecha               DATETIME,
+    @PA_Sistolica        TINYINT     = NULL,
+    @PA_Diastolica       TINYINT     = NULL,
+    @Temp_C              DECIMAL(5,2) = NULL,
+    @AlturaUterinaPP_cm  DECIMAL(5,2) = NULL,
+    @Loquios             NVARCHAR(100) = NULL,
+    @Lactancia           NVARCHAR(100) = NULL,
+    @SignosInfeccion     BIT         = NULL,
+    @TamizajeDepresion   NVARCHAR(100) = NULL,
+    @IdMetodoPF          SMALLINT    = NULL,
+    @Observaciones       NVARCHAR(500) = NULL,
+    @Estado              BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO SeguimientoPuerperio (
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PA_Sistolica,
+        PA_Diastolica,
+        Temp_C,
+        AlturaUterinaPP_cm,
+        Loquios,
+        Lactancia,
+        SignosInfeccion,
+        TamizajeDepresion,
+        IdMetodoPF,
+        Observaciones,
+        Estado
+    )
+    VALUES (
+        @IdEmbarazo,
+        @IdEncuentro,
+        @IdProfesional,
+        @Fecha,
+        @PA_Sistolica,
+        @PA_Diastolica,
+        @Temp_C,
+        @AlturaUterinaPP_cm,
+        @Loquios,
+        @Lactancia,
+        @SignosInfeccion,
+        @TamizajeDepresion,
+        @IdMetodoPF,
+        @Observaciones,
+        @Estado
+    );
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_InhabilitarSeguimientoPuerperio
+    @IdPuerperio INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE SeguimientoPuerperio
+    SET Estado = 0
+    WHERE IdPuerperio = @IdPuerperio;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_BuscarSeguimientoPuerperio
+    @IdSeguimiento INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdPuerperio,
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PA_Sistolica,
+        PA_Diastolica,
+        Temp_C,
+        AlturaUterinaPP_cm,
+        Loquios,
+        Lactancia,
+        SignosInfeccion,
+        TamizajeDepresion,
+        IdMetodoPF,
+        Observaciones,
+        Estado
+    FROM SeguimientoPuerperio
+    WHERE IdPuerperio = @IdSeguimiento;
+END;
+GO
+
+
+--SP CONTROL PRENATAL --
+
+CREATE OR ALTER PROCEDURE sp_ListarControlPrenatal
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        IdControl,
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PesoKg,
+        TallaM,
+        PA_Sistolica,
+        PA_Diastolica,
+        AlturaUterina_cm,
+        FCF_bpm,
+        Presentacion,
+        Proteinuria,
+        MovFetales,
+        Consejerias,
+        Observaciones,
+        Estado
+    FROM ControlPrenatal
+    ORDER BY Fecha DESC, IdControl DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertarControlPrenatal
+    @IdEmbarazo INT,
+    @IdEncuentro INT = NULL,
+    @IdProfesional INT = NULL,
+    @Fecha DATETIME,
+    @PesoKg DECIMAL(5,2) = NULL,
+    @TallaM DECIMAL(5,2) = NULL,
+    @PA_Sistolica TINYINT = NULL,
+    @PA_Diastolica TINYINT = NULL,
+    @AlturaUterina_cm DECIMAL(5,2) = NULL,
+    @FCF_bpm TINYINT = NULL,
+    @Presentacion NVARCHAR(100) = NULL,
+    @Proteinuria NVARCHAR(100) = NULL,
+    @MovFetales BIT = NULL,
+    @Consejerias NVARCHAR(500) = NULL,
+    @Observaciones NVARCHAR(500) = NULL,
+    @Estado BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO ControlPrenatal (
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PesoKg,
+        TallaM,
+        PA_Sistolica,
+        PA_Diastolica,
+        AlturaUterina_cm,
+        FCF_bpm,
+        Presentacion,
+        Proteinuria,
+        MovFetales,
+        Consejerias,
+        Observaciones,
+        Estado
+    )
+    VALUES (
+        @IdEmbarazo,
+        @IdEncuentro,
+        @IdProfesional,
+        @Fecha,
+        @PesoKg,
+        @TallaM,
+        @PA_Sistolica,
+        @PA_Diastolica,
+        @AlturaUterina_cm,
+        @FCF_bpm,
+        @Presentacion,
+        @Proteinuria,
+        @MovFetales,
+        @Consejerias,
+        @Observaciones,
+        @Estado
+    );
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_BuscarControlPrenatal
+    @IdControl INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        IdControl,
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        PesoKg,
+        TallaM,
+        PA_Sistolica,
+        PA_Diastolica,
+        AlturaUterina_cm,
+        FCF_bpm,
+        Presentacion,
+        Proteinuria,
+        MovFetales,
+        Consejerias,
+        Observaciones,
+        Estado
+    FROM ControlPrenatal
+    WHERE IdControl = @IdControl;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_InhabilitarControlPrenatal
+    @IdControl INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE ControlPrenatal
+    SET Estado = 0
+    WHERE IdControl = @IdControl;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE sp_EliminarControlPrenatal
+    @IdControl INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM ControlPrenatal
+    WHERE IdControl = @IdControl;
+END;
+GO
+
+/* ==================  STORED PROCEDURES PARA AYUDAS DIAGNÓSTICAS  ================== */
+
+-- SP para listar ayudas diagnósticas
+CREATE PROCEDURE sp_ListarAyudaDiagnosticaOrden
+AS
+BEGIN
+    SELECT
+        a.IdAyuda,
+        a.IdPaciente,
+        a.IdEmbarazo,
+        a.IdProfesional,
+        a.IdTipoAyuda,
+        a.Descripcion,
+        a.Urgente,
+        a.FechaOrden,
+        a.Estado,
+        -- Información adicional del paciente
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        -- Información del tipo de ayuda
+        ta.Nombre AS NombreTipoAyuda,
+        -- Información del profesional
+        ps.Nombres + ' ' + ps.Apellidos AS NombreProfesional
+    FROM AyudaDiagnosticaOrden a
+    INNER JOIN Paciente p ON a.IdPaciente = p.IdPaciente
+    LEFT JOIN TipoAyudaDiagnostica ta ON a.IdTipoAyuda = ta.IdTipoAyuda
+    LEFT JOIN ProfesionalSalud ps ON a.IdProfesional = ps.IdProfesional
+    ORDER BY a.FechaOrden DESC;
+END;
+GO
+
+-- SP para insertar ayuda diagnóstica
+CREATE PROCEDURE sp_InsertarAyudaDiagnosticaOrden
+    @IdPaciente INT,
+    @IdEmbarazo INT = NULL,
+    @IdProfesional INT = NULL,
+    @IdTipoAyuda SMALLINT = NULL,
+    @Descripcion NVARCHAR(200) = NULL,
+    @Urgente BIT,
+    @FechaOrden DATETIME2,
+    @Estado NVARCHAR(20)
+AS
+BEGIN
+    INSERT INTO AyudaDiagnosticaOrden (
+        IdPaciente, IdEmbarazo, IdProfesional, IdTipoAyuda,
+        Descripcion, Urgente, FechaOrden, Estado
+    )
+    VALUES (
+        @IdPaciente, @IdEmbarazo, @IdProfesional, @IdTipoAyuda,
+        @Descripcion, @Urgente, @FechaOrden, @Estado
+    );
+END;
+GO
+
+-- SP para inhabilitar ayuda diagnóstica
+CREATE PROCEDURE sp_InhabilitarAyudaDiagnosticaOrden
+    @IdAyuda INT
+AS
+BEGIN
+    UPDATE AyudaDiagnosticaOrden
+    SET Estado = 'Inhabilitada'
+    WHERE IdAyuda = @IdAyuda;
+END;
+GO
+

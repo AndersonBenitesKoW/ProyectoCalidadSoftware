@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -23,7 +21,7 @@ namespace CapaAccesoDatos
             List<entPaciente> lista = new List<entPaciente>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarPacientes", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarPacientesActivos", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();

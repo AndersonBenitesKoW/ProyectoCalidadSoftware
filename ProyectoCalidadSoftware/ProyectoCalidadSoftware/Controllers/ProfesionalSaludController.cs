@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CapaEntidad; // Asegúrate de tener la referencia a CapaEntidad
 using CapaLogica; // Asegúrate de tener la referencia a CapaLogica
-using CapaEntidad; // Asegúrate de tener la referencia a CapaEntidad
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -50,7 +48,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
                     if (profesional.IdUsuario == null)
                     {
-                        
+
                     }
 
                     int idGenerado = logProfesionalSalud.Instancia.InsertarProfesionalSalud(profesional);

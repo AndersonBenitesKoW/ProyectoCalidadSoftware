@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Route("core/ayudas")]
+    //[Route("core/ayudas")]
     public class OrdenAyudaDiagnosticaController : Controller
     {
         // GET: /core/ayudas
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden();
@@ -16,14 +16,14 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/ayudas/insertar
-        [HttpGet("insertar")]
+        [HttpGet]
         public IActionResult Insertar()
         {
             return View(new entAyudaDiagnosticaOrden());
         }
 
         // POST: /core/ayudas/insertar
-        [HttpPost("insertar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Insertar(entAyudaDiagnosticaOrden entidad)
         {

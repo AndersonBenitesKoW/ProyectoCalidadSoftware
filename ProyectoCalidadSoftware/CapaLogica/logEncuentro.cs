@@ -1,9 +1,4 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 
 namespace CapaLogica
@@ -24,7 +19,7 @@ namespace CapaLogica
         {
             if (idEmbarazo <= 0 || string.IsNullOrWhiteSpace(codigoTipo))
             {
-                return new List<entEncuentro>(); 
+                return new List<entEncuentro>();
             }
             return DA_Encuentro.Instancia.ListarPorEmbarazoYTipo(idEmbarazo, codigoTipo);
         }
@@ -42,7 +37,7 @@ namespace CapaLogica
             }
             if (string.IsNullOrWhiteSpace(encuentro.Estado))
             {
-                encuentro.Estado = "Abierto"; 
+                encuentro.Estado = "Abierto";
             }
 
             return DA_Encuentro.Instancia.Insertar(encuentro);

@@ -1,10 +1,5 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;  
+using CapaEntidad;
 namespace CapaLogica
 {
     public class logEstadoCita

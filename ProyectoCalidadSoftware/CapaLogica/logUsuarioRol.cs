@@ -1,9 +1,4 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 namespace CapaLogica
 {
@@ -20,15 +15,15 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
-        public List<entUsuario> ListarUsuario()
+        public List<entUsuarioRol> ListarUsuario()
         {
-            return DA_Usuario.Instancia.Listar();
+            return DA_UsuarioRol.Instancia.Listar();
         }
 
         // INSERTAR
-        public bool InsertarUsuario(entUsuario entidad)
+        public bool InsertarUsuario(entUsuarioRol entidad)
         {
-            return DA_Usuario.Instancia.Insertar(entidad);
+            return DA_UsuarioRol.Instancia.Insertar(entidad);
         }
 
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entSeguimientoPuerperio
     {
@@ -19,7 +13,7 @@ namespace CapaEntidad
         public decimal? AlturaUterinaPP_cm { get; set; }// (4,1)
         public string? Loquios { get; set; }
         public string? Lactancia { get; set; }
-        public bool? SignosInfeccion { get; set; }
+        public bool SignosInfeccion { get; set; }
         public string? TamizajeDepresion { get; set; }
         public short? IdMetodoPF { get; set; }
         public string? Observaciones { get; set; }

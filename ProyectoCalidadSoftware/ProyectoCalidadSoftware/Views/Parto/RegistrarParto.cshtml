@@ -13,158 +13,146 @@
     @* Token de seguridad para formularios POST *@
     @Html.AntiForgeryToken()
 
+    <div class="col-md-12">
+        <label asp-for="IdEmbarazo" class="form-label">Seleccionar Embarazo (Paciente)</label>
+        <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" id="embarazoDropdown">
+            <option value="">-- Seleccione un Embarazo Activo --</option>
+        </select>
+        <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-12">
+        <label asp-for="IdEncuentro" class="form-label">Seleccionar Encuentro (Intraparto)</label>
+        <select asp-for="IdEncuentro" class="form-select" id="encuentroDropdown" disabled>
+            <option value="">-- Primero seleccione un embarazo --</option>
+        </select>
+        <span asp-validation-for="IdEncuentro" class="text-danger"></span>
+    </div>
+
     @* Muestra de Errores Generales (de la Capa Lógica o Conexión) *@
     @if (ViewBag.MensajeError != null)
     {
         <div class="alert alert-danger" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.MensajeError
+            @ViewBag.MensajeError
         </div>
     }
 
-    <div class="card shadow-sm mb-4 border-primary">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-person-check-fill me-2"></i>Paso 1: Seleccionar Paciente y Encuentro</h5>
-        </div>
-        <div class="card-body bg-light">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label asp-for="IdEmbarazo" class="form-label fw-bold">Embarazo (Paciente)</label>
-                    <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" id="embarazoDropdown" required>
-                        <option value="">-- Seleccione un Embarazo Activo --</option>
-                    </select>
-                    <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-6">
-                    <label asp-for="IdEncuentro" class="form-label fw-bold">Encuentro (Intraparto)</label>
-                    <select asp-for="IdEncuentro" class="form-select" id="encuentroDropdown" disabled required>
-                        <option value="">-- Primero seleccione un embarazo --</option>
-                    </select>
-                    <span asp-validation-for="IdEncuentro" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-3">
         <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Paso 2: Datos Generales del Parto</h5>
+            <h5 class="mb-0">Datos Generales del Parto</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
 
                 <div class="col-md-6">
                     <label asp-for="Fecha" class="form-label">Fecha del Parto</label>
-                    <input asp-for="Fecha" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" required />
+                    <input asp-for="Fecha" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" />
                     <span asp-validation-for="Fecha" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
                     <label asp-for="IdProfesional" class="form-label">Profesional que Atiende</label>
-                    <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales" required>
+                    <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
                         <option value="">-- Seleccione un Profesional --</option>
                     </select>
                     <span asp-validation-for="IdProfesional" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-6">
-                    <label asp-for="HoraIngreso" class="form-label">Hora de Ingreso</label>
-                    <input asp-for="HoraIngreso" type="datetime-local" class="form-control" />
-                    <span asp-validation-for="HoraIngreso" class="text-danger"></span>
-                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="HoraIngreso" type="datetime-local" class="form-control form-control-lg" required />
+                                            <label asp-for="HoraIngreso" class="form-label">
+                                                <i class="fas fa-clock me-2"></i>Hora de Ingreso
+                                            </label>
+                                            <span asp-validation-for="HoraIngreso" class="text-danger small"></span>
+                                        </div>
+                                    </div>
 
-                <div class="col-md-6">
-                    <label asp-for="HoraInicioTrabajo" class="form-label">Hora Inicio de Trabajo de Parto</label>
-                    <input asp-for="HoraInicioTrabajo" type="datetime-local" class="form-control" />
-                    <span asp-validation-for="HoraInicioTrabajo" class="text-danger"></span>
-                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="HoraInicioTrabajo" type="datetime-local" class="form-control form-control-lg" required />
+                                            <label asp-for="HoraInicioTrabajo" class="form-label">
+                                                <i class="fas fa-clock me-2"></i>Hora Inicio Trabajo de Parto
+                                            </label>
+                                            <span asp-validation-for="HoraInicioTrabajo" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-3">
         <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-heart-pulse-fill me-2"></i>Paso 3: Detalles Clínicos</h5>
+            <h5 class="mb-0">Detalles Clínicos</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
 
                 <div class="col-md-4">
                     <label asp-for="Membranas" class="form-label">Membranas</label>
-                    <select asp-for="Membranas" class="form-select" required>
+                    <select asp-for="Membranas" class="form-select">
                         <option value="">-- Seleccione --</option>
                         <option value="Rotas">Rotas</option>
                         <option value="Íntegras">Íntegras</option>
                     </select>
-                    <span asp-validation-for="Membranas" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4">
                     <label asp-for="IdLiquido" class="form-label">Líquido Amniótico</label>
-                    <select asp-for="IdLiquido" class="form-select" asp-items="@ViewBag.ListaLiquidos" required>
+                    <select asp-for="IdLiquido" class="form-select" asp-items="@ViewBag.ListaLiquidos">
                         <option value="">-- Seleccione --</option>
                     </select>
-                    <span asp-validation-for="IdLiquido" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4">
                     <label asp-for="IdViaParto" class="form-label">Vía del Parto</label>
-                    <select asp-for="IdViaParto" class="form-select" asp-items="@ViewBag.ListaViasParto" required>
+                    <select asp-for="IdViaParto" class="form-select" asp-items="@ViewBag.ListaViasParto">
                         <option value="">-- Seleccione --</option>
                     </select>
-                    <span asp-validation-for="IdViaParto" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="Analgesia" class="form-label">Analgesia (Opcional)</label>
+                    <label asp-for="Analgesia" class="form-label">Analgesia</label>
                     <input asp-for="Analgesia" type="text" class="form-control" />
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="PerdidasML" class="form-label">Pérdida Sanguínea (mL) (Opcional)</label>
+                    <label asp-for="PerdidasML" class="form-label">Pérdida Sanguínea (mL)</label>
                     <input asp-for="PerdidasML" type="number" class="form-control" />
                 </div>
 
                 <div class="col-md-12">
-                    <label asp-for="Desgarro" class="form-label">Desgarro (Grado/Tipo) (Opcional)</label>
+                    <label asp-for="Desgarro" class="form-label">Desgarro (Grado/Tipo)</label>
                     <input asp-for="Desgarro" type="text" class="form-control" />
                 </div>
 
                 <div class="col-md-12">
                     <label asp-for="IndicacionCesarea" class="form-label">Indicación de Cesárea (si aplica)</label>
-                    <textarea asp-for="IndicacionCesarea" class="form-control" rows="2"></textarea>
+                    <textarea asp-for="IndicacionCesarea" class="form-control" rows="3"></textarea>
                 </div>
 
                 <div class="col-md-12">
-                    <label asp-for="Complicaciones" class="form-label">Complicaciones (Opcional)</label>
-                    <textarea asp-for="Complicaciones" class="form-control" rows="2"></textarea>
+                    <label asp-for="Complicaciones" class="form-label">Complicaciones</label>
+                    <textarea asp-for="Complicaciones" class="form-control" rows="3"></textarea>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-3">
         <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-scissors me-2"></i>Paso 4: Intervenciones Realizadas (Opcional)</h5>
+            <h5 class="mb-0">Intervenciones Realizadas</h5>
         </div>
         <div class="card-body">
             <div id="intervenciones-container">
             </div>
-            <button type="button" id="btn-add-intervencion" class="btn btn-outline-primary btn-sm mt-2">
-                <i class="bi bi-plus-lg me-1"></i> Agregar Intervención
-            </button>
+            <button type="button" id="btn-add-intervencion" class="btn btn-outline-primary btn-sm mt-2">+ Agregar Intervención</button>
         </div>
     </div>
 
-    <div class="mt-4 mb-5 text-end">
-        <a asp-action="Index" asp-controller="Parto" class="btn btn-secondary me-2">
-            <i class="bi bi-x-circle me-2"></i>Cancelar
-        </a>
-        <button type="submit" class="btn btn-primary btn-lg">
-            <i class="bi bi-save me-2"></i>Registrar Parto
-        </button>
+    <div class="mt-3">
+        <input type="submit" value="Registrar Parto" class="btn btn-primary" />
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Cancelar</a>
     </div>
 
 </form>
@@ -230,20 +218,19 @@
         document.getElementById('btn-add-intervencion').addEventListener('click', function () {
             var container = document.getElementById('intervenciones-container');
             var div = document.createElement('div');
-            div.className = 'input-group mb-2 shadow-sm';
+            div.className = 'input-group mb-2';
 
             var input = document.createElement('input');
             input.type = 'text';
             input.name = 'intervenciones'; // ¡Importante!
-            input.className = 'form-control';
+            input.className = 'form-control form-control-lg';
             input.placeholder = 'Ej: Episiotomía';
             input.required = true;
 
             var btnRemove = document.createElement('button');
             btnRemove.type = 'button';
             btnRemove.className = 'btn btn-outline-danger';
-            btnRemove.innerHTML = '<i class="bi bi-trash-fill"></i>'; // Icono de basura
-            btnRemove.title = 'Eliminar';
+            btnRemove.textContent = 'Eliminar';
             btnRemove.onclick = function() {
                 div.remove();
             };
@@ -255,3 +242,51 @@
         });
     </script>
 }
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .card-header h5 {
+        color: var(--primary-blue);
+        font-weight: 600;
+    }
+</style>

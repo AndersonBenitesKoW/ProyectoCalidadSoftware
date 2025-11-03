@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Route("core/ayudas/resultados")]
+    //[Route("core/ayudas/resultados")]
     public class ResultadoDiagnosticoController : Controller
     {
         // GET: /core/ayudas/resultados
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logResultadoDiagnostico.Instancia.ListarResultadoDiagnostico();
@@ -16,7 +16,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/ayudas/resultados/registrar
-        [HttpGet("registrar")]
+        [HttpGet]
         public IActionResult Registrar(int? idAyuda)
         {
             var modelo = new entResultadoDiagnostico
@@ -30,7 +30,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/ayudas/resultados/registrar
-        [HttpPost("registrar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entResultadoDiagnostico entidad)
         {
@@ -59,7 +59,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/ayudas/resultados/modificar/5
-        [HttpGet("modificar/{id:int}")]
+        [HttpGet]
         public IActionResult Modificar(int id)
         {
             try
@@ -80,7 +80,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/ayudas/resultados/modificar
-        [HttpPost("modificar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Modificar(entResultadoDiagnostico entidad)
         {
@@ -110,7 +110,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // Alias opcional: /core/ayudas/resultados/actualizar
-        [HttpPost("actualizar")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Actualizar(entResultadoDiagnostico entidad)
         {
@@ -118,7 +118,7 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
-        [HttpGet("{id:int}/anular")]
+        [HttpGet]
         public IActionResult Anular(int id)
         {
             var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
@@ -131,8 +131,8 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // POST: /core/ayudas/resultados/{id}/anular
-        [HttpPost("{id:int}/anular")]
-        [ActionName("Anular")] // permite usar asp-action="Anular" en el form
+        [HttpPost]
+         // permite usar asp-action="Anular" en el form
         [ValidateAntiForgeryToken]
         public IActionResult AnularConfirmado(int id)
         {

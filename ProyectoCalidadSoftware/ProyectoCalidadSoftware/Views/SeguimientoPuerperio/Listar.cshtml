@@ -1,67 +1,204 @@
 ﻿@model IEnumerable<CapaEntidad.entSeguimientoPuerperio>
+
 @{
     ViewData["Title"] = "Seguimiento del Puerperio";
 }
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="mb-0"><i class="bi bi-heart"></i> Seguimiento del Puerperio</h1>
-    <a asp-action="Registrar" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nuevo Seguimiento</a>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 font-weight-bold">
+                            <i class="fas fa-heartbeat me-2"></i>Seguimiento del Puerperio
+                        </h2>
+                        <a asp-action="Registrar" class="btn btn-light btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i>Nuevo Seguimiento
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["Ok"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["Ok"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-heartbeat fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No hay seguimientos registrados</h4>
+                            <p class="text-muted">Comience registrando el primer seguimiento puerperal</p>
+                            <a asp-action="Registrar" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Registrar Primer Seguimiento
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                                        <th><i class="fas fa-baby me-1"></i>Embarazo</th>
+                                        <th><i class="fas fa-calendar me-1"></i>Fecha</th>
+                                        <th><i class="fas fa-heart me-1"></i>PA Sistólica</th>
+                                        <th><i class="fas fa-heart me-1"></i>PA Diastólica</th>
+                                        <th><i class="fas fa-thermometer-half me-1"></i>Temperatura</th>
+                                        <th><i class="fas fa-ruler me-1"></i>Altura Uterina</th>
+                                        <th><i class="fas fa-tint me-1"></i>Loquios</th>
+                                        <th><i class="fas fa-baby me-1"></i>Lactancia</th>
+                                        <th><i class="fas fa-exclamation-triangle me-1"></i>Infección</th>
+                                        <th><i class="fas fa-brain me-1"></i>Depresión</th>
+                                        <th><i class="fas fa-comment me-1"></i>Observaciones</th>
+                                        <th><i class="fas fa-toggle-on me-1"></i>Estado</th>
+                                        <th><i class="fas fa-cogs me-1"></i>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var s in Model)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">#@s.IdSeguimientoPuerperio</td>
+                                            <td>
+                                                <span class="badge bg-info">@s.IdEmbarazo</span>
+                                            </td>
+                                            <td>@s.Fecha.ToString("dd/MM/yyyy")</td>
+                                            <td>@(s.PA_Sistolica.HasValue ? s.PA_Sistolica + " mmHg" : "-")</td>
+                                            <td>@(s.PA_Diastolica.HasValue ? s.PA_Diastolica + " mmHg" : "-")</td>
+                                            <td>@(s.Temp_C.HasValue ? s.Temp_C + "°C" : "-")</td>
+                                            <td>@(s.AlturaUterinaPP_cm.HasValue ? s.AlturaUterinaPP_cm + " cm" : "-")</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(s.Loquios))
+                                                {
+                                                    <span class="badge bg-secondary">@s.Loquios</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(s.Lactancia))
+                                                {
+                                                    <span class="badge bg-primary">@s.Lactancia</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (s.SignosInfeccion)
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-exclamation-triangle"></i> Sí
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check"></i> No
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(s.TamizajeDepresion))
+                                                {
+                                                    <span class="badge bg-warning text-dark">@s.TamizajeDepresion</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(s.Observaciones))
+                                                {
+                                                    <span title="@s.Observaciones">
+                                                        @(s.Observaciones.Length > 30 ? s.Observaciones.Substring(0, 30) + "..." : s.Observaciones)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (s.Estado)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Activo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times-circle me-1"></i>Inactivo
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="Inhabilitar" asp-route-id="@s.IdSeguimientoPuerperio"
+                                                        class="btn btn-sm btn-outline-danger" title="Inhabilitar">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@if (TempData["Ok"] != null)
-{
-    <div class="alert alert-success">@TempData["Ok"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
 
-@if (!Model.Any())
-{
-    <div class="text-center text-muted py-5">No hay seguimientos registrados.</div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Embarazo</th>
-                    <th>Fecha</th>
-                    <th>Observación</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var s in Model)
-                {
-                    <tr>
-                        <td>@s.IdSeguimientoPuerperio</td>
-                        <td>@s.IdEmbarazo</td>
-                        <td>@s.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td>@(string.IsNullOrWhiteSpace(s.Observaciones) ? "-" : (s.Observaciones!.Length > 30 ? s.Observaciones.Substring(0, 30) + "..." : s.Observaciones))</td>
-                        <td>
-                            @if (s.Estado)
-                            {
-                                <span class="badge bg-success">Activo</span>
-                            }
-                            else
-                            {
+    .card {
+        transition: transform 0.3s ease;
+    }
 
-                                <span class="badge bg-danger">Inactivo</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Inhabilitar" asp-route-id="@s.IdSeguimientoPuerperio"
-                               class="btn btn-sm btn-outline-danger" title="Inhabilitar">
-                                <i class="bi bi-x-circle"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+    .card:hover {
+        transform: transformY(-2px);
+    }
+
+    .table th {
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+</style>
