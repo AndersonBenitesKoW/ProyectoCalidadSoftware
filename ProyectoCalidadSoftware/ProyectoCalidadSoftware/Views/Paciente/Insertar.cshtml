@@ -1,23 +1,43 @@
 @model CapaEntidad.entPaciente
 
 @{
-    ViewData["Title"] = "Registrar Paciente";
+    ViewData["Title"] = "Insertar Paciente";
 }
 
 <div class="form-container">
     <div class="form-header">
-        <h1><i class="bi bi-person-plus"></i> Registrar Paciente</h1>
-        <h4>Registro de nuevo paciente en el sistema</h4>
+        <h1><i class="bi bi-plus-circle"></i> Insertar Paciente</h1>
+        <h4>Registrar Nuevo Paciente</h4>
     </div>
 
-    <form asp-action="Registrar">
+    <form asp-action="Insertar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i> @ViewBag.Error
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdUsuario" class="control-label">
+                        <i class="bi bi-person-badge"></i> ID Usuario (Opcional)
+                    </label>
+                    <input asp-for="IdUsuario" class="form-control" type="number" placeholder="Ingrese ID de usuario si aplica" />
+                    <span asp-validation-for="IdUsuario" class="text-danger"></span>
+                    <small class="form-text text-muted">Dejar vacío si no está asociado a un usuario</small>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="Nombres" class="control-label">
-                        <i class="bi bi-person"></i> Nombres
+                        <i class="bi bi-person"></i> Nombres *
                     </label>
                     <input asp-for="Nombres" class="form-control" placeholder="Ingrese los nombres del paciente" />
                     <span asp-validation-for="Nombres" class="text-danger"></span>
@@ -27,7 +47,7 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="Apellidos" class="control-label">
-                        <i class="bi bi-person-fill"></i> Apellidos
+                        <i class="bi bi-person-fill"></i> Apellidos *
                     </label>
                     <input asp-for="Apellidos" class="form-control" placeholder="Ingrese los apellidos del paciente" />
                     <span asp-validation-for="Apellidos" class="text-danger"></span>
@@ -40,7 +60,7 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="DNI" class="control-label">
-                        <i class="bi bi-card-text"></i> DNI
+                        <i class="bi bi-card-text"></i> DNI *
                     </label>
                     <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" />
                     <span asp-validation-for="DNI" class="text-danger"></span>
@@ -50,7 +70,7 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="FechaNacimiento" class="control-label">
-                        <i class="bi bi-calendar-event"></i> Fecha de Nacimiento
+                        <i class="bi bi-calendar-event"></i> Fecha de Nacimiento *
                     </label>
                     <input asp-for="FechaNacimiento" class="form-control" type="date" />
                     <span asp-validation-for="FechaNacimiento" class="text-danger"></span>

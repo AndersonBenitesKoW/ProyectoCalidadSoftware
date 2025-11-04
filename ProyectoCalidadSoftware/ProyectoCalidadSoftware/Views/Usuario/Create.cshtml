@@ -138,143 +138,14 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         $(document).ready(function () {
-            // Validación de nombre de usuario (solo letras, números y guiones bajos)
-            $('#NombreUsuario').on('input', function () {
-                var valor = $(this).val();
-                var regex = /^[a-zA-Z0-9_]*$/;
-                if (!regex.test(valor)) {
-                    $(this).val(valor.replace(/[^a-zA-Z0-9_]/g, ''));
-                    mostrarErrorTemporal(this, 'Solo se permiten letras, números y guiones bajos.');
-                }
-                // Limitar longitud máxima
-                if (valor.length > 50) {
-                    $(this).val(valor.substring(0, 50));
-                }
-            });
-
-            // Validación de email
-            $('#Email').on('blur', function () {
-                var email = $(this).val();
-                var emailRegex = new RegExp('^[^\s@@]+\@@[^\s@@]+\.[^\s@@]+$');
-                if (email && !emailRegex.test(email)) {
-                    mostrarErrorTemporal(this, 'Formato de email inválido.');
-                }
-            });
-
-            // Validación de contraseña (mínimo 8 caracteres)
-            $('#ClaveHash').on('input', function () {
-                var password = $(this).val();
-                if (password.length > 0 && password.length < 8) {
-                    mostrarErrorTemporal(this, 'La contraseña debe tener al menos 8 caracteres.');
-                }
-            });
-
+            // Solo mantener la funcionalidad básica del toggle de contraseña
             $('#showPassword').on('change', function () {
-                var passwordInput = $('#ClaveHash');
+                var passwordInput = $('#passwordInput');
                 if ($(this).is(':checked')) {
                     passwordInput.attr('type', 'text');
                 } else {
                     passwordInput.attr('type', 'password');
                 }
-            });
-
-            // Función para agregar prefijo según el rol seleccionado
-            function actualizarPrefijoUsuario() {
-                var rolSeleccionado = $('#NombreRol').val();
-                var nombreUsuarioInput = $('#NombreUsuario');
-                var nombreBase = nombreUsuarioInput.val().replace(/^(ADMIN_|MED_|SECRE_)/, ''); // Remover prefijos existentes
-
-                var prefijo = '';
-                switch (rolSeleccionado.toUpperCase()) {
-                    case 'ADMIN':
-                        prefijo = 'ADMIN_';
-                        break;
-                    case 'PERSONAL_SALUD':
-                        prefijo = 'MED_';
-                        break;
-                    case 'SECRETARIA':
-                        prefijo = 'SECRE_';
-                        break;
-                    default:
-                        prefijo = '';
-                        break;
-                }
-
-                nombreUsuarioInput.val(prefijo + nombreBase);
-            }
-
-            // Actualizar prefijo cuando cambia el rol
-            $('#NombreRol').on('change', function () {
-                actualizarPrefijoUsuario();
-            });
-
-            // Actualizar prefijo cuando se escribe en el campo de nombre de usuario
-            $('#NombreUsuario').on('input', function () {
-                var rolSeleccionado = $('#NombreRol').val();
-                if (rolSeleccionado) {
-                    actualizarPrefijoUsuario();
-                }
-            });
-
-            // Función para mostrar errores temporales
-            function mostrarErrorTemporal(elemento, mensaje) {
-                var $elemento = $(elemento);
-                var $feedback = $elemento.siblings('.text-danger');
-
-                if ($feedback.length === 0) {
-                    $elemento.after('<span class="text-danger small"></span>');
-                    $feedback = $elemento.siblings('.text-danger');
-                }
-
-                $feedback.text(mensaje).show();
-
-                // Ocultar después de 3 segundos
-                setTimeout(function() {
-                    $feedback.fadeOut();
-                }, 3000);
-            }
-
-            // Validación antes del envío del formulario
-            $('form').on('submit', function (e) {
-                var isValid = true;
-                var errores = [];
-
-                // Validar nombre de usuario
-                var nombreUsuario = $('#NombreUsuario').val();
-                if (!nombreUsuario || nombreUsuario.length < 3) {
-                    errores.push('El nombre de usuario debe tener al menos 3 caracteres.');
-                    isValid = false;
-                }
-
-                // Validar email
-                var email = $('#Email').val();
-                var emailRegex = new RegExp('^[^\s@@]+\@@[^\s@@]+\.[^\s@@]+$');
-                if (!email || !emailRegex.test(email)) {
-                    errores.push('Debe ingresar un email válido.');
-                    isValid = false;
-                }
-
-                // Validar contraseña
-                var password = $('#ClaveHash').val();
-                if (!password || password.length < 8) {
-                    errores.push('La contraseña debe tener al menos 8 caracteres.');
-                    isValid = false;
-                }
-
-                // Validar rol
-                var rol = $('#NombreRol').val();
-                if (!rol) {
-                    errores.push('Debe seleccionar un rol.');
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    e.preventDefault();
-                    alert('Por favor, corrija los siguientes errores:\n\n' + errores.join('\n'));
-                    return false;
-                }
-
-                return true;
             });
         });
     </script>
