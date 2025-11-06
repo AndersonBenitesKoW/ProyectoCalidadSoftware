@@ -9,5 +9,7 @@
         public string? Nombres { get; set; }
         public string? Apellidos { get; set; }
         public bool Estado { get; set; }
+        public string EmailPrincipal { get; set; }
+        public string TelefonoPrincipal { get; set; }
     }
 }

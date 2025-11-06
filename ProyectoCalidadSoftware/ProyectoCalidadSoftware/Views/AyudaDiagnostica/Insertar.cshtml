@@ -1,0 +1,79 @@
+﻿@model CapaEntidad.entAyudaDiagnosticaOrden
+@{
+    ViewData["Title"] = "Registrar Orden de Ayuda Diagnóstica";
+}
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-medical me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Insertar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdPaciente" class="form-select" asp-items="@ViewBag.ListaPacientes" required>
+                                    <option value="">-- Seleccione Paciente --</option>
+                                </select>
+                                <label asp-for="IdPaciente">Paciente</label>
+                                <span asp-validation-for="IdPaciente" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos">
+                                    <option value="">-- Embarazo (Opcional) --</option>
+                                </select>
+                                <label asp-for="IdEmbarazo">Embarazo Relacionado</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales" required>
+                            <option value="">-- Seleccione Profesional que ordena --</option>
+                        </select>
+                        <label asp-for="IdProfesional">Profesional que ordena</label>
+                        <span asp-validation-for="IdProfesional" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdTipoAyuda" class="form-select" asp-items="@ViewBag.ListaTiposAyuda">
+                            <option value="">-- Seleccione Tipo (o escriba abajo) --</option>
+                        </select>
+                        <label asp-for="IdTipoAyuda">Tipo de Ayuda Estándar</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="Descripcion" class="form-control" placeholder="Descripción" style="height: 100px"></textarea>
+                        <label asp-for="Descripcion">Descripción Específica (si no está en la lista)</label>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="Urgente" class="form-check-input" type="checkbox" role="switch" />
+                        <label asp-for="Urgente" class="form-check-label">Marcar como Urgente</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Registrar Orden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

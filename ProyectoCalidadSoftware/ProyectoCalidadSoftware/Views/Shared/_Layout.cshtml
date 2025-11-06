@@ -10,113 +10,167 @@
     <link rel="stylesheet" href="~/ProyectoCalidadSoftware.styles.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark shadow-sm">
-            <div class="container-fluid">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom shadow-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <div class="brand-icon me-2">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="brand-text">Clínica Obstétrica</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon-custom"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-heart-pulse-fill me-2"></i>ProyectoCalidadSoftware
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <ul class="navbar-nav mx-auto">
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home me-1"></i>Inicio
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-house-door me-2"></i>Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="ProfesionalSalud" asp-action="Index">
-                                <i class="bi bi-people me-2"></i>Personal Salud
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Embarazo" asp-action="Index">
-                                <i class="bi bi-person-hearts me-2"></i>Embarazos
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Cita" asp-action="Listar">
-                                <i class="bi bi-calendar-event me-2"></i>Citas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="ControlPrenatal" asp-action="Listar">
-                                <i class="bi bi-clipboard2-pulse me-2"></i>Controles
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="SeguimientoPuerperio" asp-action="Listar">
-                                <i class="bi bi-bandaid me-2"></i>Puerperio
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Parto" asp-action="Index">
-                                <i class="bi bi-list-check me-2"></i>Listado Partos
-                            </a>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownGestion" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-friends me-1"></i>Gestión Central
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Paciente" asp-action="Listar">
+                                    <i class="fas fa-list me-2"></i>Listar Pacientes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Paciente" asp-action="Insertar">
+                                    <i class="fas fa-plus-circle me-2"></i>Nuevo Paciente
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Cita" asp-action="Listar">
+                                    <i class="fas fa-calendar-check me-2"></i>Gestionar Citas
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownRegistros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-pencil-square me-2"></i>Registros
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownRegistros">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownClinica" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-heart-pulse me-1"></i>Atención Clínica
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-header">Embarazo</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Embarazo" asp-action="Index">
+                                    <i class="fas fa-baby me-2"></i>Listar Embarazos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
+                                    <i class="fas fa-plus-circle me-2"></i>Registrar Embarazo
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-header">Seguimiento</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Encuentro" asp-action="Listar">
+                                    <i class="fas fa-file-medical-alt me-2"></i>Encuentros
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="ControlPrenatal" asp-action="Listar">
+                                    <i class="fas fa-stethoscope me-2"></i>Controles Prenatales
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="AyudaDiagnostica" asp-action="Listar">
+                                    <i class="fas fa-microscope me-2"></i>Ayudas Diagnósticas
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-header">Cierre de Caso</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Parto" asp-action="Index">
+                                    <i class="fas fa-list me-2"></i>Listar Partos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Parto" asp-action="RegistrarParto">
+                                    <i class="fas fa-birthday-cake me-2"></i>Registrar Parto
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="SeguimientoPuerperio" asp-action="Listar">
+                                    <i class="fas fa-heart me-2"></i>Seg. Puerperio
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Encuentro" asp-action="Insertar">
+                                    <i class="fas fa-handshake me-2"></i>Registrar Encuentro
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cogs me-1"></i>Administración
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                    <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="ProfesionalSalud" asp-action="Index">
+                                    <i class="fas fa-user-md me-2"></i>Gestionar Personal
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="navbar-actions d-flex gap-2">
+                    @if (User.IsInRole("ADMIN"))
+                    {
+                        <div class="dropdown">
+                            <button class="btn btn-cta-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-cog me-1"></i>Admin
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
-                                        <i class="bi bi-person-plus me-2"></i>Registrar Embarazo
+                                    <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                        <i class="fas fa-users me-2"></i>Gestionar Usuarios
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Encuentro" asp-action="RegistrarEncuentro">
-                                        <i class="bi bi-file-earmark-plus me-2"></i>Registrar Encuentro
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Parto" asp-action="RegistrarParto">
-                                        <i class="bi bi-file-medical me-2"></i>Registrar Parto
+                                    <a class="dropdown-item" asp-controller="Portal" asp-action="Index">
+                                        <i class="fas fa-globe me-2"></i>Portal Público
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-
-                    </ul>
+                        </div>
+                    }
+                    <form asp-controller="Portal" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-cta-outline">
+                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <div class="container mt-4">
-
-        @if (TempData["MensajeExito"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>¡Éxito!</strong> @TempData["MensajeExito"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-
-        @if (TempData["MensajeError"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>¡Error!</strong> @TempData["MensajeError"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div class="public-body" style="padding-top: 80px;">
+        @RenderBody()
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="bg-gradient-primary text-white py-4 mt-5">
         <div class="container">
-            &copy; 2025 - ProyectoCalidadSoftware - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

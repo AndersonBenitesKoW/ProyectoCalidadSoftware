@@ -1,30 +1,30 @@
 ﻿using CapaAccesoDatos;
 using CapaEntidad;
+using System;
+using System.Collections.Generic;
 
 namespace CapaLogica
 {
     public class logMetodoPF
     {
-
         #region Singleton
-        private static readonly logMetodoPF UnicaInstancia = new logMetodoPF();
+        private static readonly logMetodoPF _instancia = new logMetodoPF();
         public static logMetodoPF Instancia
         {
-            get { return logMetodoPF.UnicaInstancia; }
+            get { return logMetodoPF._instancia; }
         }
         #endregion
 
-        // LISTAR
-        public List<entMetodoPF> ListarMetodoPF()
+        public List<entMetodoPF> ListarMetodosPF()
         {
-            return DA_MetodoPF.Instancia.Listar();
+            try
+            {
+                return DA_MetodoPF.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar métodos PF: " + ex.Message, ex);
+            }
         }
-
-        // INSERTAR
-        public bool InsertarMetodoPF(entMetodoPF entidad)
-        {
-            return DA_MetodoPF.Instancia.Insertar(entidad);
-        }
-
     }
 }

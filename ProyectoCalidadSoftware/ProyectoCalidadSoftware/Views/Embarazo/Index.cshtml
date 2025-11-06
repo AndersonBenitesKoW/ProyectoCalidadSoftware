@@ -76,15 +76,9 @@
 
                                 @if (item.Estado)
                                 {
-                                    <form asp-action="CerrarEmbarazo" asp-route-id="@item.IdEmbarazo" method="post" style="display:inline;"
-                                          onsubmit="return confirm('¿Está seguro de que desea cerrar/anular este embarazo? Esta acción es irreversible.');">
-
-                                        @Html.AntiForgeryToken()
-
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Cerrar / Anular">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <a asp-action="CerrarEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-danger" title="Cerrar / Anular">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 }
                             </td>
                         </tr>

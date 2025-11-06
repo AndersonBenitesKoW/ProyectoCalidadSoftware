@@ -10,5 +10,7 @@
         public DateTime? FechaNacimiento { get; set; }
         public bool Estado { get; set; }
         public string NombreCompleto => $"{Apellidos}, {Nombres}";
+        public string EmailPrincipal { get; set; }
+        public string TelefonoPrincipal { get; set; }
     }
 }

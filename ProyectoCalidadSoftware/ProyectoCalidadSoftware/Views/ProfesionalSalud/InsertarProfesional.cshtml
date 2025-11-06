@@ -24,16 +24,17 @@
             <div class="card-body">
                 <form asp-action="InsertarProfesional" method="post" class="needs-validation" novalidate>
                     @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
                         <label asp-for="Nombres" class="form-label"><i class="bi bi-person-text me-1"></i> @Html.DisplayNameFor(model => model.Nombres)</label>
-                        <input asp-for="Nombres" class="form-control" required />
+                        <input asp-for="Nombres" class="form-control" />
                         <span asp-validation-for="Nombres" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Apellidos" class="form-label"><i class="bi bi-person-text me-1"></i> @Html.DisplayNameFor(model => model.Apellidos)</label>
-                        <input asp-for="Apellidos" class="form-control" required />
+                        <input asp-for="Apellidos" class="form-control" />
                         <span asp-validation-for="Apellidos" class="text-danger"></span>
                     </div>
 
@@ -49,6 +50,20 @@
                         <span asp-validation-for="Especialidad" class="text-danger"></span>
                     </div>
 
+                    <hr />
+                    <h6 class="text-muted">Datos de Contacto (Usuario)</h6>
+
+                    <div class="mb-3">
+                        <label asp-for="EmailPrincipal" class="form-label"><i class="bi bi-envelope-at me-1"></i> Email Principal</label>
+                        <input asp-for="EmailPrincipal" class="form-control" type="email" />
+                        <span asp-validation-for="EmailPrincipal" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TelefonoPrincipal" class="form-label"><i class="bi bi-phone me-1"></i> Teléfono Principal</label>
+                        <input asp-for="TelefonoPrincipal" class="form-control" />
+                        <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
+                    </div>
                     <hr />
                     <div class="text-end">
                         <a asp-action="Index" class="btn btn-secondary me-2">

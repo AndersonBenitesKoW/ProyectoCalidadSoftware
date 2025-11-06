@@ -21,13 +21,15 @@ namespace CapaAccesoDatos
         {
             System.Diagnostics.Debug.WriteLine("DA_Usuario.Listar() llamado");
 
-            // usamos diccionario para evitar duplicados
-            var dic = new Dictionary<int, entUsuario>();
+            // Lista simple, ya no necesitamos el diccionario.
+            var lista = new List<entUsuario>();
 
             try
             {
                 using (SqlConnection cn = Conexion.Instancia.Conectar())
-                using (SqlCommand cmd = new SqlCommand("sp_ListarUsuario", cn))
+
+                // CORRECCIÓN: El nombre del SP debe ser en plural.
+                using (SqlCommand cmd = new SqlCommand("sp_ListarUsuarios", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cn.Open();
@@ -36,39 +38,31 @@ namespace CapaAccesoDatos
                     {
                         while (dr.Read())
                         {
-                            int idUsuario = (int)dr["IdUsuario"];
+                            // Lógica simplificada:
+                            // El SP 'sp_ListarUsuarios' ahora devuelve una fila
+                            // por usuario y usa ISNULL para evitar errores.
 
-                            // si todavía no lo agregamos, lo creamos
-                            if (!dic.TryGetValue(idUsuario, out var usuario))
+                            var usuario = new entUsuario
                             {
-                                usuario = new entUsuario
-                                {
-                                    IdUsuario = idUsuario,
-                                    NombreUsuario = dr["NombreUsuario"].ToString(),
-                                    ClaveHash = dr["ClaveHash"].ToString(),
-                                    Email = dr["Email"].ToString(),
-                                    Estado = (bool)dr["Estado"],
+                                IdUsuario = (int)dr["IdUsuario"],
+                                NombreUsuario = dr["NombreUsuario"].ToString(),
+                                // ClaveHash no es necesaria en la lista, pero si la tuvieras
+                                // ClaveHash = dr["ClaveHash"].ToString(), 
+                                Email = dr["Email"].ToString(),
+                                Estado = (bool)dr["Estado"],
 
-                                    // inicializamos en 0 por si esta fila no trae rol
-                                    IdRol = 0,
-                                    NombreRol = string.Empty
-                                };
+                                // Estas lecturas son seguras gracias al ISNULL del SP
+                                IdRol = (int)dr["IdRol"],
+                                NombreRol = dr["NombreRol"].ToString()
+                            };
 
-                                dic.Add(idUsuario, usuario);
-                            }
-
-                            // si esta fila sí trae rol y aún no lo hemos puesto, lo ponemos
-                            if (dr["IdRol"] != DBNull.Value && usuario.IdRol == 0)
-                            {
-                                usuario.IdRol = (int)dr["IdRol"];
-                                usuario.NombreRol = dr["NombreRol"].ToString();
-                            }
+                            lista.Add(usuario);
                         }
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine($"Usuarios listados: {dic.Count}");
-                return dic.Values.ToList();
+                System.Diagnostics.Debug.WriteLine($"Usuarios listados: {lista.Count}");
+                return lista;
             }
             catch (Exception ex)
             {
@@ -133,7 +127,6 @@ namespace CapaAccesoDatos
 
                 cmd.Parameters.AddWithValue("@IdUsuario", entidad.IdUsuario);
 
-                // si quieres permitir nulos en nombre/clave/email:
                 cmd.Parameters.AddWithValue("@Username",
                     string.IsNullOrWhiteSpace(entidad.NombreUsuario)
                         ? (object)DBNull.Value
@@ -153,8 +146,13 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                cmd.ExecuteNonQuery(); // 1. Ejecutamos el SP
+
+                return true; // 2. Asumimos éxito si no hubo excepción
             }
+            // 3. Si el SP falla, el TRY..CATCH..THROW en SQL
+            //    lanzará una excepción aquí, y tu controlador
+            //    la atrapará. El 'return true' nunca se ejecutará.
         }
 
 

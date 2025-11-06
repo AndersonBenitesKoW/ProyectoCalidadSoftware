@@ -1,102 +1,106 @@
 ﻿@model IEnumerable<CapaEntidad.entControlPrenatal>
 
 @{
-    ViewData["Title"] = "Listar Controles Prenatales";
+    ViewData["Title"] = "Controles Prenatales";
 }
 
-<div class="table-container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="mb-0"><i class="bi bi-clipboard-data"></i> Controles Prenatales</h1>
-            <p class="text-muted mb-0">Gestión de controles prenatales de pacientes</p>
-        </div>
-        <a asp-action="Registrar" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nuevo Control
-        </a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-0"><i class="bi bi-stethoscope"></i> @ViewData["Title"]</h1>
+        <p class="text-muted mb-0">Seguimiento de todos los controles registrados</p>
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th><i class="bi bi-hash"></i> ID Control</th>
-                    <th><i class="bi bi-heart-pulse"></i> Embarazo</th>
-                    <th><i class="bi bi-calendar-event"></i> Encuentro</th>
-                    <th><i class="bi bi-person-badge"></i> Profesional</th>
-                    <th><i class="bi bi-calendar-date"></i> Fecha</th>
-                    <th><i class="bi bi-speedometer"></i> Peso (Kg)</th>
-                    <th><i class="bi bi-rulers"></i> Talla (m)</th>
-                    <th><i class="bi bi-heart-half"></i> PA (mmHg)</th>
-                    <th><i class="bi bi-bullseye"></i> AU (cm)</th>
-                    <th><i class="bi bi-activity"></i> FCF (bpm)</th>
-                    <th><i class="bi bi-body-text"></i> Presentación</th>
-                    <th><i class="bi bi-droplet"></i> Proteinuria</th>
-                    <th><i class="bi bi-check-circle"></i> Estado</th>
-                    <th><i class="bi bi-gear"></i> Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model) {
-                    <tr>
-                        <!-- cambio mínimo: IdControl -> IdControlPrenatal -->
-                        <td>@Html.DisplayFor(modelItem => item.IdControlPrenatal)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IdEncuentro)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IdProfesional)</td>
-                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td>@(item.PesoKg.HasValue ? item.PesoKg.Value.ToString("N2") : "-")</td>
-                        <td>@(item.TallaM.HasValue ? item.TallaM.Value.ToString("N2") : "-")</td>
-                        <td>
-                            @(item.PA_Sistolica.HasValue && item.PA_Diastolica.HasValue ?
-                              $"{item.PA_Sistolica}/{item.PA_Diastolica}" : "-")
-                        </td>
-                        <td>@(item.AlturaUterina_cm.HasValue ? item.AlturaUterina_cm.Value.ToString("N1") : "-")</td>
-                        <td>@(item.FCF_bpm.HasValue ? item.FCF_bpm.Value.ToString() : "-")</td>
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.Presentacion)) {
-                                <span class="badge bg-info">@item.Presentacion</span>
-                            } else {
-                                <span class="text-muted">-</span>
-                            }
-                        </td>
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.Proteinuria)) {
-                                <span class="badge bg-warning">@item.Proteinuria</span>
-                            } else {
-                                <span class="text-muted">-</span>
-                            }
-                        </td>
-                        <td>
-                            @if (item.Estado) {
-                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>
-                            } else {
-                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactivo</span>
-                            }
-                        </td>
-                        <td>
-                            <div class="btn-group" role="group">
-
-                                <a asp-action="Inhabilitar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (!Model.Any()) {
-        <div class="text-center py-5">
-            <i class="bi bi-clipboard-x text-muted" style="font-size: 3rem;"></i>
-            <h4 class="text-muted mt-3">No hay controles prenatales registrados</h4>
-            <p class="text-muted">Comience registrando un nuevo control prenatal.</p>
-            <a asp-action="Registrar" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Registrar Primer Control
-            </a>
-        </div>
-    }
+    <a asp-action="Registrar" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Registrar Control
+    </a>
 </div>
- 
 
+@if (TempData["Ok"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Ok"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+    </div>
+}
+
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+                <h4 class="text-muted mt-3">No hay controles registrados</h4>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Fecha</th>
+                            <th>Profesional</th>
+                            <th>Peso (Kg)</th>
+                            <th>PA (sis/dia)</th>
+                            <th>AU (cm)</th>
+                            <th>FCF (lpm)</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NombrePaciente</td>
+                                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@item.NombreProfesional</td>
+                                <td>@item.PesoKg</td>
+                                <td>@item.PA_Sistolica / @item.PA_Diastolica</td>
+                                <td>@item.AlturaUterina_cm</td>
+                                <td>@item.FCF_bpm</td>
+                                <td class="text-center">
+                                    @{
+                                        string clase = item.Estado ? "bg-success" : "bg-danger";
+                                        string texto = item.Estado ? "Activo" : "Inhabilitado";
+                                    }
+                                    <span class="badge @clase">@texto</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Detalles" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-info" title="Detalles">
+                                            <i class="bi bi-search"></i>
+                                        </a>
+                                        <a asp-action="Editar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        @if (item.Estado)
+                                        {
+                                            <a asp-action="Inhabilitar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

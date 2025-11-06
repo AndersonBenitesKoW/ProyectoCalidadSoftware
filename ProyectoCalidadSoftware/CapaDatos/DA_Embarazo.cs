@@ -142,8 +142,18 @@ namespace CapaAccesoDatos
                     cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
 
                     cn.Open();
-                    // Devuelve true si se afectó al menos 1 fila
-                    return cmd.ExecuteNonQuery() > 0;
+
+                    // ==== INICIO DE LA CORRECCIÓN ====
+
+                    // 1. Ejecutamos el SP.
+                    //    Si falla, el TRY/CATCH del SP lanzará una 
+                    //    excepción que el controlador atrapará.
+                    cmd.ExecuteNonQuery();
+
+                    // 2. Si no hubo excepción, asumimos que funcionó.
+                    return true;
+
+                    // ==== FIN DE LA CORRECCIÓN ====
                 }
             }
         }

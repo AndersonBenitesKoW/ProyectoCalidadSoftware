@@ -1,5 +1,7 @@
 ﻿using CapaAccesoDatos;
 using CapaEntidad;
+using System;
+using System.Collections.Generic;
 
 namespace CapaLogica
 {
@@ -14,24 +16,71 @@ namespace CapaLogica
         private logControlPrenatal() { }
         #endregion
 
-        // LISTAR
         public List<entControlPrenatal> ListarControlPrenatal()
         {
-            return DA_ControlPrenatal.Instancia.Listar();
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar controles: " + ex.Message, ex);
+            }
         }
 
-        // INSERTAR
         public bool InsertarControlPrenatal(entControlPrenatal entidad)
         {
-            return DA_ControlPrenatal.Instancia.Insertar(entidad);
+            try
+            {
+                // Aquí puedes añadir validaciones de negocio
+                if (entidad.IdEmbarazo <= 0)
+                    throw new ApplicationException("El IdEmbarazo es obligatorio.");
+                if (entidad.Fecha > DateTime.Now.AddDays(1))
+                    throw new ApplicationException("La fecha del control no puede ser futura.");
+
+                entidad.Estado = true; // Aseguramos que se inserte como activo
+                return DA_ControlPrenatal.Instancia.Insertar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al insertar control: " + ex.Message, ex);
+            }
         }
 
-        public bool Inhabilitar(int id)
+        public bool EditarControlPrenatal(entControlPrenatal entidad)
         {
-            return DA_ControlPrenatal.Instancia.Inhabilitar(id);
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Editar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al editar control: " + ex.Message, ex);
+            }
         }
 
+        public entControlPrenatal? BuscarControlPrenatal(int id)
+        {
+            try
+            {
+                return DA_ControlPrenatal.Instancia.BuscarPorId(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al buscar control: " + ex.Message, ex);
+            }
+        }
 
-
+        public bool InhabilitarControlPrenatal(int id)
+        {
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Inhabilitar(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al inhabilitar control: " + ex.Message, ex);
+            }
+        }
     }
 }
