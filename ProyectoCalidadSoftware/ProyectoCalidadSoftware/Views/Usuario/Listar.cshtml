@@ -1,0 +1,81 @@
+﻿@model IEnumerable<CapaEntidad.entUsuario>
+
+@{
+    ViewData["Title"] = "Listar Usuarios";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-users"></i> Lista de Usuarios</h4>
+                    <a asp-action="Create" class="btn btn-light btn-sm">
+                        <i class="fas fa-plus"></i> Crear Nuevo Usuario
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-id-badge"></i> @Html.DisplayNameFor(model => model.IdUsuario)</th>
+                                    <th><i class="fas fa-user"></i> @Html.DisplayNameFor(model => model.NombreUsuario)</th>
+                                    <th><i class="fas fa-key"></i> @Html.DisplayNameFor(model => model.ClaveHash)</th>
+                                    <th><i class="fas fa-envelope"></i> @Html.DisplayNameFor(model => model.Email)</th>
+                                    <th><i class="fas fa-user-tag"></i> Roles</th>
+                                    <th><i class="fas fa-toggle-on"></i> @Html.DisplayNameFor(model => model.Estado)</th>
+                                    <th><i class="fas fa-cogs"></i> Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.IdUsuario)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.NombreUsuario)</td>
+                                        <td>
+                                            <span class="text-muted">••••••••</span> <!-- Ocultar hash por seguridad -->
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                        <td>
+                                            @if (item.IdRol != 0)
+                                            {
+                                                <span class="badge bg-secondary">ID: @item.IdRol - @item.NombreRol</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Sin rol asignado</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Estado)
+                                            {
+                                                <span class="badge bg-success"><i class="fas fa-check-circle"></i> Activo</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Inactivo</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                @Html.ActionLink("Editar", "Edit", new { id = item.IdUsuario }, new { @class = "btn btn-outline-primary btn-sm", title = "Editar" }) |
+                                                @Html.ActionLink("Detalles", "Details", new { id = item.IdUsuario }, new { @class = "btn btn-outline-info btn-sm", title = "Detalles" }) |
+                                                @Html.ActionLink("Eliminar", "Delete", new { id = item.IdUsuario }, new { @class = "btn btn-outline-danger btn-sm", title = "Eliminar" })
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+}

@@ -1,114 +1,88 @@
 @model CapaEntidad.entCita
 
 @{
-    ViewData["Title"] = "Insertar Cita";
+    ViewData["Title"] = "Insertar Nueva Cita";
 }
 
-<div class="form-container">
-    <div class="form-header">
-        <h1><i class="bi bi-calendar-plus"></i> Insertar Cita Médica</h1>
-        <h4>Programación de nueva cita para paciente</h4>
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-calendar-plus me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form asp-action="Insertar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdPaciente" class="form-select" asp-items="@ViewBag.ListaPacientes" required>
+                            <option value="">-- Seleccione una Paciente --</option>
+                        </select>
+                        <label asp-for="IdPaciente"><i class="bi bi-person me-2"></i>Paciente</label>
+                        <span asp-validation-for="IdPaciente" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                            <option value="">-- Asignar Profesional (Opcional) --</option>
+                        </select>
+                        <label asp-for="IdProfesional"><i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos">
+                            <option value="">-- Embarazo Relacionado (Opcional) --</option>
+                        </select>
+                        <label asp-for="IdEmbarazo"><i class="bi bi-heart-pulse me-2"></i>Embarazo (Si aplica)</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="FechaCita" class="form-control" type="datetime-local" />
+                                <label asp-for="FechaCita"><i class="bi bi-calendar-event me-2"></i>Fecha de la Cita</label>
+                                <span asp-validation-for="FechaCita" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Motivo" class="form-control" placeholder="Motivo de la Cita" />
+                                <label asp-for="Motivo"><i class="bi bi-chat-text me-2"></i>Motivo de la Cita</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="Observacion" class="form-control" placeholder="Observaciones" style="height: 100px"></textarea>
+                        <label asp-for="Observacion"><i class="bi bi-sticky me-2"></i>Observación (Opcional)</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a la Lista
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i> Insertar Cita
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <form asp-action="Insertar">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdPaciente" class="control-label">
-                        <i class="bi bi-person"></i> ID Paciente
-                    </label>
-                    <input asp-for="IdPaciente" class="form-control" type="number" placeholder="Ingrese ID del paciente" />
-                    <span asp-validation-for="IdPaciente" class="text-danger"></span>
-                    <small class="form-text text-muted">Identificador único del paciente</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdRecepcionista" class="control-label">
-                        <i class="bi bi-person-badge"></i> ID Recepcionista (Opcional)
-                    </label>
-                    <input asp-for="IdRecepcionista" class="form-control" type="number" placeholder="Ingrese ID del recepcionista" />
-                    <span asp-validation-for="IdRecepcionista" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdProfesional" class="control-label">
-                        <i class="bi bi-person-lines-fill"></i> ID Profesional (Opcional)
-                    </label>
-                    <input asp-for="IdProfesional" class="form-control" type="number" placeholder="Ingrese ID del profesional" />
-                    <span asp-validation-for="IdProfesional" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdEmbarazo" class="control-label">
-                        <i class="bi bi-heart-pulse"></i> ID Embarazo (Opcional)
-                    </label>
-                    <input asp-for="IdEmbarazo" class="form-control" type="number" placeholder="Ingrese ID del embarazo" />
-                    <span asp-validation-for="IdEmbarazo" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="FechaCita" class="control-label">
-                        <i class="bi bi-calendar-event"></i> Fecha de la Cita
-                    </label>
-                    <input asp-for="FechaCita" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="FechaCita" class="text-danger"></span>
-                    <small class="form-text text-muted">Seleccione fecha y hora de la cita</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdEstadoCita" class="control-label">
-                        <i class="bi bi-flag"></i> Estado de la Cita
-                    </label>
-                    <input asp-for="IdEstadoCita" class="form-control" type="number" placeholder="Ingrese estado de la cita" />
-                    <span asp-validation-for="IdEstadoCita" class="text-danger"></span>
-                    <small class="form-text text-muted">Código del estado de la cita</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="Motivo" class="control-label">
-                        <i class="bi bi-chat-text"></i> Motivo de la Cita
-                    </label>
-                    <textarea asp-for="Motivo" class="form-control" rows="3" placeholder="Describa el motivo de la cita"></textarea>
-                    <span asp-validation-for="Motivo" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="Observacion" class="control-label">
-                        <i class="bi bi-sticky"></i> Observación (Opcional)
-                    </label>
-                    <textarea asp-for="Observacion" class="form-control" rows="3" placeholder="Observaciones adicionales"></textarea>
-                    <span asp-validation-for="Observacion" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-between">
-            <a asp-action="Listar" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Volver a la Lista
-            </a>
-            <input type="submit" value="Insertar Cita" class="btn btn-primary" />
-        </div>
-    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

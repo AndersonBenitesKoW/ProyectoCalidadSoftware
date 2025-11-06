@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -80,20 +78,61 @@ namespace CapaAccesoDatos
             }
         }
 
-        public DataTable BuscarPorId(int idRol)
+        public entRol? BuscarPorId(int idRol)
         {
-            DataTable dt = new DataTable();
+            entRol? rol = null;
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_BuscarRol", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_BuscarRol", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdRol", idRol);
 
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        rol = new entRol
+                        {
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            NombreRol = dr["NombreRol"].ToString()!,
+                            Descripcion = dr["Descripcion"] != DBNull.Value ? dr["Descripcion"].ToString()! : "",
+                            Estado = dr["Estado"] != DBNull.Value && Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
             }
-            return dt;
+            return rol;
+        }
+
+        public entRol? ObtenerPorNombre(string nombreRol)
+        {
+            entRol? rol = null;
+
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_Rol_ObtenerPorNombre", cn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@NombreRol", nombreRol);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        rol = new entRol
+                        {
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            NombreRol = dr["NombreRol"].ToString()!,
+                            Descripcion = dr["Descripcion"] != DBNull.Value ? dr["Descripcion"].ToString()! : "",
+                            Estado = dr["Estado"] != DBNull.Value && Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
+            }
+
+            return rol;
         }
 
         public bool Eliminar(int idRol)

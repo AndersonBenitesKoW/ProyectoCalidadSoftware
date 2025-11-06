@@ -4,23 +4,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    //[Route("core/ayudas")]
     public class OrdenAyudaDiagnosticaController : Controller
     {
-        // GET: /OrdenAyudaDiagnostica/Listar
+        // GET: /core/ayudas
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden();
             return View(lista);
         }
 
-        // GET: /OrdenAyudaDiagnostica/Insertar
+        // GET: /core/ayudas/insertar
         [HttpGet]
         public IActionResult Insertar()
         {
             return View(new entAyudaDiagnosticaOrden());
         }
 
-        // POST: /OrdenAyudaDiagnostica/Insertar
+        // POST: /core/ayudas/insertar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Insertar(entAyudaDiagnosticaOrden entidad)

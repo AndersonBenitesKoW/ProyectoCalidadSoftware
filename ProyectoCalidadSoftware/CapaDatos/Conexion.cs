@@ -1,30 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 
 
 namespace CapaAccesoDatos
+{
+    public class Conexion
     {
-        public class Conexion
+        #region Singleton
+        private static readonly Conexion unicaInstancia = new Conexion();
+        public static Conexion Instancia
         {
-            #region Singleton
-            private static readonly Conexion unicaInstancia = new Conexion();
-            public static Conexion Instancia
-            {
-                get { return Conexion.unicaInstancia; }
-            }
+            get { return Conexion.unicaInstancia; }
+        }
         #endregion
         public SqlConnection Conectar()
         {
             SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = "Data Source=DESKTOP-TMU82JN\\SQLEXPRESS;" +
+
+            // MODIFICADO: Apunta a TU servidor y usa tu autenticación de Windows.
+            cn.ConnectionString = "Data Source=DESKTOP-BLFSTC3\\SQLEXPRESS;" +
                                   "Initial Catalog=ProyectoCalidad;" +
-                                  "Integrated Security=True;";
+                                  "Integrated Security=True;"; // <-- Esto reemplaza al User ID y Password
             return cn;
-        }
+
+        //"Data Source=DESKTOP-TMU82JN\\SQLEXPRESS;" +
+        //          "Initial Catalog=ProyectoCalidad;" +
+        //          "User ID=tuUsuarioSQL;" +
+        //          "Password=tuContraseñaSQL;";
+
+    }
 
     }
 

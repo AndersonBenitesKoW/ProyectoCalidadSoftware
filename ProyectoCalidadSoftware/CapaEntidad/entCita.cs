@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entCita
     {
@@ -19,5 +13,10 @@ namespace CapaEntidad
         public string? Observacion { get; set; }
         public DateTime? FechaAnulacion { get; set; }
         public string? MotivoAnulacion { get; set; }
+
+        // --- Propiedades AÑADIDAS (para Listar y Buscar) ---
+        public string NombrePaciente { get; set; } = string.Empty;
+        public string NombreProfesional { get; set; } = string.Empty;
+        public string NombreEstado { get; set; } = string.Empty;
     }
 }

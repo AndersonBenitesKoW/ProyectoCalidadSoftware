@@ -1,34 +1,32 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
+
 namespace CapaLogica
 {
     public class logTipoEncuentro
     {
         #region Singleton
-        private static readonly logTipoEncuentro UnicaInstancia = new logTipoEncuentro();
+        private static readonly logTipoEncuentro _instancia = new logTipoEncuentro();
         public static logTipoEncuentro Instancia
         {
-            get { return logTipoEncuentro.UnicaInstancia; }
+            get { return logTipoEncuentro._instancia; }
         }
         private logTipoEncuentro() { }
         #endregion
 
-        // LISTAR
-        public List<entTipoEncuentro> ListarTipoEncuentro()
+        // Renombrado para que EncuentroController lo encuentre
+        public List<entTipoEncuentro> ListarTiposEncuentro()
         {
-            return DA_TipoEncuentro.Instancia.Listar();
+            try
+            {
+                return DA_TipoEncuentro.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar tipos de encuentro: " + ex.Message, ex);
+            }
         }
-
-        // INSERTAR
-        public bool InsertarTipoEncuentro(entTipoEncuentro entidad)
-        {
-            return DA_TipoEncuentro.Instancia.Insertar(entidad);
-        }
-
     }
 }

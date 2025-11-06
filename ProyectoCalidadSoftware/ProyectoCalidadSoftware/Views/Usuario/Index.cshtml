@@ -1,0 +1,152 @@
+@model IEnumerable<CapaEntidad.entUsuario>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 font-weight-bold">
+                            <i class="fas fa-users me-2"></i>Gestión de Usuarios
+                        </h2>
+                        <a asp-action="Create" class="btn btn-light btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Usuario
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No hay usuarios registrados</h4>
+                            <p class="text-muted">Comience creando el primer usuario del sistema</p>
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Crear Primer Usuario
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                                        <th><i class="fas fa-user me-1"></i>Nombre de Usuario</th>
+                                        <th><i class="fas fa-envelope me-1"></i>Email</th>
+                                        <th><i class="fas fa-user-tag me-1"></i>Rol</th>
+                                        <th><i class="fas fa-toggle-on me-1"></i>Estado</th>
+                                        <th><i class="fas fa-cogs me-1"></i>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var usuario in Model)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">#@usuario.IdUsuario</td>
+                                            <td class="fw-semibold">@usuario.NombreUsuario</td>
+                                            <td>@usuario.Email</td>
+                                            <td>
+                                                @if (usuario.IdRol != 0)
+                                                {
+                                                    <span class="badge bg-primary">@usuario.NombreRol</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Sin rol</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (usuario.Estado)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Activo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times-circle me-1"></i>Inactivo
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="Edit" asp-route-id="@usuario.IdUsuario"
+                                                        class="btn btn-sm btn-outline-primary" title="Editar usuario">
+                                                        <i class="fas fa-edit me-1"></i>Editar
+                                                    </a>
+                                                    <a asp-action="Delete" asp-route-id="@usuario.IdUsuario"
+                                                        class="btn btn-sm btn-outline-danger" title="Eliminar usuario">
+                                                        <i class="fas fa-trash me-1"></i>Eliminar
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: transformY(-2px);
+    }
+
+    .table th {
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

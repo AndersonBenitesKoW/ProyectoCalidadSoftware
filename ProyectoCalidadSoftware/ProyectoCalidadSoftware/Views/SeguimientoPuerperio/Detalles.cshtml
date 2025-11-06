@@ -1,0 +1,69 @@
+﻿@model CapaEntidad.entSeguimientoPuerperio
+@{
+    ViewData["Title"] = "Detalles del Seguimiento";
+    string clase = Model.Estado ? "text-success" : "text-danger";
+    string texto = Model.Estado ? "Activo" : "Inhabilitado";
+}
+<style>
+    .details-list dt {
+        font-weight: 600;
+    }
+
+    .details-list dd {
+        color: #333;
+    }</style>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="display-6"><i class="bi bi-file-earmark-medical text-primary"></i> @ViewData["Title"]</h1>
+        <hr />
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Seguimiento #@Model.IdPuerperio</h5>
+                <span class="badge bg-@clase fs-6">@texto</span>
+            </div>
+            <div class="card-body">
+
+                <h5 class="mt-2"><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Paciente</dt>
+                    <dd class="col-sm-9">@Model.NombrePaciente (Embarazo ID: @Model.IdEmbarazo)</dd>
+                    <dt class="col-sm-3">Profesional</dt>
+                    <dd class="col-sm-9">@Model.NombreProfesional</dd>
+                    <dt class="col-sm-3">Fecha del Control</dt>
+                    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-heart-pulse me-2"></i>Evaluación Clínica</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">PA (sis/dia)</dt>
+                    <dd class="col-sm-3">@Model.PA_Sistolica / @Model.PA_Diastolica mmHg</dd>
+                    <dt class="col-sm-3">Temp (°C)</dt>
+                    <dd class="col-sm-3">@Model.Temp_C</dd>
+                    <dt class="col-sm-3">Altura Uterina PP</dt>
+                    <dd class="col-sm-3">@Model.AlturaUterinaPP_cm cm</dd>
+                    <dt class="col-sm-3">Loquios</dt>
+                    <dd class="col-sm-3">@Model.Loquios</dd>
+                    <dt class="col-sm-3">Lactancia</dt>
+                    <dd class="col-sm-3">@Model.Lactancia</dd>
+                    <dt class="col-sm-3">Signos de Infección</dt>
+                    <dd class="col-sm-3">@(Model.SignosInfeccion == true ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Tamizaje Depresión</dt>
+                    <dd class="col-sm-9">@Model.TamizajeDepresion</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Planificación y Notas</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Método PF</dt>
+                    <dd class="col-sm-9">@Model.NombreMetodoPF</dd>
+                    <dt class="col-sm-3">Observaciones</dt>
+                    <dd class="col-sm-9">@Model.Observaciones</dd>
+                </dl>
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Listar" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                <a asp-action="Editar" asp-route-id="@Model.IdPuerperio" class="btn btn-warning"><i class="bi bi-pencil-fill"></i> Editar</a>
+            </div>
+        </div>
+    </div>
+</div>

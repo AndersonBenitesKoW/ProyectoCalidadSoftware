@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using CapaEntidad;
-using CapaLogica;
 
 namespace ProyectoCalidadSoftware.Controllers
 {

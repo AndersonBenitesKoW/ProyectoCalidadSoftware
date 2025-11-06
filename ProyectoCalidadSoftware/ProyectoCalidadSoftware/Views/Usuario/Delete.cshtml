@@ -1,0 +1,143 @@
+@model CapaEntidad.entUsuario
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+}
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-danger text-white text-center py-4">
+                    <h3 class="mb-0 font-weight-bold">
+                        <i class="fas fa-user-times fa-2x mb-2"></i><br>
+                        Eliminar Usuario
+                    </h3>
+                    <p class="mb-0 small">¿Está seguro de que desea eliminar este usuario?</p>
+                </div>
+                <div class="card-body p-5">
+                    <!-- Información del usuario -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-hashtag me-2"></i>ID Usuario</h6>
+                                <p class="mb-0 fw-bold fs-5">#@Model.IdUsuario</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-user me-2"></i>Nombre de Usuario</h6>
+                                <p class="mb-0 fw-bold fs-5">@Model.NombreUsuario</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-envelope me-2"></i>Email</h6>
+                                <p class="mb-0 fw-bold">@Model.Email</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-user-tag me-2"></i>Rol</h6>
+                                <p class="mb-0 fw-bold">@Model.NombreRol</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-card p-3 mb-3 bg-light rounded">
+                                <h6 class="text-primary mb-2"><i class="fas fa-toggle-on me-2"></i>Estado</h6>
+                                <p class="mb-0">
+                                    @if (Model.Estado)
+                                    {
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-check-circle me-1"></i>Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger fs-6">
+                                            <i class="fas fa-times-circle me-1"></i>Inactivo
+                                        </span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerta de advertencia -->
+                    <div class="alert alert-danger border-danger" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle fa-2x me-3 text-danger"></i>
+                            <div>
+                                <h6 class="alert-heading mb-1">¡Advertencia!</h6>
+                                <p class="mb-0">Esta acción eliminará permanentemente al usuario <strong>@Model.NombreUsuario</strong> del sistema. Esta acción no se puede deshacer.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de eliminación -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <form asp-action="Delete" method="post" class="me-md-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="IdUsuario" />
+                            <button type="submit" class="btn btn-danger btn-lg px-5">
+                                <i class="fas fa-trash me-2"></i>Sí, Eliminar Usuario
+                            </button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-5">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .info-card {
+        border-left: 4px solid #dc3545 !important;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border-width: 2px;
+    }
+
+    .border {
+        border-color: #dee2e6 !important;
+    }
+</style>

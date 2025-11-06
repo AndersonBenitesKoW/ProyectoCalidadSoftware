@@ -1,36 +1,30 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
+
 namespace CapaLogica
 {
     public class logTipoAyudaDiagnostica
     {
-
         #region Singleton
-        private static readonly logTipoAyudaDiagnostica UnicaInstancia = new logTipoAyudaDiagnostica();
+        private static readonly logTipoAyudaDiagnostica _instancia = new logTipoAyudaDiagnostica();
         public static logTipoAyudaDiagnostica Instancia
         {
-            get { return logTipoAyudaDiagnostica.UnicaInstancia; }
+            get { return logTipoAyudaDiagnostica._instancia; }
         }
-        private logTipoAyudaDiagnostica() { }
         #endregion
 
-        // LISTAR
-        public List<entTipoAyudaDiagnostica> ListarTipoAyudaDiagnostica()
+        public List<entTipoAyudaDiagnostica> ListarTiposAyuda()
         {
-            return DA_TipoAyudaDiagnostica.Instancia.Listar();
+            try
+            {
+                return DA_TipoAyudaDiagnostica.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar tipos de ayuda: " + ex.Message, ex);
+            }
         }
-
-        // INSERTAR
-        public bool InsertarTipoAyudaDiagnostica(entTipoAyudaDiagnostica entidad)
-        {
-            return DA_TipoAyudaDiagnostica.Instancia.Insertar(entidad);
-        }
-
-
     }
 }

@@ -1,0 +1,74 @@
+﻿@model CapaEntidad.entEncuentro
+
+@{
+    ViewData["Title"] = "Registrar Nuevo Encuentro";
+}
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-medical me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form asp-action="Insertar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                            <option value="">-- Seleccione un Embarazo (Paciente) --</option>
+                        </select>
+                        <label asp-for="IdEmbarazo"><i class="bi bi-heart-pulse me-2"></i>Embarazo</label>
+                        <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdTipoEncuentro" class="form-select" asp-items="@ViewBag.ListaTiposEncuentro" required>
+                            <option value="">-- Seleccione el Tipo de Encuentro --</option>
+                        </select>
+                        <label asp-for="IdTipoEncuentro"><i class="bi bi-clipboard-pulse me-2"></i>Tipo de Encuentro</label>
+                        <span asp-validation-for="IdTipoEncuentro" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales" required>
+                            <option value="">-- Seleccione el Profesional que atendió --</option>
+                        </select>
+                        <label asp-for="IdProfesional"><i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud</label>
+                        <span asp-validation-for="IdProfesional" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="Notas" class="form-control" placeholder="Notas" style="height: 120px"></textarea>
+                        <label asp-for="Notas"><i class="bi bi-sticky me-2"></i>Notas (Opcional)</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a la Lista
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i> Registrar Encuentro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

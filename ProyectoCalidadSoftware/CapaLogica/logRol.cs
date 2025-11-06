@@ -1,13 +1,8 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 namespace CapaLogica
 {
-    internal class logRol
+    public class logRol
     {
         #region Singleton
         private static readonly logRol UnicaInstancia = new logRol();

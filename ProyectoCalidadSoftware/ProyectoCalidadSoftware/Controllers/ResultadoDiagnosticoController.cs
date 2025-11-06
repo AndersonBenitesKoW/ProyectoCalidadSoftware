@@ -4,17 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    //[Route("core/ayudas/resultados")]
     public class ResultadoDiagnosticoController : Controller
     {
-
-        // GET: /ResultadoDiagnostico/Listar
+        // GET: /core/ayudas/resultados
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logResultadoDiagnostico.Instancia.ListarResultadoDiagnostico();
             return View(lista);
         }
 
-        // GET: /ResultadoDiagnostico/Registrar
+        // GET: /core/ayudas/resultados/registrar
         [HttpGet]
         public IActionResult Registrar(int? idAyuda)
         {
@@ -23,12 +24,12 @@ namespace ProyectoCalidadSoftware.Controllers
                 IdAyuda = idAyuda ?? 0,
                 FechaResultado = DateTime.Now,
                 Critico = false,
-                Estado = "ACTIVO" // ajusta a tu catálogo
+                Estado = "ACTIVO"
             };
             return View(modelo);
         }
 
-        // POST: /ResultadoDiagnostico/Registrar
+        // POST: /core/ayudas/resultados/registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entResultadoDiagnostico entidad)
@@ -57,14 +58,18 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /ResultadoDiagnostico/Modificar/5
+        // GET: /core/ayudas/resultados/modificar/5
         [HttpGet]
         public IActionResult Modificar(int id)
         {
             try
             {
                 var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
-                if (entidad == null) return NotFound();
+                if (entidad == null)
+                {
+                    TempData["Error"] = "Resultado no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
                 return View(entidad);
             }
             catch (Exception ex)
@@ -74,7 +79,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // POST: /ResultadoDiagnostico/Modificar  (update con entidad)
+        // POST: /core/ayudas/resultados/modificar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Modificar(entResultadoDiagnostico entidad)
@@ -104,7 +109,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // Alias: /ResultadoDiagnostico/Actualizar (si quieres tener ambas rutas)
+        // Alias opcional: /core/ayudas/resultados/actualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Actualizar(entResultadoDiagnostico entidad)
@@ -112,16 +117,29 @@ namespace ProyectoCalidadSoftware.Controllers
             return Modificar(entidad);
         }
 
-        // POST: /ResultadoDiagnostico/Anular/5  (soft delete por estado)
-        [HttpPost]
+        // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
+        [HttpGet]
         public IActionResult Anular(int id)
+        {
+            var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
+            if (entidad == null)
+            {
+                TempData["Error"] = "Resultado no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(entidad); // Views/ResultadoDiagnostico/Anular.cshtml (modelo: entResultadoDiagnostico)
+        }
+
+        // POST: /core/ayudas/resultados/{id}/anular
+        [HttpPost]
+         // permite usar asp-action="Anular" en el form
+        [ValidateAntiForgeryToken]
+        public IActionResult AnularConfirmado(int id)
         {
             try
             {
                 bool ok = logResultadoDiagnostico.Instancia.AnularResultadoDiagnostico(id);
-                if (ok) return RedirectToAction(nameof(Listar));
-
-                TempData["Error"] = "No se pudo anular el resultado.";
+                TempData[ok ? "Ok" : "Error"] = ok ? "Resultado anulado." : "No se pudo anular el resultado.";
                 return RedirectToAction(nameof(Listar));
             }
             catch (Exception ex)
@@ -130,8 +148,5 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(Listar));
             }
         }
-
-
-
     }
 }

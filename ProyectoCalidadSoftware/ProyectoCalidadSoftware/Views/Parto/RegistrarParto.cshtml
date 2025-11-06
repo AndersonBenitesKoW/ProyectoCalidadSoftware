@@ -1,0 +1,223 @@
+﻿@model CapaEntidad.entParto
+@{
+    ViewData["Title"] = "Registrar Parto";
+}
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-gift-fill me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="RegistrarParto" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Estado" />
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <h5><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                                    <option value="">-- Seleccione Embarazo --</option>
+                                </select>
+                                <label asp-for="IdEmbarazo">Embarazo (Paciente)</label>
+                                <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEncuentro" class="form-select" disabled>
+                                    <option value="">-- Seleccione un embarazo primero --</option>
+                                </select>
+                                <label asp-for="IdEncuentro">Encuentro (Consulta)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                                    <option value="">-- Seleccione Profesional --</option>
+                                </select>
+                                <label asp-for="IdProfesional">Profesional</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Fecha" class="form-control" type="date" />
+                                <label asp-for="Fecha">Fecha del Parto</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clock-history me-2"></i>Tiempos y Evaluación</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraIngreso" class="form-control" type="time" />
+                                <label asp-for="HoraIngreso">Hora Ingreso</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraInicioTrabajo" class="form-control" type="time" />
+                                <label asp-for="HoraInicioTrabajo">Hora Inicio Trabajo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Membranas" class="form-control" placeholder="Integras/Rotas" />
+                                <label asp-for="Membranas">Membranas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdLiquido" class="form-select" asp-items="@ViewBag.ListaLiquidos">
+                                    <option value="">-- Líquido Amniótico --</option>
+                                </select>
+                                <label asp-for="IdLiquido"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Detalles del Parto</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdViaParto" class="form-select" asp-items="@ViewBag.ListaViasParto">
+                                    <option value="">-- Vía de Parto --</option>
+                                </select>
+                                <label asp-for="IdViaParto"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Analgesia" class="form-control" />
+                                <label asp-for="Analgesia">Analgesia</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PerdidasML" class="form-control" type="number" />
+                                <label asp-for="PerdidasML"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input asp-for="IndicacionCesarea" class="form-control" placeholder="N/A" />
+                                <label asp-for="IndicacionCesarea">Indicación Cesárea (si aplica)</label>
+                                <span asp-validation-for="IndicacionCesarea" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Desgarro" class="form-control" placeholder="N/A" />
+                                <label asp-for="Desgarro">Desgarro (Grado)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Complicaciones" class="form-control" placeholder="N/A" style="height: 100px"></textarea>
+                                <label asp-for="Complicaciones">Otras Complicaciones</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Registrar Parto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // 1. Define los dropdowns
+            var embarazoSelect = $('#IdEmbarazo');
+            var encuentroSelect = $('#IdEncuentro');
+
+            // 2. Evento 'change' para el dropdown de Embarazo
+            embarazoSelect.on('change', function () {
+                var selectedEmbarazoId = $(this).val();
+
+                // 3. Limpiar y deshabilitar el dropdown de Encuentros
+                encuentroSelect.empty();
+                encuentroSelect.attr('disabled', 'disabled');
+
+                if (selectedEmbarazoId) {
+                    // 4. Si se seleccionó un embarazo, buscar sus encuentros
+                    encuentroSelect.append($('<option>', {
+                        value: '',
+                        text: 'Cargando encuentros...'
+                    }));
+
+                    $.ajax({
+                        // 5. Llamada al endpoint del controlador
+                        url: '@Url.Action("GetEncuentrosPorEmbarazo", "Parto")',
+                        type: 'GET',
+                        data: { idEmbarazo: selectedEmbarazoId },
+                        success: function (data) {
+                            // 6. Éxito: Llenar el dropdown
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', {
+                                value: '',
+                                text: '-- Seleccione un Encuentro (Opcional) --'
+                            }));
+
+                            if (data.length > 0) {
+                                $.each(data, function (i, item) {
+                                    encuentroSelect.append($('<option>', {
+                                        value: item.idEncuentro,
+                                        text: item.encuentroDesc
+                                    }));
+                                });
+                                encuentroSelect.removeAttr('disabled'); // Habilitar
+                            } else {
+                                encuentroSelect.empty();
+                                encuentroSelect.append($('<option>', {
+                                    value: '',
+                                    text: 'No hay encuentros para este embarazo'
+                                }));
+                            }
+                        },
+                        error: function () {
+                            // 7. Error
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', {
+                                value: '',
+                                text: 'Error al cargar encuentros'
+                            }));
+                        }
+                    });
+                } else {
+                    // 8. Si no hay embarazo seleccionado
+                    encuentroSelect.append($('<option>', {
+                        value: '',
+                        text: '-- Seleccione un embarazo primero --'
+                    }));
+                }
+            });
+        });
+    </script>
+}

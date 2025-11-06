@@ -1,32 +1,36 @@
+// =======================
+// auth.js
+// =======================
+
 // Variables globales
 let captchaText = '';
 let loginAttempts = 3;
 let isBlocked = false;
 let blockTimer = null;
 
-// Inicialización cuando el DOM está listo
-document.addEventListener('DOMContentLoaded', function() {
+// DOM listo
+document.addEventListener('DOMContentLoaded', function () {
     initializeForm();
     generateVisualCaptcha();
 });
 
-// Inicializar componentes del formulario
+// Inicializar componentes
 function initializeForm() {
-    // Tabs de formulario
+    // 1. Tabs (solo si existen)
     const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', switchForm);
-    });
+    if (tabButtons.length > 0) {
+        tabButtons.forEach(button => {
+            button.addEventListener('click', switchForm);
+        });
+    }
 
-    // Toggle de contraseña
-    const toggleButtons = document.querySelectorAll('.toggle-password');
-    toggleButtons.forEach(button => {
+    // 2. Toggle de contraseña
+    document.querySelectorAll('.toggle-password').forEach(button => {
         button.addEventListener('click', togglePasswordVisibility);
     });
 
-    // Modal de privacidad
-    const privacyLinks = document.querySelectorAll('.privacy-link');
-    privacyLinks.forEach(link => {
+    // 3. Modal de privacidad
+    document.querySelectorAll('.privacy-link').forEach(link => {
         link.addEventListener('click', openPrivacyModal);
     });
 
@@ -35,19 +39,27 @@ function initializeForm() {
         closeModal.addEventListener('click', closePrivacyModal);
     }
 
-    // Botón de volver en forgot password
+    // 4. Botón "volver" del forgot (si estás en la vista de login unificada)
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) {
-        backBtn.addEventListener('click', () => switchForm({ target: document.querySelector('[data-form="login"]') }));
+        backBtn.addEventListener('click', () => {
+            const loginTab = document.querySelector('[data-form="login"]');
+            if (loginTab) {
+                switchForm({ target: loginTab });
+            } else {
+                // en páginas separadas, puedes redirigir
+                window.location.href = '/Login/Index';
+            }
+        });
     }
 
-    // Toggle de credenciales demo
+    // 5. Toggle de credenciales demo
     const demoToggle = document.querySelector('.demo-toggle');
     if (demoToggle) {
         demoToggle.addEventListener('click', toggleDemoCredentials);
     }
 
-    // Envío de formularios
+    // 6. Formularios
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLoginSubmit);
@@ -56,52 +68,49 @@ function initializeForm() {
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegisterSubmit);
+
+        // validación de password en registro
+        const passwordInput = document.getElementById('register-password');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', checkPasswordStrength);
+        }
+
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        if (confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+        }
     }
 
     const forgotForm = document.getElementById('forgot-form');
     if (forgotForm) {
         forgotForm.addEventListener('submit', handleForgotSubmit);
     }
-
-    // Validación de contraseña en registro
-    const passwordInput = document.getElementById('register-password');
-    if (passwordInput) {
-        passwordInput.addEventListener('input', checkPasswordStrength);
-    }
-
-    // Validación de confirmación de contraseña
-    const confirmPasswordInput = document.getElementById('confirm-password');
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-    }
 }
 
-// Cambiar entre formularios
+// Cambiar entre formularios (solo si estás usando pestañas en una sola vista)
 function switchForm(event) {
     const targetForm = event.target.getAttribute('data-form');
+    if (!targetForm) return;
 
-    // Remover clase active de todos los tabs
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    // Agregar clase active al tab clickeado
     event.target.classList.add('active');
 
-    // Ocultar todos los formularios
     document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-    // Mostrar formulario seleccionado
     const selectedForm = document.getElementById(targetForm + '-form');
     if (selectedForm) {
         selectedForm.classList.add('active');
     }
 
-    // Limpiar mensajes
     clearMessages();
 }
 
-// Toggle de visibilidad de contraseña
+// Toggle de contraseña
 function togglePasswordVisibility(event) {
     const button = event.target.closest('.toggle-password');
+    if (!button) return;
     const targetId = button.getAttribute('data-target');
     const input = document.getElementById(targetId);
+    if (!input) return;
 
     if (input.type === 'password') {
         input.type = 'text';
@@ -112,7 +121,9 @@ function togglePasswordVisibility(event) {
     }
 }
 
-// Generar captcha visual
+// =======================
+// CAPTCHA
+// =======================
 function generateVisualCaptcha() {
     const canvas = document.getElementById('captcha-canvas');
     if (!canvas) return;
@@ -121,26 +132,21 @@ function generateVisualCaptcha() {
     const width = canvas.width;
     const height = canvas.height;
 
-    // Limpiar canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Fondo con gradiente
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, 'rgba(147, 197, 253, 0.3)');
     gradient.addColorStop(1, 'rgba(219, 234, 254, 0.3)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Generar texto aleatorio
     captchaText = generateRandomText(6);
 
-    // Dibujar texto con distorsión
     ctx.font = 'bold 24px Arial';
     ctx.fillStyle = '#1e40af';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    // Aplicar distorsión
     for (let i = 0; i < captchaText.length; i++) {
         const x = (width / captchaText.length) * (i + 0.5);
         const y = height / 2 + Math.sin(i * 0.5) * 5;
@@ -151,7 +157,6 @@ function generateVisualCaptcha() {
         ctx.restore();
     }
 
-    // Agregar líneas de ruido
     for (let i = 0; i < 5; i++) {
         ctx.strokeStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.3)`;
         ctx.beginPath();
@@ -160,14 +165,12 @@ function generateVisualCaptcha() {
         ctx.stroke();
     }
 
-    // Agregar puntos de ruido
     for (let i = 0; i < 50; i++) {
         ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`;
         ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1);
     }
 }
 
-// Generar texto aleatorio para captcha
 function generateRandomText(length) {
     const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
     let result = '';
@@ -177,79 +180,33 @@ function generateRandomText(length) {
     return result;
 }
 
-// Validar captcha
 function validateCaptcha() {
-    const userInput = document.getElementById('captcha-answer').value.toUpperCase();
-    return userInput === captchaText.toUpperCase();
+    const input = document.getElementById('captcha-answer');
+    if (!input) return true; // en registro no hay captcha
+    return input.value.toUpperCase() === captchaText.toUpperCase();
 }
 
-// Toggle de credenciales demo
+// =======================
+// Credenciales demo
+// =======================
 function toggleDemoCredentials() {
     const demoList = document.getElementById('demo-credentials');
     const toggleIcon = document.querySelector('.demo-toggle i');
 
+    if (!demoList) return;
+
     if (demoList.style.display === 'none' || demoList.style.display === '') {
         demoList.style.display = 'block';
-        toggleIcon.className = 'fas fa-eye-slash';
+        if (toggleIcon) toggleIcon.className = 'fas fa-eye-slash';
     } else {
         demoList.style.display = 'none';
-        toggleIcon.className = 'fas fa-eye';
+        if (toggleIcon) toggleIcon.className = 'fas fa-eye';
     }
 }
 
-// Verificar fortaleza de contraseña
-function checkPasswordStrength() {
-    const password = document.getElementById('register-password').value;
-    const strengthIndicator = document.getElementById('password-strength');
-
-    if (!strengthIndicator) return;
-
-    let strength = 0;
-    let feedback = [];
-
-    if (password.length >= 8) strength++;
-    else feedback.push('Al menos 8 caracteres');
-
-    if (/[a-z]/.test(password)) strength++;
-    else feedback.push('Una letra minúscula');
-
-    if (/[A-Z]/.test(password)) strength++;
-    else feedback.push('Una letra mayúscula');
-
-    if (/[0-9]/.test(password)) strength++;
-    else feedback.push('Un número');
-
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    else feedback.push('Un carácter especial');
-
-    strengthIndicator.className = 'password-strength';
-
-    if (strength < 3) {
-        strengthIndicator.classList.add('weak');
-        strengthIndicator.textContent = 'Débil: ' + feedback.join(', ');
-    } else if (strength < 4) {
-        strengthIndicator.classList.add('medium');
-        strengthIndicator.textContent = 'Media: Agrega más complejidad';
-    } else {
-        strengthIndicator.classList.add('strong');
-        strengthIndicator.textContent = 'Fuerte: ¡Excelente!';
-    }
-}
-
-// Validar coincidencia de contraseñas
-function validatePasswordMatch() {
-    const password = document.getElementById('register-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-    const confirmInput = document.getElementById('confirm-password');
-
-    if (password !== confirmPassword) {
-        confirmInput.setCustomValidity('Las contraseñas no coinciden');
-    } else {
-        confirmInput.setCustomValidity('');
-    }
-}
-
-// Manejar envío del formulario de login
+// =======================
+// LOGIN
+// =======================
 async function handleLoginSubmit(event) {
     event.preventDefault();
 
@@ -261,11 +218,8 @@ async function handleLoginSubmit(event) {
     const formData = new FormData(event.target);
     const username = formData.get('username');
     const password = formData.get('password');
-    const captcha = formData.get('captcha');
-    const rememberMe = formData.get('remember-me') === 'on';
     const privacyAccepted = formData.get('privacy-login') === 'on';
 
-    // Validaciones
     if (!username || !password) {
         showMessage('Por favor complete todos los campos requeridos.', 'error');
         return;
@@ -282,16 +236,17 @@ async function handleLoginSubmit(event) {
         return;
     }
 
-    // Deshabilitar botón
     const submitBtn = event.target.querySelector('.submit-btn');
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando...';
 
     try {
-        const response = await fetch('/Login/Index', {
+        // aquí llamas a tu acción real
+        const response = await fetch('/Portal/LoginAjax', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             body: new URLSearchParams({
                 NombreUsuario: username,
@@ -325,7 +280,6 @@ async function handleLoginSubmit(event) {
     }
 }
 
-// Actualizar display de intentos
 function updateAttemptsDisplay() {
     const attemptsElement = document.getElementById('login-attempts');
     if (attemptsElement) {
@@ -333,11 +287,9 @@ function updateAttemptsDisplay() {
     }
 }
 
-// Bloquear cuenta temporalmente
 function blockAccount() {
     isBlocked = true;
-    let timeLeft = 60; // 1 minuto
-
+    let timeLeft = 60;
     const timerElement = document.getElementById('timer-countdown');
     const timerDisplay = document.getElementById('timer-display');
 
@@ -369,7 +321,9 @@ function blockAccount() {
     showMessage('Demasiados intentos fallidos. Cuenta bloqueada por 1 minuto.', 'error');
 }
 
-// Manejar envío del formulario de registro
+// =======================
+// REGISTRO
+// =======================
 async function handleRegisterSubmit(event) {
     event.preventDefault();
 
@@ -381,7 +335,6 @@ async function handleRegisterSubmit(event) {
     const recaptchaAccepted = formData.get('recaptcha-check') === 'on';
     const privacyAccepted = formData.get('privacy-register') === 'on';
 
-    // Validaciones
     if (!username || !email || !password || !confirmPassword) {
         showMessage('Por favor complete todos los campos.', 'error');
         return;
@@ -402,14 +355,16 @@ async function handleRegisterSubmit(event) {
         return;
     }
 
-    // Aquí iría la lógica de registro
-    showMessage('Registro exitoso. Puede iniciar sesión ahora.', 'success');
+    // Aquí iría tu POST real
+    showMessage('Registro exitoso. Redirigiendo al inicio de sesión...', 'success');
     setTimeout(() => {
-        switchForm({ target: document.querySelector('[data-form="login"]') });
+        window.location.href = '/Login/Index';
     }, 2000);
 }
 
-// Manejar envío del formulario de recuperación
+// =======================
+// Forgot password (solo si existe ese form)
+// =======================
 async function handleForgotSubmit(event) {
     event.preventDefault();
 
@@ -420,14 +375,21 @@ async function handleForgotSubmit(event) {
         return;
     }
 
-    // Aquí iría la lógica de recuperación
     showMessage('Se ha enviado un enlace de recuperación a su correo.', 'success');
     setTimeout(() => {
-        switchForm({ target: document.querySelector('[data-form="login"]') });
+        // si hay tabs
+        const loginTab = document.querySelector('[data-form="login"]');
+        if (loginTab) {
+            switchForm({ target: loginTab });
+        } else {
+            window.location.href = '/Login/Index';
+        }
     }, 2000);
 }
 
-// Mostrar mensajes
+// =======================
+// Mensajes y modal
+// =======================
 function showMessage(message, type) {
     clearMessages();
 
@@ -443,7 +405,6 @@ function showMessage(message, type) {
 
     messageContainer.appendChild(messageElement);
 
-    // Auto-remover después de 5 segundos
     setTimeout(() => {
         if (messageElement.parentNode) {
             messageElement.remove();
@@ -451,7 +412,6 @@ function showMessage(message, type) {
     }, 5000);
 }
 
-// Limpiar mensajes
 function clearMessages() {
     const messageContainer = document.getElementById('message-container');
     if (messageContainer) {
@@ -459,7 +419,6 @@ function clearMessages() {
     }
 }
 
-// Abrir modal de privacidad
 function openPrivacyModal() {
     const modal = document.getElementById('privacy-modal');
     if (modal) {
@@ -467,7 +426,6 @@ function openPrivacyModal() {
     }
 }
 
-// Cerrar modal de privacidad
 function closePrivacyModal() {
     const modal = document.getElementById('privacy-modal');
     if (modal) {
@@ -475,8 +433,7 @@ function closePrivacyModal() {
     }
 }
 
-// Cerrar modal al hacer click fuera
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const modal = document.getElementById('privacy-modal');
     if (modal && event.target === modal) {
         closePrivacyModal();

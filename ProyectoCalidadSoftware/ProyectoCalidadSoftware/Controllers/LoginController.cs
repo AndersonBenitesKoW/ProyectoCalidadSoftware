@@ -1,8 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using CapaEntidad;
-using CapaLogica;
-using System.Text.Json;
-
 namespace ProyectoCalidadSoftware.Controllers
 {
     //public class LoginController : Controller

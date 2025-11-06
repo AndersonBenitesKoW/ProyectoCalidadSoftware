@@ -1,36 +1,79 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
+
 namespace CapaLogica
 {
     public class logParto
     {
-
-
         #region Singleton
         private static readonly logParto UnicaInstancia = new logParto();
-        public static logParto Instancia
-        {
-            get { return logParto.UnicaInstancia; }
-        }
+        public static logParto Instancia { get { return logParto.UnicaInstancia; } }
         private logParto() { }
         #endregion
 
-        // LISTAR
-        public List<entParto> ListarParto()
+        public List<entParto> ListarPartos(bool estado)
         {
-            return DA_Parto.Instancia.Listar();
+            try
+            {
+                return DA_Parto.Instancia.Listar(estado);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar partos: " + ex.Message, ex);
+            }
         }
 
-        // INSERTAR
-        public bool InsertarParto(entParto entidad)
+        public bool RegistrarParto(entParto entidad)
         {
-            return DA_Parto.Instancia.Insertar(entidad);
+            try
+            {
+                if (entidad.IdEmbarazo <= 0)
+                    throw new ApplicationException("El IdEmbarazo es obligatorio.");
+                entidad.Estado = true;
+                return DA_Parto.Instancia.Insertar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al registrar parto: " + ex.Message, ex);
+            }
         }
 
+        public bool EditarParto(entParto entidad)
+        {
+            try
+            {
+                return DA_Parto.Instancia.Editar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al editar parto: " + ex.Message, ex);
+            }
+        }
+
+        public entParto? BuscarParto(int id)
+        {
+            try
+            {
+                return DA_Parto.Instancia.BuscarPorId(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al buscar parto: " + ex.Message, ex);
+            }
+        }
+
+        public bool AnularParto(int id)
+        {
+            try
+            {
+                return DA_Parto.Instancia.Anular(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al anular parto: " + ex.Message, ex);
+            }
+        }
     }
 }
