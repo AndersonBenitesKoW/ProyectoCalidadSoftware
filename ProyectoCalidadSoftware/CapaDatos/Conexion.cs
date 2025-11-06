@@ -15,18 +15,19 @@ namespace CapaAccesoDatos
         public SqlConnection Conectar()
         {
             SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = "Data Source=ANDERSON\\SQL2024;" +
+
+            // MODIFICADO: Apunta a TU servidor y usa tu autenticación de Windows.
+            cn.ConnectionString = "Data Source=DESKTOP-BLFSTC3\\SQLEXPRESS;" +
                                   "Initial Catalog=ProyectoCalidad;" +
-                                 "User ID=sa;" +
-                      "Password=anderson123;";
+                                  "Integrated Security=True;"; // <-- Esto reemplaza al User ID y Password
             return cn;
 
-            //"Data Source=DESKTOP-TMU82JN\\SQLEXPRESS;" +
-            //          "Initial Catalog=ProyectoCalidad;" +
-            //          "User ID=tuUsuarioSQL;" +
-            //          "Password=tuContraseñaSQL;";
+        //"Data Source=DESKTOP-TMU82JN\\SQLEXPRESS;" +
+        //          "Initial Catalog=ProyectoCalidad;" +
+        //          "User ID=tuUsuarioSQL;" +
+        //          "Password=tuContraseñaSQL;";
 
-        }
+    }
 
     }
 

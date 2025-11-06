@@ -1,25 +1,38 @@
 ﻿using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    //[Route("core/puerperio")]
+    // [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
     public class SeguimientoPuerperioController : Controller
     {
-        // GET: /core/puerperio
+        // GET: /SeguimientoPuerperio/Listar
         [HttpGet]
-        public IActionResult Listar()
+        public IActionResult Listar(bool mostrarActivos = true)
         {
-            var lista = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
-            ViewBag.Lista = lista;
-            return View(lista); // Views/SeguimientoPuerperio/Listar.cshtml
+            try
+            {
+                ViewBag.MostrandoActivos = mostrarActivos;
+                var lista = logSeguimientoPuerperio.Instancia.ListarSeguimiento(mostrarActivos);
+                return View(lista); // Views/SeguimientoPuerperio/Listar.cshtml
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar la lista: " + ex.Message;
+                return View(new List<entSeguimientoPuerperio>());
+            }
         }
 
-        // GET: /core/puerperio/registrar
+        // GET: /SeguimientoPuerperio/Registrar
         [HttpGet]
         public IActionResult Registrar(int? idEmbarazo)
         {
+            CargarViewBags(null); // Carga los dropdowns
             var modelo = new entSeguimientoPuerperio
             {
                 IdEmbarazo = idEmbarazo ?? 0,
@@ -29,69 +42,163 @@ namespace ProyectoCalidadSoftware.Controllers
             return View(modelo); // Views/SeguimientoPuerperio/Registrar.cshtml
         }
 
-        // POST: /core/puerperio/registrar
+        // POST: /SeguimientoPuerperio/Registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Registrar(entSeguimientoPuerperio entidad)
+        public IActionResult Registrar(entSeguimientoPuerperio control)
         {
             try
             {
-                if (entidad.IdEmbarazo <= 0)
-                    ModelState.AddModelError(nameof(entidad.IdEmbarazo), "Debe seleccionar un embarazo válido.");
-                if (entidad.Fecha == default)
-                    ModelState.AddModelError(nameof(entidad.Fecha), "Debe ingresar una fecha válida.");
+                if (control.IdEmbarazo <= 0)
+                    ModelState.AddModelError(nameof(control.IdEmbarazo), "Debe seleccionar un embarazo válido.");
+                if (control.Fecha == default)
+                    ModelState.AddModelError(nameof(control.Fecha), "Debe ingresar una fecha válida.");
 
-                if (!ModelState.IsValid) return View(entidad);
+                if (!ModelState.IsValid)
+                {
+                    CargarViewBags(control);
+                    return View(control);
+                }
 
-                entidad.Estado = true;
+                bool registrado = logSeguimientoPuerperio.Instancia.InsertarSeguimiento(control);
 
-                bool ok = logSeguimientoPuerperio.Instancia.InsertarSeguimientoPuerperio(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (registrado)
+                {
+                    TempData["Ok"] = "Seguimiento de puerperio registrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
 
-                ViewBag.Error = "No se pudo registrar el seguimiento de puerperio.";
-                return View(entidad);
+                ViewBag.Error = "No se pudo registrar el seguimiento.";
+                CargarViewBags(control);
+                return View(control);
             }
             catch (Exception ex)
             {
                 ViewBag.Error = "Error al registrar: " + ex.Message;
-                return View(entidad);
+                CargarViewBags(control);
+                return View(control);
             }
         }
 
-        // GET: /core/puerperio/{id}/inhabilitar  -> confirmación
+        // GET: /SeguimientoPuerperio/Editar/5
         [HttpGet]
-        public IActionResult Inhabilitar(int id)
+        public IActionResult Editar(int id)
         {
-            var entidad = logSeguimientoPuerperio.Instancia
-                .ListarSeguimientoPuerperio()
-                .FirstOrDefault(x => x.IdSeguimientoPuerperio == id);
-
-            if (entidad == null)
+            var control = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
+            if (control == null)
             {
-                TempData["Error"] = "Seguimiento no encontrado.";
+                TempData["Error"] = "Registro no encontrado.";
                 return RedirectToAction(nameof(Listar));
             }
-            return View(entidad); // Views/SeguimientoPuerperio/Inhabilitar.cshtml
+            CargarViewBags(control);
+            return View(control); // Views/SeguimientoPuerperio/Editar.cshtml
         }
 
-        // POST: /core/puerperio/{id}/inhabilitar
+        // POST: /SeguimientoPuerperio/Editar/5
         [HttpPost]
-        
         [ValidateAntiForgeryToken]
-        public IActionResult InhabilitarConfirmado(int id)
+        public IActionResult Editar(entSeguimientoPuerperio control)
         {
             try
             {
-                bool ok = logSeguimientoPuerperio.Instancia.Inhabilitar(id);
-                TempData[ok ? "Ok" : "Error"] = ok
-                    ? "Seguimiento inhabilitado correctamente."
-                    : "No se pudo inhabilitar el seguimiento.";
+                if (!ModelState.IsValid)
+                {
+                    CargarViewBags(control);
+                    return View(control);
+                }
+                bool editado = logSeguimientoPuerperio.Instancia.EditarSeguimiento(control);
+                if (editado)
+                {
+                    TempData["Ok"] = "Seguimiento actualizado.";
+                    return RedirectToAction(nameof(Listar));
+                }
+                ViewBag.Error = "No se pudo actualizar el seguimiento.";
+                CargarViewBags(control);
+                return View(control);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al actualizar: " + ex.Message;
+                CargarViewBags(control);
+                return View(control);
+            }
+        }
+
+        // GET: /SeguimientoPuerperio/Detalles/5
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            var control = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
+            if (control == null)
+            {
+                TempData["Error"] = "Registro no encontrado.";
                 return RedirectToAction(nameof(Listar));
+            }
+            return View(control); // Views/SeguimientoPuerperio/Detalles.cshtml
+        }
+
+        // GET: /SeguimientoPuerperio/Inhabilitar/5
+        [HttpGet]
+        public IActionResult Inhabilitar(int id)
+        {
+            var control = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
+            if (control == null)
+            {
+                TempData["Error"] = "Registro no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(control); // Views/SeguimientoPuerperio/Inhabilitar.cshtml
+        }
+
+        // POST: /SeguimientoPuerperio/Inhabilitar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Inhabilitar(entSeguimientoPuerperio control)
+        {
+            try
+            {
+                bool resultado = logSeguimientoPuerperio.Instancia.InhabilitarSeguimiento(control.IdPuerperio);
+                TempData[resultado ? "Ok" : "Error"] = resultado
+                    ? "Seguimiento inhabilitado."
+                    : "No se pudo inhabilitar.";
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "Error al inhabilitar: " + ex.Message;
-                return RedirectToAction(nameof(Listar));
+            }
+            return RedirectToAction(nameof(Listar));
+        }
+
+        // --- Método privado para cargar DropDownLists ---
+        private void CargarViewBags(entSeguimientoPuerperio? control)
+        {
+            try
+            {
+                // Cargar Embarazos (Activos y Cerrados, por si acaso)
+                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true)
+                    .Concat(logEmbarazo.Instancia.ListarEmbarazosPorEstado(false));
+
+                ViewBag.ListaEmbarazos = new SelectList(
+                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
+                    "IdEmbarazo", "Nombre", control?.IdEmbarazo
+                );
+
+                // Cargar Profesionales Activos
+                var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+                ViewBag.ListaProfesionales = new SelectList(
+                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
+                    "IdProfesional", "Nombre", control?.IdProfesional
+                );
+
+                // Cargar Métodos PF
+                var metodos = logMetodoPF.Instancia.ListarMetodosPF();
+                ViewBag.ListaMetodosPF = new SelectList(
+                    metodos, "IdMetodoPF", "Nombre", control?.IdMetodoPF
+                );
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
     }

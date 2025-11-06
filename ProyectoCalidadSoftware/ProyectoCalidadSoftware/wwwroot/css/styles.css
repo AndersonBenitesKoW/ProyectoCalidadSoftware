@@ -1289,3 +1289,37 @@ h4::after {
         width: 60px;
     }
 }
+/*
+  ================================================================
+  PARCHE PARA ARREGLAR EL MENÚ DESPLEGABLE TRANSPARENTE
+  (Añadir al final de wwwroot/css/styles.css)
+  ================================================================
+*/
+
+/* 1. Asegura que la barra de navegación (navbar) esté siempre encima */
+.navbar-custom {
+    /* Un z-index (capa) alto es crucial para que esté sobre el @RenderBody() */
+    z-index: 1030;
+}
+
+    /* 2. Arregla el menú desplegable (EL PROBLEMA PRINCIPAL) */
+    .navbar-custom .dropdown-menu {
+        background-color: #ffffff; /* ¡Fondo sólido blanco, no transparente! */
+        backdrop-filter: none; /* Quita cualquier filtro de vidrio heredado */
+        border: 1px solid rgba(0, 0, 0, 0.15); /* Borde estándar de Bootstrap */
+        z-index: 1031; /* Se asegura que el menú esté sobre la navbar */
+    }
+
+    /* 3. (Opcional) Arregla el color del texto del dropdown si se vuelve ilegible */
+    .navbar-custom .dropdown-item {
+        color: #212529; /* Color de texto oscuro estándar */
+    }
+
+        .navbar-custom .dropdown-item:hover {
+            background-color: #f8f9fa; /* Un fondo suave al pasar el mouse */
+        }
+
+    /* 4. Arregla las cabeceras del menú (ej. "Embarazo", "Seguimiento") */
+    .navbar-custom .dropdown-header {
+        color: #6c757d; /* Color de cabecera estándar */
+    }

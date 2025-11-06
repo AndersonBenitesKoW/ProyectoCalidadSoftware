@@ -2,65 +2,89 @@
 
 @{
     ViewData["Title"] = "Listado de Embarazos";
+
+    // Lógica para el botón de filtro
+    bool mostrandoActivos = ViewBag.MostrandoActivos ?? true;
+    string botonTexto = mostrandoActivos ? "Mostrar Inactivos" : "Mostrar Activos";
+    string botonIcono = mostrandoActivos ? "bi-eye-slash" : "bi-eye";
+    string botonClase = mostrandoActivos ? "btn-outline-secondary" : "btn-outline-primary";
+    bool proximoEstado = !mostrandoActivos;
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<p>
-    <a asp-action="RegistrarEmbarazo" class="btn btn-success">Registrar Nuevo Embarazo</a>
-</p>
-
-<div class="mb-3">
-    @{
-        bool mostrandoActivos = ViewBag.MostrandoActivos ?? true;
-        string botonTexto = mostrandoActivos ? "Mostrar Inactivos" : "Mostrar Activos";
-        string botonClase = mostrandoActivos ? "btn btn-outline-secondary" : "btn btn-outline-primary";
-        bool proximoEstado = !mostrandoActivos;
-    }
-    <a asp-action="Index" asp-route-mostrarActivos="@proximoEstado" class="@botonClase btn-sm">
-        @botonTexto
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="display-6 mb-0">@ViewData["Title"]</h1>
+    <a asp-action="RegistrarEmbarazo" class="btn btn-success shadow-sm">
+        <i class="bi bi-plus-circle me-2"></i>Registrar Nuevo Embarazo
     </a>
 </div>
 
-@* Muestra mensajes (TempData y ViewBag) *@
-@if (TempData["MensajeExito"] != null)
-{
-    <div class="alert alert-success">@TempData["MensajeExito"]</div>
-}
 @if (ViewBag.Error != null)
 {
-    <div class="alert alert-danger">@ViewBag.Error</div>
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error</div>
 }
 @if (ViewBag.Advertencia != null)
 {
-    <div class="alert alert-warning">@ViewBag.Advertencia</div>
+    <div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i> @ViewBag.Advertencia</div>
 }
 
+<div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-muted">Embarazos Registrados</h5>
+        <a asp-action="Index" asp-route-mostrarActivos="@proximoEstado" class="btn @botonClase btn-sm">
+            <i class="bi @botonIcono me-2"></i>@botonTexto
+        </a>
+    </div>
+    <div class="card-body p-0">
 
-<table class="table table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>ID Embarazo</th>
-            <th>Paciente</th>
-            <th>FPP (Fecha Probable Parto)</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        @if (!Model.Any())
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
-                <td>@Html.DisplayFor(modelItem => item.NombrePaciente)</td>
-                <td>@item.FPP?.ToString("dd/MM/yyyy")</td>
-                <td>
-                    @(item.Estado ? "Activo" : "Cerrado/Inactivo")
-                </td>
-                <td>
-                    <a asp-action="DetallesEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-info">Detalles</a>
-                </td>
-            </tr>
+            <div class="alert alert-info m-3" role="alert">
+                No hay embarazos que coincidan con el filtro actual.
+            </div>
         }
-    </tbody>
-</table>
+        else
+        {
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Paciente</th>
+                        <th>FPP (Fecha Probable Parto)</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Lógica para el color del "badge" de estado
+                        var estadoClase = item.Estado ? "bg-success" : "bg-secondary";
+                        var estadoTexto = item.Estado ? "Activo" : "Cerrado";
+
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.IdEmbarazo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NombrePaciente)</td>
+                            <td>@item.FPP?.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                <span class="badge @estadoClase">@estadoTexto</span>
+                            </td>
+                            <td class="text-end">
+
+                                <a asp-action="DetallesEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-primary" title="Detalles">
+                                    <i class="bi bi-search"></i> Detalles
+                                </a>
+
+                                @if (item.Estado)
+                                {
+                                    <a asp-action="CerrarEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-danger" title="Cerrar / Anular">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

@@ -1,6 +1,4 @@
-
-
-CREATE OR ALTER PROCEDURE sp_InsertarEmbarazo
+CREATE  PROCEDURE sp_InsertarEmbarazo
 (
     @IdPaciente INT,
     @FUR DATE = NULL, -- Fecha Última Regla (opcional)
@@ -31,7 +29,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_BuscarEmbarazoPorId
+CREATE  PROCEDURE sp_BuscarEmbarazoPorId
 (
     @IdEmbarazo INT
 )
@@ -51,7 +49,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarEmbarazosActivos
+CREATE PROCEDURE sp_ListarEmbarazosActivos
 (
     @Estado BIT 
 )
@@ -76,7 +74,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarProfesionalSalud
+CREATE PROCEDURE sp_ListarProfesionalSalud
 (
     @Estado BIT -- Parámetro requerido: 1 para activos, 0 para inactivos
 )
@@ -88,7 +86,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarProfesionalSalud
+CREATE PROCEDURE sp_InsertarProfesionalSalud
   @CMP NVARCHAR(20),
   @Especialidad NVARCHAR(80),
   @Nombres NVARCHAR(100),
@@ -102,7 +100,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_BuscarProfesionalSalud
+CREATE PROCEDURE sp_BuscarProfesionalSalud
 (
     @IdProfesional INT
 )
@@ -114,7 +112,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_EditarProfesionalSalud
+CREATE PROCEDURE sp_EditarProfesionalSalud
 (
     @IdProfesional  INT,
     @Nombres        VARCHAR(100),
@@ -137,7 +135,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarParto
+CREATE PROCEDURE sp_InsertarParto
     @IdEmbarazo INT,
     @IdEncuentro INT, -- 👈 RE-AGREGADO: Ahora es un parámetro obligatorio
     @IdProfesional INT = NULL,
@@ -200,7 +198,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarPartos
+CREATE PROCEDURE sp_ListarPartos
 (
     @Estado BIT -- 1 para activos (habilitados), 0 para anulados (inhabilitados)
 )
@@ -230,7 +228,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarPartoIntervencion
+CREATE  PROCEDURE sp_InsertarPartoIntervencion
     @IdParto INT,
     @Intervencion NVARCHAR(80)
 AS
@@ -240,7 +238,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_AnularParto
+CREATE  PROCEDURE sp_AnularParto
     @IdParto INT
 AS
 BEGIN
@@ -251,7 +249,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_BuscarPartoPorId
+CREATE  PROCEDURE sp_BuscarPartoPorId
 (
     @IdParto INT
 )
@@ -292,7 +290,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarViaParto
+CREATE  PROCEDURE sp_ListarViaParto
 AS
 BEGIN
     SELECT 
@@ -306,7 +304,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarLiquidoAmniotico
+CREATE  PROCEDURE sp_ListarLiquidoAmniotico
 AS
 BEGIN
     SELECT 
@@ -320,7 +318,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarPacientesActivos
+CREATE  PROCEDURE sp_ListarPacientesActivos
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -339,7 +337,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarEncuentro
+CREATE  PROCEDURE sp_InsertarEncuentro
 (
     @IdEmbarazo INT,
     @IdProfesional INT = NULL,
@@ -374,7 +372,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarTipoEncuentro
+CREATE  PROCEDURE sp_ListarTipoEncuentro
 AS
 BEGIN
     SELECT IdTipoEncuentro, Codigo, Descripcion 
@@ -382,7 +380,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarTipoEncuentro
+CREATE  PROCEDURE sp_ListarTipoEncuentro
 AS
 BEGIN
     SELECT IdTipoEncuentro, Codigo, Descripcion 
@@ -390,7 +388,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarEncuentrosPorEmbarazoYTipo
+CREATE  PROCEDURE sp_ListarEncuentrosPorEmbarazoYTipo
 (
     @IdEmbarazo INT,
     @CodigoTipo NVARCHAR(20) 
@@ -418,7 +416,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_ListarPacientes
+CREATE  PROCEDURE sp_ListarPacientes
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -439,7 +437,7 @@ GO
 --------------------------------STORES PARA LA VALIDACION DE LOS USUARIOS-------------
 -------------------------------                                           --------------------
                                       
-CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerPorNombre
+CREATE  PROCEDURE sp_Usuario_ObtenerPorNombre
   @NombreUsuario NVARCHAR(50)
 AS
 BEGIN
@@ -462,7 +460,7 @@ GO
 
 
 
-CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerRoles
+CREATE  PROCEDURE sp_Usuario_ObtenerRoles
   @IdUsuario INT
 AS
 BEGIN
@@ -482,7 +480,7 @@ GO
 
 ------ SP PARA LOS ROLES -------------
 
-CREATE OR ALTER PROCEDURE sp_ListarRol
+CREATE  PROCEDURE sp_ListarRol
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -498,7 +496,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_InsertarRol
+CREATE  PROCEDURE sp_InsertarRol
     @Nombre NVARCHAR(50),
     @Descripcion NVARCHAR(100) = NULL,
     @Estado BIT
@@ -511,7 +509,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_EditarRol
+CREATE  PROCEDURE sp_EditarRol
     @IdRol INT,
     @Nombre NVARCHAR(50),
     @Descripcion NVARCHAR(100) = NULL,
@@ -530,7 +528,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_BuscarRol
+CREATE  PROCEDURE sp_BuscarRol
     @IdRol INT
 AS
 BEGIN
@@ -546,7 +544,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_Rol_ObtenerPorNombre
+CREATE  PROCEDURE sp_Rol_ObtenerPorNombre
     @NombreRol NVARCHAR(50)
 AS
 BEGIN
@@ -568,7 +566,7 @@ GO
 
 ----------------------SP DE USUARIOS-----------------------
 
-CREATE OR ALTER  PROCEDURE sp_ListarUsuario
+CREATE   PROCEDURE sp_ListarUsuario
 AS
 BEGIN 
     SET NOCOUNT ON;
@@ -588,7 +586,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarUsuario
+CREATE  PROCEDURE sp_InsertarUsuario
     @Username      NVARCHAR(50),
     @PasswordHash  NVARCHAR(500),
     @Correo        NVARCHAR(100),
@@ -610,79 +608,7 @@ END;
 GO
 
 
-select * from Usuario
-
-EXEC sp_InsertarUsuario
-    @Username = 'admin2',
-    @PasswordHash = 'hash_admin2',
-    @Correo = 'admin@clinica2.com',
-    @IdRol = 1,   -- Id del rol ADMINISTRADOR
-    @Estado = 1;  -- Activo
-
-
-
-CREATE OR ALTER PROCEDURE sp_EditarUsuario
-    @IdUsuario     INT,
-    @Username      NVARCHAR(50)  = NULL,
-    @PasswordHash  NVARCHAR(500) = NULL,
-    @Correo        NVARCHAR(100) = NULL,
-    @IdRol         INT,
-    @Estado        BIT
-AS
-BEGIN
-   
-
-    -- 1) actualizar datos del usuario
-    UPDATE Usuario
-    SET
-        NombreUsuario = ISNULL(@Username, NombreUsuario),
-        ClaveHash     = ISNULL(@PasswordHash, ClaveHash),
-        Email         = ISNULL(@Correo, Email),
-        Estado        = @Estado
-    WHERE IdUsuario = @IdUsuario;
-
-    -- 2) actualizar el rol del usuario
-    -- si existe, se actualiza
-    IF EXISTS (SELECT 1 FROM UsuarioRol WHERE IdUsuario = @IdUsuario)
-    BEGIN
-        UPDATE UsuarioRol
-        SET IdRol = @IdRol
-        WHERE IdUsuario = @IdUsuario;
-    END
-    ELSE
-    BEGIN
-        -- por si acaso no existiera la fila, la creamos
-        INSERT INTO UsuarioRol (IdUsuario, IdRol)
-        VALUES (@IdUsuario, @IdRol);
-    END
-END;
-GO
-
-select * from UsuarioRol
-
-CREATE OR ALTER PROCEDURE sp_BuscarUsuario
-    @IdUsuario INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT 
-        u.IdUsuario,
-        u.NombreUsuario,
-        u.ClaveHash,
-        u.Email,
-        ur.IdRol,
-        r.NombreRol,
-        u.Estado
-    FROM Usuario u
-    INNER JOIN UsuarioRol ur ON u.IdUsuario = ur.IdUsuario
-    INNER JOIN Rol r ON r.IdRol = ur.IdRol
-    WHERE u.IdUsuario = @IdUsuario;
-END;
-GO
-
-
-CREATE OR ALTER PROCEDURE sp_EliminarUsuario
+CREATE  PROCEDURE sp_EliminarUsuario
     @IdUsuario INT
 AS
 BEGIN
@@ -701,7 +627,7 @@ END;
 GO
 ---SP CITAS ------------
 
-CREATE OR ALTER PROCEDURE sp_ListarCitas
+CREATE  PROCEDURE sp_ListarCitas
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -725,7 +651,7 @@ GO
 
 
 
-CREATE OR ALTER PROCEDURE sp_InsertarCita
+CREATE  PROCEDURE sp_InsertarCita
     @IdPaciente       INT,
     @IdRecepcionista  INT = NULL,
     @IdProfesional    INT = NULL,
@@ -768,7 +694,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_BuscarCitaPorId
+CREATE  PROCEDURE sp_BuscarCitaPorId
     @IdCita INT
 AS
 BEGIN
@@ -792,7 +718,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_AnularCita
+CREATE  PROCEDURE sp_AnularCita
     @IdCita INT,
     @MotivoAnulacion NVARCHAR(200)
 AS
@@ -810,7 +736,7 @@ GO
 
 
 --SEGUIMIENTO PUERPERIO-----
-CREATE OR ALTER PROCEDURE sp_ListarSeguimientoPuerperio
+CREATE  PROCEDURE sp_ListarSeguimientoPuerperio
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -839,7 +765,7 @@ GO
 
 
 
-CREATE OR ALTER PROCEDURE sp_InsertarSeguimientoPuerperio
+CREATE  PROCEDURE sp_InsertarSeguimientoPuerperio
     @IdEmbarazo          INT,
     @IdEncuentro         INT         = NULL,
     @IdProfesional       INT         = NULL,
@@ -896,7 +822,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_InhabilitarSeguimientoPuerperio
+CREATE  PROCEDURE sp_InhabilitarSeguimientoPuerperio
     @IdPuerperio INT
 AS
 BEGIN
@@ -909,7 +835,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE sp_BuscarSeguimientoPuerperio
+CREATE  PROCEDURE sp_BuscarSeguimientoPuerperio
     @IdSeguimiento INT
 AS
 BEGIN
@@ -940,7 +866,7 @@ GO
 
 --SP CONTROL PRENATAL --
 
-CREATE OR ALTER PROCEDURE sp_ListarControlPrenatal
+CREATE  PROCEDURE sp_ListarControlPrenatal
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -968,7 +894,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertarControlPrenatal
+CREATE  PROCEDURE sp_InsertarControlPrenatal
     @IdEmbarazo INT,
     @IdEncuentro INT = NULL,
     @IdProfesional INT = NULL,
@@ -1028,7 +954,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_BuscarControlPrenatal
+CREATE  PROCEDURE sp_BuscarControlPrenatal
     @IdControl INT
 AS
 BEGIN
@@ -1057,7 +983,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_InhabilitarControlPrenatal
+CREATE  PROCEDURE sp_InhabilitarControlPrenatal
     @IdControl INT
 AS
 BEGIN
@@ -1069,7 +995,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE sp_EliminarControlPrenatal
+CREATE  PROCEDURE sp_EliminarControlPrenatal
     @IdControl INT
 AS
 BEGIN
@@ -1083,10 +1009,20 @@ GO
 /* ==================  STORED PROCEDURES PARA AYUDAS DIAGNÓSTICAS  ================== */
 
 -- SP para listar ayudas diagnósticas
-CREATE PROCEDURE sp_ListarAyudaDiagnosticaOrden
+CREATE OR ALTER PROCEDURE sp_ListarTipoAyuda
 AS
 BEGIN
-    SELECT
+    SET NOCOUNT ON;
+    SELECT IdTipoAyuda, Nombre
+    FROM TipoAyudaDiagnostica
+    ORDER BY Nombre;
+END
+GO
+CREATE OR ALTER PROCEDURE sp_ListarAyudaDiagnostica
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
         a.IdAyuda,
         a.IdPaciente,
         a.IdEmbarazo,
@@ -1096,51 +1032,124 @@ BEGIN
         a.Urgente,
         a.FechaOrden,
         a.Estado,
-        -- Información adicional del paciente
+        -- JOINs para nombres
         p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
-        -- Información del tipo de ayuda
-        ta.Nombre AS NombreTipoAyuda,
-        -- Información del profesional
-        ps.Nombres + ' ' + ps.Apellidos AS NombreProfesional
-    FROM AyudaDiagnosticaOrden a
-    INNER JOIN Paciente p ON a.IdPaciente = p.IdPaciente
-    LEFT JOIN TipoAyudaDiagnostica ta ON a.IdTipoAyuda = ta.IdTipoAyuda
-    LEFT JOIN ProfesionalSalud ps ON a.IdProfesional = ps.IdProfesional
-    ORDER BY a.FechaOrden DESC;
-END;
+        ISNULL(ps.Nombres + ' ' + ps.Apellidos, 'No Asignado') AS NombreProfesional,
+        ISNULL(ta.Nombre, 'Tipo no especificado') AS NombreTipoAyuda
+    FROM 
+        AyudaDiagnosticaOrden a
+    INNER JOIN 
+        Paciente p ON a.IdPaciente = p.IdPaciente
+    LEFT JOIN 
+        ProfesionalSalud ps ON a.IdProfesional = ps.IdProfesional
+    LEFT JOIN 
+        TipoAyudaDiagnostica ta ON a.IdTipoAyuda = ta.IdTipoAyuda
+    ORDER BY
+        a.FechaOrden DESC;
+END
 GO
-
--- SP para insertar ayuda diagnóstica
-CREATE PROCEDURE sp_InsertarAyudaDiagnosticaOrden
+CREATE OR ALTER PROCEDURE sp_InsertarAyudaDiagnostica (
+    @IdPaciente INT,
+    @IdEmbarazo INT = NULL,
+    @IdProfesional INT = NULL,
+    @IdTipoAyuda SMALLINT = NULL,
+    @Descripcion NVARCHAR(200) = NULL,
+    @Urgente BIT = 0
+    -- FechaOrden y Estado usan defaults de la tabla
+)
+AS
+BEGIN
+    -- No SET NOCOUNT ON
+    DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+    BEGIN TRY
+        INSERT INTO AyudaDiagnosticaOrden (
+            IdPaciente, IdEmbarazo, IdProfesional, 
+            IdTipoAyuda, Descripcion, Urgente
+        )
+        VALUES (
+            @IdPaciente, @IdEmbarazo, @IdProfesional, 
+            @IdTipoAyuda, @Descripcion, @Urgente
+        );
+    END TRY
+    BEGIN CATCH
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END
+GO
+CREATE OR ALTER PROCEDURE sp_BuscarAyudaDiagnostica (
+    @IdAyuda INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        a.IdAyuda, a.IdPaciente, a.IdEmbarazo, a.IdProfesional, a.IdTipoAyuda,
+        a.Descripcion, a.Urgente, a.FechaOrden, a.Estado,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        ISNULL(ps.Nombres + ' ' + ps.Apellidos, 'No Asignado') AS NombreProfesional,
+        ISNULL(ta.Nombre, 'Tipo no especificado') AS NombreTipoAyuda
+    FROM 
+        AyudaDiagnosticaOrden a
+    INNER JOIN 
+        Paciente p ON a.IdPaciente = p.IdPaciente
+    LEFT JOIN 
+        ProfesionalSalud ps ON a.IdProfesional = ps.IdProfesional
+    LEFT JOIN 
+        TipoAyudaDiagnostica ta ON a.IdTipoAyuda = ta.IdTipoAyuda
+    WHERE
+        a.IdAyuda = @IdAyuda;
+END
+GO
+CREATE OR ALTER PROCEDURE sp_EditarAyudaDiagnostica (
+    @IdAyuda INT,
     @IdPaciente INT,
     @IdEmbarazo INT = NULL,
     @IdProfesional INT = NULL,
     @IdTipoAyuda SMALLINT = NULL,
     @Descripcion NVARCHAR(200) = NULL,
     @Urgente BIT,
-    @FechaOrden DATETIME2,
     @Estado NVARCHAR(20)
+)
 AS
 BEGIN
-    INSERT INTO AyudaDiagnosticaOrden (
-        IdPaciente, IdEmbarazo, IdProfesional, IdTipoAyuda,
-        Descripcion, Urgente, FechaOrden, Estado
-    )
-    VALUES (
-        @IdPaciente, @IdEmbarazo, @IdProfesional, @IdTipoAyuda,
-        @Descripcion, @Urgente, @FechaOrden, @Estado
-    );
-END;
+    -- No SET NOCOUNT ON
+    DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+    BEGIN TRY
+        UPDATE AyudaDiagnosticaOrden SET
+            IdPaciente = @IdPaciente,
+            IdEmbarazo = @IdEmbarazo,
+            IdProfesional = @IdProfesional,
+            IdTipoAyuda = @IdTipoAyuda,
+            Descripcion = @Descripcion,
+            Urgente = @Urgente,
+            Estado = @Estado
+            -- No editamos FechaOrden
+        WHERE
+            IdAyuda = @IdAyuda;
+    END TRY
+    BEGIN CATCH
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END
 GO
-
--- SP para inhabilitar ayuda diagnóstica
-CREATE PROCEDURE sp_InhabilitarAyudaDiagnosticaOrden
+CREATE OR ALTER PROCEDURE sp_AnularAyudaDiagnostica (
     @IdAyuda INT
+)
 AS
 BEGIN
-    UPDATE AyudaDiagnosticaOrden
-    SET Estado = 'Inhabilitada'
-    WHERE IdAyuda = @IdAyuda;
-END;
+    -- No SET NOCOUNT ON
+    DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+    BEGIN TRY
+        UPDATE AyudaDiagnosticaOrden
+        SET Estado = 'Anulada'
+        WHERE IdAyuda = @IdAyuda AND Estado != 'Anulada';
+    END TRY
+    BEGIN CATCH
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END
 GO
 

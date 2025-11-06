@@ -1,5 +1,7 @@
 ﻿using CapaAccesoDatos;
 using CapaEntidad;
+using System;
+using System.Collections.Generic;
 
 namespace CapaLogica
 {
@@ -14,19 +16,17 @@ namespace CapaLogica
         private logTipoEncuentro() { }
         #endregion
 
-        /// <summary>
-        /// Llama a la Capa de Datos para listar Tipos de Encuentro
-        /// </summary>
-        public List<entTipoEncuentro> Listar()
+        // Renombrado para que EncuentroController lo encuentre
+        public List<entTipoEncuentro> ListarTiposEncuentro()
         {
-            return DA_TipoEncuentro.Instancia.Listar();
+            try
+            {
+                return DA_TipoEncuentro.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar tipos de encuentro: " + ex.Message, ex);
+            }
         }
-
-        // INSERTAR
-        public bool InsertarTipoEncuentro(entTipoEncuentro entidad)
-        {
-            return DA_TipoEncuentro.Instancia.Insertar(entidad);
-        }
-
     }
 }

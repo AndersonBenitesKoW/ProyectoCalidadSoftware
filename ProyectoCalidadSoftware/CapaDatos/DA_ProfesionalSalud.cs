@@ -1,4 +1,6 @@
 ﻿using CapaEntidad;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -19,9 +21,8 @@ namespace CapaAccesoDatos
         public List<entProfesionalSalud> Listar(bool estado)
         {
             List<entProfesionalSalud> lista = new List<entProfesionalSalud>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionales", cn)) // Asegúrate que el SP se llame así
+            using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionalSalud", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Estado", estado);
@@ -30,24 +31,22 @@ namespace CapaAccesoDatos
                 {
                     while (dr.Read())
                     {
-                        var profesional = new entProfesionalSalud
+                        lista.Add(new entProfesionalSalud
                         {
                             IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
-                            // 🚀 LÍNEAS AÑADIDAS: Leer CMP e IdUsuario
-                            CMP = dr["CMP"] != DBNull.Value ? dr["CMP"].ToString() : null, // Lee CMP, maneja nulos
-                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null, // Lee IdUsuario, maneja nulos
-                                                                                                                         // --- Fin de líneas añadidas ---
-                            Nombres = dr["Nombres"] != DBNull.Value ? dr["Nombres"].ToString() : null, // Añadido manejo de nulos
-                            Apellidos = dr["Apellidos"] != DBNull.Value ? dr["Apellidos"].ToString() : null, // Añadido manejo de nulos
-                            Especialidad = dr["Especialidad"] != DBNull.Value ? dr["Especialidad"].ToString() : null, // Añadido manejo de nulos
-                            Estado = Convert.ToBoolean(dr["Estado"])
-                        };
-
-                        lista.Add(profesional);
+                            CMP = dr["CMP"].ToString(), // CMP nunca es nulo
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Especialidad = dr["Especialidad"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            // --- CAMPOS AÑADIDOS ---
+                            EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                            TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                        });
                     }
                 }
             }
-
             return lista;
         }
 
@@ -63,11 +62,12 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@Especialidad", (object)entidad.Especialidad ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@CMP", entidad.CMP);
 
+                // --- PARÁMETROS AÑADIDOS ---
+                cmd.Parameters.AddWithValue("@EmailPrincipal", entidad.EmailPrincipal);
+                cmd.Parameters.AddWithValue("@TelefonoPrincipal", entidad.TelefonoPrincipal);
 
                 cn.Open();
-
-
-                object idGenerado = cmd.ExecuteScalar();
+                object idGenerado = cmd.ExecuteScalar(); // SP devuelve el nuevo ID
                 return (idGenerado != null && idGenerado != DBNull.Value) ? Convert.ToInt32(idGenerado) : 0;
             }
         }
@@ -77,7 +77,6 @@ namespace CapaAccesoDatos
             entProfesionalSalud profesional = null;
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                // 1. Llamamos al SP correcto (el que tú me mostraste)
                 SqlCommand cmd = new SqlCommand("sp_BuscarProfesionalSalud", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdProfesional", idProfesional);
@@ -85,20 +84,21 @@ namespace CapaAccesoDatos
                 cn.Open();
                 SqlDataReader dr = cmd.ExecuteReader();
 
-                // 2. Aquí está el punto clave
-                if (dr.Read()) // Usamos 'if' porque solo esperamos un resultado
+                if (dr.Read())
                 {
-                    profesional = new entProfesionalSalud();
-                    profesional.IdProfesional = Convert.ToInt32(dr["IdProfesional"]);
-                    profesional.IdUsuario = dr["IdUsuario"] != DBNull.Value ? Convert.ToInt32(dr["IdUsuario"]) : (int?)null;
-                    profesional.Nombres = dr["Nombres"].ToString();
-                    profesional.Apellidos = dr["Apellidos"].ToString();
-                    profesional.Especialidad = dr["Especialidad"].ToString();
-                    profesional.Estado = Convert.ToBoolean(dr["Estado"]);
-
-                    // 🚀 ¡AQUÍ ESTÁ LA LÍNEA QUE FALTA! 🚀
-                    // Tu código C# probablemente no está leyendo el campo CMP del resultado de la consulta.
-                    profesional.CMP = dr["CMP"].ToString();
+                    profesional = new entProfesionalSalud
+                    {
+                        IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
+                        IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                        Nombres = dr["Nombres"].ToString(),
+                        Apellidos = dr["Apellidos"].ToString(),
+                        Especialidad = dr["Especialidad"].ToString(),
+                        Estado = Convert.ToBoolean(dr["Estado"]),
+                        CMP = dr["CMP"].ToString(),
+                        // --- CAMPOS AÑADIDOS ---
+                        EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                        TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                    };
                 }
             }
             return profesional;
@@ -112,14 +112,32 @@ namespace CapaAccesoDatos
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@IdProfesional", entidad.IdProfesional);
-                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value); // Manejo de nulos
+                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apellidos", (object)entidad.Apellidos ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Especialidad", (object)entidad.Especialidad ?? DBNull.Value);
 
-                // 🚀 LÍNEA AÑADIDA: El parámetro que faltaba
-                cmd.Parameters.AddWithValue("@Colegiatura", (object)entidad.CMP ?? DBNull.Value); // Mapeado desde CMP
+                // --- CORRECCIÓN DE PARÁMETRO ---
+                cmd.Parameters.AddWithValue("@CMP", (object)entidad.CMP ?? DBNull.Value); // Era @Colegiatura
 
                 cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+
+                // --- PARÁMETROS AÑADIDOS ---
+                cmd.Parameters.AddWithValue("@EmailPrincipal", (object)entidad.EmailPrincipal ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TelefonoPrincipal", (object)entidad.TelefonoPrincipal ?? DBNull.Value);
+
+                cn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        // --- MÉTODO NUEVO ---
+        public bool Eliminar(int idProfesional)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_InhabilitarProfesionalSalud", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdProfesional", idProfesional);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;

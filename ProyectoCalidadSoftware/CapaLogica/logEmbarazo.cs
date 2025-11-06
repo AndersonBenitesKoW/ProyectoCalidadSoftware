@@ -43,6 +43,16 @@ namespace CapaLogica
             }
             return DA_Embarazo.Instancia.BuscarPorId(idEmbarazo);
         }
+        public bool CerrarEmbarazo(int idEmbarazo)
+        {
+            if (idEmbarazo <= 0)
+            {
+                throw new ApplicationException("El ID del embarazo no es válido.");
+            }
+
+            // Llama al nuevo método de la Capa de Datos
+            return DA_Embarazo.Instancia.Cerrar(idEmbarazo);
+        }
 
     }
 }

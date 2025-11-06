@@ -9,7 +9,6 @@ namespace CapaEntidad
         [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
         public string NombreUsuario { get; set; } = null!;
 
-        [Required(ErrorMessage = "La contraseña es obligatoria.")]
         public string ClaveHash { get; set; } = null!;
 
         [Required(ErrorMessage = "El email es obligatorio.")]
@@ -20,7 +19,7 @@ namespace CapaEntidad
 
         [Required(ErrorMessage = "Debe seleccionar un rol.")]
         public int IdRol { get; set; }
-        public string NombreRol { get; set; } = null!;
 
+        public string NombreRol { get; set; } = null!;
     }
 }

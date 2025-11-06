@@ -1,221 +1,141 @@
 ﻿@model CapaEntidad.entSeguimientoPuerperio
-
 @{
-    ViewData["Title"] = "Registrar Seguimiento de Puerperio";
+    ViewData["Title"] = "Registrar Seguimiento Puerperio";
 }
 
-<div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-12">
-            <div class="card shadow-lg border-0 rounded-lg">
-                <div class="card-header bg-gradient-primary text-white text-center py-4">
-                    <h3 class="mb-0 font-weight-bold">
-                        <i class="fas fa-heartbeat fa-2x mb-2"></i><br>
-                        Registrar Seguimiento de Puerperio
-                    </h3>
-                    <p class="mb-0 small">Complete la información del seguimiento puerperal</p>
-                </div>
-                <div class="card-body p-5">
-                    <form asp-action="Registrar" method="post" novalidate class="needs-validation">
-                        @Html.AntiForgeryToken()
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert">
-                            <i class="fas fa-exclamation-triangle"></i> Por favor, corrija los errores a continuación.
-                        </div>
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-medical me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Registrar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Estado" />
 
-                        <!-- Información básica -->
-                        <div class="row mb-4">
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="IdEmbarazo" class="form-control form-control-lg" type="number" placeholder="ID del embarazo" required />
-                                    <label asp-for="IdEmbarazo" class="form-label">
-                                        <i class="fas fa-baby me-2"></i>ID Embarazo
-                                    </label>
-                                    <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Fecha" class="form-control form-control-lg" type="date" required />
-                                    <label asp-for="Fecha" class="form-label">
-                                        <i class="fas fa-calendar me-2"></i>Fecha
-                                    </label>
-                                    <span asp-validation-for="Fecha" class="text-danger small"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="form-check d-flex align-items-center h-100 pt-4">
-                                    <input asp-for="Estado" class="form-check-input me-2" />
-                                    <label asp-for="Estado" class="form-check-label">
-                                        <i class="fas fa-toggle-on me-2"></i>Activo
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                        <!-- Signos vitales -->
-                        <h5 class="mb-3 text-primary"><i class="fas fa-stethoscope me-2"></i>Signos Vitales</h5>
-                        <div class="row mb-4">
-                            <div class="col-md-3 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="PA_Sistolica" class="form-control" type="number" min="0" max="300" placeholder="Presión sistólica" />
-                                    <label asp-for="PA_Sistolica" class="form-label">
-                                        <i class="fas fa-heart me-2"></i>PA Sistólica (mmHg)
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="PA_Diastolica" class="form-control" type="number" min="0" max="200" placeholder="Presión diastólica" />
-                                    <label asp-for="PA_Diastolica" class="form-label">
-                                        <i class="fas fa-heart me-2"></i>PA Diastólica (mmHg)
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Temp_C" class="form-control" type="number" step="0.1" min="30" max="45" placeholder="Temperatura" />
-                                    <label asp-for="Temp_C" class="form-label">
-                                        <i class="fas fa-thermometer-half me-2"></i>Temperatura (°C)
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="AlturaUterinaPP_cm" class="form-control" type="number" step="0.1" min="0" max="50" placeholder="Altura uterina" />
-                                    <label asp-for="AlturaUterinaPP_cm" class="form-label">
-                                        <i class="fas fa-ruler me-2"></i>Altura Uterina (cm)
-                                    </label>
-                                </div>
+                    <h5><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                                    <option value="">-- Seleccione --</option>
+                                </select>
+                                <label asp-for="IdEmbarazo">Embarazo (Paciente)</label>
+                                <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                                    <option value="">-- Seleccione --</option>
+                                </select>
+                                <label asp-for="IdProfesional">Profesional</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Fecha" class="form-control" type="date" />
+                                <label asp-for="Fecha">Fecha del Seguimiento</label>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Evaluación clínica -->
-                        <h5 class="mb-3 text-primary"><i class="fas fa-user-md me-2"></i>Evaluación Clínica</h5>
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select asp-for="Loquios" class="form-select">
-                                        <option value="">Seleccionar</option>
-                                        <option value="Ausentes">Ausentes</option>
-                                        <option value="Escasos">Escasos</option>
-                                        <option value="Moderados">Moderados</option>
-                                        <option value="Abundantes">Abundantes</option>
-                                        <option value="Hemorrágicos">Hemorrágicos</option>
-                                    </select>
-                                    <label asp-for="Loquios" class="form-label">
-                                        <i class="fas fa-tint me-2"></i>Loquios
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select asp-for="Lactancia" class="form-select">
-                                        <option value="">Seleccionar</option>
-                                        <option value="Exclusiva">Exclusiva</option>
-                                        <option value="Mixta">Mixta</option>
-                                        <option value="Artificial">Artificial</option>
-                                        <option value="No iniciada">No iniciada</option>
-                                    </select>
-                                    <label asp-for="Lactancia" class="form-label">
-                                        <i class="fas fa-baby me-2"></i>Lactancia
-                                    </label>
-                                </div>
+                    <h5 class="mt-4"><i class="bi bi-heart-pulse me-2"></i>Evaluación Clínica</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PA_Sistolica" class="form-control" type="number" />
+                                <label asp-for="PA_Sistolica"></label>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PA_Diastolica" class="form-control" type="number" />
+                                <label asp-for="PA_Diastolica"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Temp_C" class="form-control" type="number" step="0.1" />
+                                <label asp-for="Temp_C"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="AlturaUterinaPP_cm" class="form-control" type="number" step="0.1" />
+                                <label asp-for="AlturaUterinaPP_cm"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Loquios" class="form-control" />
+                                <label asp-for="Loquios">Loquios</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Lactancia" class="form-control" />
+                                <label asp-for="Lactancia">Lactancia</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <select asp-for="SignosInfeccion" class="form-select">
+                                    <option value="">-- Seleccione --</option>
+                                    <option value="true">Sí</option>
+                                    <option value="false">No</option>
+                                </select>
+                                <label asp-for="SignosInfeccion"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TamizajeDepresion" class="form-control" />
+                                <label asp-for="TamizajeDepresion"></label>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-check d-flex align-items-center h-100 pt-4">
-                                    <input asp-for="SignosInfeccion" class="form-check-input me-2" />
-                                    <label asp-for="SignosInfeccion" class="form-check-label">
-                                        <i class="fas fa-exclamation-triangle me-2"></i>Signos de infección
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="TamizajeDepresion" class="form-control" placeholder="Evaluación de depresión" />
-                                    <label asp-for="TamizajeDepresion" class="form-label">
-                                        <i class="fas fa-brain me-2"></i>Tamizaje Depresión
-                                    </label>
-                                </div>
+                    <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Planificación Familiar y Notas</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdMetodoPF" class="form-select" asp-items="@ViewBag.ListaMetodosPF">
+                                    <option value="">-- Seleccione Método PF --</option>
+                                </select>
+                                <label asp-for="IdMetodoPF">Método Planificación</label>
                             </div>
                         </div>
-
-                        <!-- Método planificación familiar -->
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="IdMetodoPF" class="form-control" type="number" placeholder="ID método PF" />
-                                    <label asp-for="IdMetodoPF" class="form-label">
-                                        <i class="fas fa-pills me-2"></i>ID Método PF
-                                    </label>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Observaciones" class="form-control" placeholder="Observaciones" style="height: 100px"></textarea>
+                                <label asp-for="Observaciones">Observaciones</label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Observaciones -->
-                        <div class="mb-4">
-                            <label asp-for="Observaciones" class="form-label mb-2">
-                                <i class="fas fa-comment me-2"></i>Observaciones
-                            </label>
-                            <textarea asp-for="Observaciones" class="form-control" rows="4" placeholder="Ingrese observaciones adicionales..."></textarea>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                            <a asp-action="Listar" class="btn btn-outline-secondary btn-lg px-5">
-                                <i class="fas fa-arrow-left me-2"></i>Volver
-                            </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
-                                <i class="fas fa-save me-2"></i>Registrar Seguimiento
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Registrar Seguimiento</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .card {
-        transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-    }
-
-    .form-floating > label {
-        padding: 1rem 0.75rem;
-    }
-
-    .btn {
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-
-    h5 {
-        border-bottom: 2px solid #e9ecef;
-        padding-bottom: 0.5rem;
-    }
-</style>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
 }
