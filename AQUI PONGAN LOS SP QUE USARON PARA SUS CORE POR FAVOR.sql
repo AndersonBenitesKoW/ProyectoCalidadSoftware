@@ -1,4 +1,4 @@
-CREATE  PROCEDURE sp_InsertarEmbarazo
+CREATE OR ALTER PROCEDURE sp_InsertarEmbarazo
 (
     @IdPaciente INT,
     @FUR DATE = NULL, -- Fecha Última Regla (opcional)
@@ -29,7 +29,7 @@ BEGIN
 END
 GO
 
-CREATE  PROCEDURE sp_BuscarEmbarazoPorId
+CREATE OR ALTER PROCEDURE sp_BuscarEmbarazoPorId
 (
     @IdEmbarazo INT
 )
@@ -460,7 +460,7 @@ GO
 
 
 
-CREATE  PROCEDURE sp_Usuario_ObtenerRoles
+CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerRoles
   @IdUsuario INT
 AS
 BEGIN
@@ -480,7 +480,7 @@ GO
 
 ------ SP PARA LOS ROLES -------------
 
-CREATE  PROCEDURE sp_ListarRol
+CREATE OR ALTER PROCEDURE sp_ListarRol
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -528,7 +528,7 @@ END;
 GO
 
 
-CREATE  PROCEDURE sp_BuscarRol
+CREATE OR ALTER PROCEDURE sp_BuscarRol
     @IdRol INT
 AS
 BEGIN
@@ -544,7 +544,7 @@ END;
 GO
 
 
-CREATE  PROCEDURE sp_Rol_ObtenerPorNombre
+CREATE OR ALTER PROCEDURE sp_Rol_ObtenerPorNombre
     @NombreRol NVARCHAR(50)
 AS
 BEGIN
@@ -586,7 +586,7 @@ BEGIN
 END;
 GO
 
-CREATE  PROCEDURE sp_InsertarUsuario
+CREATE OR ALTER  PROCEDURE sp_InsertarUsuario
     @Username      NVARCHAR(50),
     @PasswordHash  NVARCHAR(500),
     @Correo        NVARCHAR(100),

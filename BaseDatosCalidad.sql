@@ -19,11 +19,6 @@ CREATE TABLE Rol(
 );
 GO
 
-delete from Usuario
-delete from UsuarioRol
-select * from Usuario
-dbcc checkident('usuario', RESEED,0); 
-
 CREATE TABLE Usuario(
   IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
   NombreUsuario NVARCHAR(50) NOT NULL UNIQUE,
@@ -32,7 +27,7 @@ CREATE TABLE Usuario(
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
-
+select * from paciente
 
 
 CREATE TABLE UsuarioRol(
@@ -55,7 +50,6 @@ GO
 
 --contraseña: anderson
 
-SELECT * FROM USUARIO 
 
 INSERT INTO UsuarioRol (IdUsuario, IdRol)
 VALUES (1, (SELECT IdRol FROM Rol WHERE NombreRol='ADMIN'));
@@ -261,7 +255,6 @@ CREATE TABLE AntecedenteObstetrico(
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
-select  * from Usuario
 
 CREATE TABLE FactorRiesgoCat(
   IdFactorCat INT IDENTITY(1,1) PRIMARY KEY,
