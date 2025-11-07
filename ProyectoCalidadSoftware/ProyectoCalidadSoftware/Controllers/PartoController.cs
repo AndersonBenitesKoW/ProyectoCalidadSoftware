@@ -2,223 +2,224 @@
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    //[Route("core/parto")]
+    // [Authorize(Roles = "PERSONAL_SALUD,ADMIN")]
     public class PartoController : Controller
     {
-        /// <summary>
-        /// 🚀 Listado de partos.
-        /// GET: /core/parto
-        /// </summary>
+        // GET: /Parto/Index
         [HttpGet]
         public IActionResult Index(bool mostrarActivos = true)
         {
-            List<entParto> lista;
             try
             {
                 ViewBag.MostrandoActivos = mostrarActivos;
-                lista = logParto.Instancia.ListarPartos(mostrarActivos);
+                var lista = logParto.Instancia.ListarPartos(mostrarActivos);
+                return View(lista); // Views/Parto/Index.cshtml
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error al cargar la lista de partos: " + ex.Message;
-                lista = new List<entParto>();
+                ViewBag.Error = "Error al cargar la lista: " + ex.Message;
+                return View(new List<entParto>());
             }
-            return View(lista);
         }
 
-        /// <summary>
-        /// GET: /core/parto/registrar
-        /// </summary>
+        // GET: /Parto/RegistrarParto
         [HttpGet]
-        public IActionResult RegistrarParto()
+        public IActionResult RegistrarParto(int? idEmbarazo)
         {
             CargarViewBags(null);
-            return View(new entParto());
+            var modelo = new entParto
+            {
+                IdEmbarazo = idEmbarazo ?? 0,
+                Fecha = DateTime.Now,
+                Estado = true
+            };
+            return View(modelo); // Views/Parto/RegistrarParto.cshtml
         }
 
-        /// <summary>
-        /// POST: /core/parto/registrar
-        /// </summary>
+        // POST: /Parto/RegistrarParto
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RegistrarParto(entParto parto, List<string> intervenciones)
+        public IActionResult RegistrarParto(entParto parto)
         {
-            if (intervenciones != null)
-            {
-                foreach (var intervencionTexto in intervenciones)
-                {
-                    if (!string.IsNullOrWhiteSpace(intervencionTexto))
-                        parto.Intervenciones.Add(new entPartoIntervencion { Intervencion = intervencionTexto });
-                }
-            }
-            parto.Estado = true;
-
-            if (ModelState.IsValid && parto.IdEmbarazo > 0 && parto.IdEncuentro > 0)
-            {
-                try
-                {
-                    int idGenerado = logParto.Instancia.RegistrarParto(parto);
-                    if (idGenerado > 0)
-                    {
-                        TempData["MensajeExito"] = $"Parto registrado correctamente con ID: {idGenerado}.";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        ViewBag.MensajeError = "No se pudo registrar el parto. La base de datos no devolvió un ID.";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.MensajeError = "Ocurrió un error en el servidor: " + ex.Message;
-                }
-            }
-            else
+            try
             {
                 if (parto.IdEmbarazo <= 0)
-                    ViewBag.MensajeError = "Error: Debe seleccionar un embarazo de la lista.";
-                else if (parto.IdEncuentro <= 0)
-                    ViewBag.MensajeError = "Error: Debe seleccionar un encuentro de la lista.";
-                else
-                    ViewBag.MensajeError = "Datos inválidos. Revise el formulario.";
-            }
+                    ModelState.AddModelError(nameof(parto.IdEmbarazo), "Debe seleccionar un embarazo válido.");
 
-            CargarViewBags(parto);
-            return View(parto);
-        }
+                if (parto.IdViaParto == 3 && string.IsNullOrWhiteSpace(parto.IndicacionCesarea)) // 3 = CESAREA
+                    ModelState.AddModelError(nameof(parto.IndicacionCesarea), "Debe indicar el motivo de la cesárea.");
 
-        /// <summary>
-        /// GET: /core/parto/{id}/anular  -> página de confirmación
-        /// </summary>
-        [HttpGet]
-        public IActionResult AnularParto(int id)
-        {
-            try
-            {
-                var parto = logParto.Instancia.BuscarPartoPorId(id);
-                if (parto == null)
+                if (!ModelState.IsValid)
                 {
-                    TempData["MensajeError"] = "No se encontró el registro de parto solicitado.";
-                    return RedirectToAction("Index");
-                }
-                return View(parto); // Views/Parto/Anular.cshtml (modelo: entParto)
-            }
-            catch (Exception ex)
-            {
-                TempData["MensajeError"] = "Error al cargar la confirmación: " + ex.Message;
-                return RedirectToAction("Index");
-            }
-        }
-
-        /// <summary>
-        /// POST: /core/parto/{id}/anular
-        /// </summary>
-        [HttpPost]
-         // permite usar asp-action="AnularParto" o renombrar en la vista si prefieres "Anular"
-        [ValidateAntiForgeryToken]
-        public IActionResult AnularPartoPost(int idParto)
-        {
-            try
-            {
-                if (idParto <= 0)
-                    throw new ArgumentException("ID de Parto no válido.");
-
-                bool exito = logParto.Instancia.AnularParto(idParto);
-
-                if (exito)
-                    TempData["MensajeExito"] = $"Parto ID {idParto} anulado correctamente.";
-                else
-                    TempData["MensajeError"] = $"No se pudo anular el Parto ID {idParto}.";
-            }
-            catch (Exception ex)
-            {
-                TempData["MensajeError"] = "Error al intentar anular el parto: " + ex.Message;
-            }
-
-            return RedirectToAction("Index");
-        }
-
-        /// <summary>
-        /// GET: /core/parto/detalles/{id}
-        /// </summary>
-        [HttpGet]
-        public IActionResult DetallesParto(int id)
-        {
-            try
-            {
-                entParto? parto = logParto.Instancia.BuscarPartoPorId(id);
-
-                if (parto == null)
-                {
-                    TempData["MensajeError"] = "No se encontró el registro de parto solicitado.";
-                    return RedirectToAction("Index");
+                    CargarViewBags(parto);
+                    return View(parto);
                 }
 
+                bool registrado = logParto.Instancia.RegistrarParto(parto);
+
+                if (registrado)
+                {
+                    TempData["Ok"] = "Parto registrado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ViewBag.Error = "No se pudo registrar el parto.";
+                CargarViewBags(parto);
                 return View(parto);
             }
             catch (Exception ex)
             {
-                TempData["MensajeError"] = "Error al cargar los detalles del parto: " + ex.Message;
-                return RedirectToAction("Index");
+                ViewBag.Error = "Error al registrar: " + ex.Message;
+                CargarViewBags(parto);
+                return View(parto);
             }
         }
 
-        /// <summary>
-        /// GET: /core/parto/encuentros?idEmbarazo=123
-        /// </summary>
+        // GET: /Parto/Editar/5
         [HttpGet]
-        public JsonResult GetEncuentros(int idEmbarazo)
+        public IActionResult Editar(int id)
+        {
+            var parto = logParto.Instancia.BuscarParto(id);
+            if (parto == null)
+            {
+                TempData["Error"] = "Registro no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+            CargarViewBags(parto);
+            return View(parto); // Views/Parto/Editar.cshtml
+        }
+
+        // POST: /Parto/Editar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(entParto parto)
         {
             try
             {
-                var encuentros = logEncuentro.Instancia.ListarPorEmbarazoYTipo(idEmbarazo, "INTRAPARTO");
-                var listaFormateada = encuentros.Select(e => new SelectListItem
+                if (parto.IdViaParto == 3 && string.IsNullOrWhiteSpace(parto.IndicacionCesarea))
+                    ModelState.AddModelError(nameof(parto.IndicacionCesarea), "Debe indicar el motivo de la cesárea.");
+
+                if (!ModelState.IsValid)
                 {
-                    Value = e.IdEncuentro.ToString(),
-                    Text = $"ID: {e.IdEncuentro} (Inicio: {e.FechaHoraInicio:dd/MM/yy HH:mm} - Estado: {e.Estado})"
-                });
-                return Json(listaFormateada);
+                    CargarViewBags(parto);
+                    return View(parto);
+                }
+                bool editado = logParto.Instancia.EditarParto(parto);
+                if (editado)
+                {
+                    TempData["Ok"] = "Parto actualizado.";
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewBag.Error = "No se pudo actualizar el registro.";
+                CargarViewBags(parto);
+                return View(parto);
             }
             catch (Exception ex)
             {
-                return Json(new { error = ex.Message });
+                ViewBag.Error = "Error al actualizar: " + ex.Message;
+                CargarViewBags(parto);
+                return View(parto);
             }
         }
 
-        /// <summary>
-        /// Cargar dropdowns
-        /// </summary>
+        // GET: /Parto/Detalles/5
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            var parto = logParto.Instancia.BuscarParto(id);
+            if (parto == null)
+            {
+                TempData["Error"] = "Registro no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(parto); // Views/Parto/Detalles.cshtml
+        }
+
+        // GET: /Parto/Anular/5
+        [HttpGet]
+        public IActionResult Anular(int id)
+        {
+            var parto = logParto.Instancia.BuscarParto(id);
+            if (parto == null)
+            {
+                TempData["Error"] = "Registro no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(parto); // Views/Parto/Anular.cshtml
+        }
+
+        // POST: /Parto/Anular
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Anular(entParto parto)
+        {
+            try
+            {
+                bool resultado = logParto.Instancia.AnularParto(parto.IdParto);
+                TempData[resultado ? "Ok" : "Error"] = resultado
+                    ? "Registro de parto anulado."
+                    : "No se pudo anular.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al anular: " + ex.Message;
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public IActionResult GetEncuentrosPorEmbarazo(int idEmbarazo)
+        {
+            try
+            {
+                var lista = logEncuentro.Instancia.ListarEncuentrosPorEmbarazo(idEmbarazo);
+                return Json(lista); // Devuelve la lista como JSON
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        // --- Método privado para cargar DropDownLists ---
         private void CargarViewBags(entParto? parto)
         {
             try
             {
+                // Cargar Embarazos (Activos)
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
-                var listaEmbarazosFormateada = embarazos.Select(e => new SelectListItem
-                {
-                    Value = e.IdEmbarazo.ToString(),
-                    Text = $"ID: {e.IdEmbarazo} - {e.NombrePaciente} (FPP: {e.FPP?.ToString("dd/MM/yyyy") ?? "N/A"})"
-                });
-                ViewBag.ListaEmbarazos = new SelectList(listaEmbarazosFormateada, "Value", "Text", parto?.IdEmbarazo);
+                ViewBag.ListaEmbarazos = new SelectList(
+                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
+                    "IdEmbarazo", "Nombre", parto?.IdEmbarazo
+                );
 
+                // Cargar Profesionales Activos
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
-                ViewBag.ListaProfesionales = new SelectList(profesionales, "IdProfesional", "Nombres", parto?.IdProfesional);
+                ViewBag.ListaProfesionales = new SelectList(
+                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
+                    "IdProfesional", "Nombre", parto?.IdProfesional
+                );
 
-                var viasParto = logViaParto.Instancia.Listar();
-                ViewBag.ListaViasParto = new SelectList(viasParto, "IdViaParto", "Descripcion", parto?.IdViaParto);
+                // Cargar Vias de Parto (¡de tu imagen!)
+                var vias = logViaParto.Instancia.ListarViasParto();
+                ViewBag.ListaViasParto = new SelectList(
+                    vias, "IdViaParto", "Descripcion", parto?.IdViaParto
+                );
 
-                var liquidos = logLiquidoAmniotico.Instancia.Listar();
-                ViewBag.ListaLiquidos = new SelectList(liquidos, "IdLiquido", "Descripcion", parto?.IdLiquido);
+                // Cargar Líquidos Amnióticos (¡de tu imagen!)
+                var liquidos = logLiquidoAmniotico.Instancia.ListarLiquidos();
+                ViewBag.ListaLiquidos = new SelectList(
+                    liquidos, "IdLiquido", "Descripcion", parto?.IdLiquido
+                );
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error fatal al cargar listas desplegables: " + ex.Message;
-                ViewBag.ListaEmbarazos = new SelectList(new List<SelectListItem>());
-                ViewBag.ListaProfesionales = new SelectList(new List<entProfesionalSalud>());
-                ViewBag.ListaViasParto = new SelectList(new List<entViaParto>());
-                ViewBag.ListaLiquidos = new SelectList(new List<entLiquidoAmniotico>());
+                ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
     }

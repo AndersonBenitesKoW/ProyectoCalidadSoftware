@@ -43,7 +43,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     .Count();
 
                 // 4. Puerperios activos (TU lógica 👇)
-                var listaPuerperios = logSeguimientoPuerperio.Instancia.ListarSeguimientoPuerperio();
+                var listaPuerperios = logSeguimientoPuerperio.Instancia.ListarSeguimiento(true);
 
                 // opción A: solo los que están en Estado = 1
                 // puerperiosActivos = listaPuerperios.Where(p => p.Estado).Count();

@@ -115,9 +115,9 @@
         transition: transform 0.3s ease;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-    }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
     .form-floating > label {
         padding: 1rem 0.75rem;
@@ -129,10 +129,10 @@
         transition: all 0.3s ease;
     }
 
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
     .form-control:focus, .form-select:focus {
         border-color: #667eea;
@@ -146,7 +146,9 @@
 </style>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         $(document).ready(function () {
             // Calcular FPP automáticamente cuando se selecciona FUR

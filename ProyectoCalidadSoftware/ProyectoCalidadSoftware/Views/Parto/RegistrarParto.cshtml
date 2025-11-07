@@ -1,235 +1,151 @@
 ﻿@model CapaEntidad.entParto
-
 @{
-    ViewData["Title"] = "Registro de Parto";
+    ViewData["Title"] = "Registrar Parto";
 }
 
-<div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-12">
-            <div class="card shadow-lg border-0 rounded-lg">
-                <div class="card-header bg-gradient-primary text-white text-center py-4">
-                    <h3 class="mb-0 font-weight-bold">
-                        <i class="fas fa-birthday-cake fa-2x mb-2"></i><br>
-                        Registro de Parto
-                    </h3>
-                    <p class="mb-0 small">Complete todos los detalles del nacimiento</p>
-                </div>
-                <div class="card-body p-5">
-                    <form asp-action="RegistrarParto" method="post" novalidate class="needs-validation">
-                        @Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-gift-fill me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="RegistrarParto" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Estado" />
 
-                        @* Muestra de Errores Generales *@
-                        @if (ViewBag.MensajeError != null)
-                        {
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.MensajeError
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        }
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <div class="form-floating">
-                                    <select asp-for="IdEmbarazo" class="form-select form-select-lg" asp-items="@ViewBag.ListaEmbarazos" id="embarazoDropdown" required>
-                                        <option value="">-- Seleccione un Embarazo Activo --</option>
-                                    </select>
-                                    <label asp-for="IdEmbarazo" class="form-label">
-                                        <i class="fas fa-baby me-2"></i>Embarazo (Paciente)
-                                    </label>
-                                    <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <div class="form-floating">
-                                    <select asp-for="IdEncuentro" class="form-select form-select-lg" id="encuentroDropdown" disabled required>
-                                        <option value="">-- Primero seleccione un embarazo --</option>
-                                    </select>
-                                    <label asp-for="IdEncuentro" class="form-label">
-                                        <i class="fas fa-handshake me-2"></i>Encuentro (Intraparto)
-                                    </label>
-                                    <span asp-validation-for="IdEncuentro" class="text-danger small"></span>
-                                </div>
+                    <h5><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                                    <option value="">-- Seleccione Embarazo --</option>
+                                </select>
+                                <label asp-for="IdEmbarazo">Embarazo (Paciente)</label>
+                                <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
                             </div>
                         </div>
 
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-info-circle me-2"></i>Datos Generales del Parto
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input asp-for="Fecha" type="date" class="form-control form-control-lg" asp-format="{0:yyyy-MM-dd}" required />
-                                            <label asp-for="Fecha" class="form-label">
-                                                <i class="fas fa-calendar-day me-2"></i>Fecha del Parto
-                                            </label>
-                                            <span asp-validation-for="Fecha" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <select asp-for="IdProfesional" class="form-select form-select-lg" asp-items="@ViewBag.ListaProfesionales" required>
-                                                <option value="">-- Seleccione un Profesional --</option>
-                                            </select>
-                                            <label asp-for="IdProfesional" class="form-label">
-                                                <i class="fas fa-user-md me-2"></i>Profesional que Atiende
-                                            </label>
-                                            <span asp-validation-for="IdProfesional" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input asp-for="HoraIngreso" type="datetime-local" class="form-control form-control-lg" required />
-                                            <label asp-for="HoraIngreso" class="form-label">
-                                                <i class="fas fa-clock me-2"></i>Hora de Ingreso
-                                            </label>
-                                            <span asp-validation-for="HoraIngreso" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input asp-for="HoraInicioTrabajo" type="datetime-local" class="form-control form-control-lg" required />
-                                            <label asp-for="HoraInicioTrabajo" class="form-label">
-                                                <i class="fas fa-clock me-2"></i>Hora Inicio Trabajo de Parto
-                                            </label>
-                                            <span asp-validation-for="HoraInicioTrabajo" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEncuentro" class="form-select" disabled>
+                                    <option value="">-- Seleccione un embarazo primero --</option>
+                                </select>
+                                <label asp-for="IdEncuentro">Encuentro (Consulta)</label>
                             </div>
                         </div>
-
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-stethoscope me-2"></i>Detalles Clínicos
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <div class="form-floating">
-                                            <select asp-for="Membranas" class="form-select form-select-lg">
-                                                <option value="">-- Seleccione --</option>
-                                                <option value="Rotas">Rotas</option>
-                                                <option value="Íntegras">Íntegras</option>
-                                            </select>
-                                            <label asp-for="Membranas" class="form-label">
-                                                <i class="fas fa-water me-2"></i>Membranas
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-floating">
-                                            <select asp-for="IdLiquido" class="form-select form-select-lg" asp-items="@ViewBag.ListaLiquidos">
-                                                <option value="">-- Seleccione --</option>
-                                            </select>
-                                            <label asp-for="IdLiquido" class="form-label">
-                                                <i class="fas fa-tint me-2"></i>Líquido Amniótico
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-floating">
-                                            <select asp-for="IdViaParto" class="form-select form-select-lg" asp-items="@ViewBag.ListaViasParto" required>
-                                                <option value="">-- Seleccione --</option>
-                                            </select>
-                                            <label asp-for="IdViaParto" class="form-label">
-                                                <i class="fas fa-road me-2"></i>Vía del Parto
-                                            </label>
-                                            <span asp-validation-for="IdViaParto" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input asp-for="Analgesia" type="text" class="form-control form-control-lg" placeholder="Tipo de analgesia utilizada" />
-                                            <label asp-for="Analgesia" class="form-label">
-                                                <i class="fas fa-pills me-2"></i>Analgesia
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input asp-for="PerdidasML" type="number" class="form-control form-control-lg" placeholder="mL" />
-                                            <label asp-for="PerdidasML" class="form-label">
-                                                <i class="fas fa-tint me-2"></i>Pérdida Sanguínea (mL)
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-floating">
-                                            <input asp-for="Desgarro" type="text" class="form-control form-control-lg" placeholder="Grado/Tipo de desgarro" />
-                                            <label asp-for="Desgarro" class="form-label">
-                                                <i class="fas fa-cut me-2"></i>Desgarro (Grado/Tipo)
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-floating">
-                                            <textarea asp-for="IndicacionCesarea" class="form-control" style="height: 80px; padding-top: 1.625rem; padding-bottom: 0.625rem;" placeholder="Indicación si fue cesárea"></textarea>
-                                            <label asp-for="IndicacionCesarea" class="form-label">
-                                                <i class="fas fa-file-medical me-2"></i>Indicación de Cesárea (si aplica)
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-floating">
-                                            <textarea asp-for="Complicaciones" class="form-control" style="height: 80px; padding-top: 1.625rem; padding-bottom: 0.625rem;" placeholder="Complicaciones presentadas"></textarea>
-                                            <label asp-for="Complicaciones" class="form-label">
-                                                <i class="fas fa-exclamation-triangle me-2"></i>Complicaciones
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                                    <option value="">-- Seleccione Profesional --</option>
+                                </select>
+                                <label asp-for="IdProfesional">Profesional</label>
                             </div>
                         </div>
-
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-syringe me-2"></i>Intervenciones Realizadas
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="intervenciones-container" class="mb-3">
-                                </div>
-                                <button type="button" id="btn-add-intervencion" class="btn btn-outline-primary">
-                                    <i class="fas fa-plus me-2"></i>Agregar Intervención
-                                </button>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Fecha" class="form-control" type="date" />
+                                <label asp-for="Fecha">Fecha del Parto</label>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
-                                <i class="fas fa-save me-2"></i>Registrar Parto
-                            </button>
-                            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary btn-lg px-5">
-                                <i class="fas fa-times me-2"></i>Cancelar
-                            </a>
+                    <h5 class="mt-4"><i class="bi bi-clock-history me-2"></i>Tiempos y Evaluación</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraIngreso" class="form-control" type="time" />
+                                <label asp-for="HoraIngreso">Hora Ingreso</label>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraInicioTrabajo" class="form-control" type="time" />
+                                <label asp-for="HoraInicioTrabajo">Hora Inicio Trabajo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Membranas" class="form-control" placeholder="Integras/Rotas" />
+                                <label asp-for="Membranas">Membranas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdLiquido" class="form-select" asp-items="@ViewBag.ListaLiquidos">
+                                    <option value="">-- Líquido Amniótico --</option>
+                                </select>
+                                <label asp-for="IdLiquido"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Detalles del Parto</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdViaParto" class="form-select" asp-items="@ViewBag.ListaViasParto">
+                                    <option value="">-- Vía de Parto --</option>
+                                </select>
+                                <label asp-for="IdViaParto"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Analgesia" class="form-control" />
+                                <label asp-for="Analgesia">Analgesia</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PerdidasML" class="form-control" type="number" />
+                                <label asp-for="PerdidasML"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input asp-for="IndicacionCesarea" class="form-control" placeholder="N/A" />
+                                <label asp-for="IndicacionCesarea">Indicación Cesárea (si aplica)</label>
+                                <span asp-validation-for="IndicacionCesarea" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Desgarro" class="form-control" placeholder="N/A" />
+                                <label asp-for="Desgarro">Desgarro (Grado)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Complicaciones" class="form-control" placeholder="N/A" style="height: 100px"></textarea>
+                                <label asp-for="Complicaciones">Otras Complicaciones</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Registrar Parto</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-@* Scripts de validación de formulario *@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -237,125 +153,71 @@
 
     <script>
         $(document).ready(function () {
+            // 1. Define los dropdowns
+            var embarazoSelect = $('#IdEmbarazo');
+            var encuentroSelect = $('#IdEncuentro');
 
-            var embarazoSelect = $('#embarazoDropdown');
-            var encuentroSelect = $('#encuentroDropdown');
-
-            if (embarazoSelect.val()) {
-                cargarEncuentros(embarazoSelect.val());
-            }
-
+            // 2. Evento 'change' para el dropdown de Embarazo
             embarazoSelect.on('change', function () {
-                var idEmbarazoSeleccionado = $(this).val();
-                encuentroSelect.empty().append('<option value="">-- Cargando... --</option>');
+                var selectedEmbarazoId = $(this).val();
 
-                if (idEmbarazoSeleccionado) {
-                    cargarEncuentros(idEmbarazoSeleccionado);
+                // 3. Limpiar y deshabilitar el dropdown de Encuentros
+                encuentroSelect.empty();
+                encuentroSelect.attr('disabled', 'disabled');
+
+                if (selectedEmbarazoId) {
+                    // 4. Si se seleccionó un embarazo, buscar sus encuentros
+                    encuentroSelect.append($('<option>', {
+                        value: '',
+                        text: 'Cargando encuentros...'
+                    }));
+
+                    $.ajax({
+                        // 5. Llamada al endpoint del controlador
+                        url: '@Url.Action("GetEncuentrosPorEmbarazo", "Parto")',
+                        type: 'GET',
+                        data: { idEmbarazo: selectedEmbarazoId },
+                        success: function (data) {
+                            // 6. Éxito: Llenar el dropdown
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', {
+                                value: '',
+                                text: '-- Seleccione un Encuentro (Opcional) --'
+                            }));
+
+                            if (data.length > 0) {
+                                $.each(data, function (i, item) {
+                                    encuentroSelect.append($('<option>', {
+                                        value: item.idEncuentro,
+                                        text: item.encuentroDesc
+                                    }));
+                                });
+                                encuentroSelect.removeAttr('disabled'); // Habilitar
+                            } else {
+                                encuentroSelect.empty();
+                                encuentroSelect.append($('<option>', {
+                                    value: '',
+                                    text: 'No hay encuentros para este embarazo'
+                                }));
+                            }
+                        },
+                        error: function () {
+                            // 7. Error
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', {
+                                value: '',
+                                text: 'Error al cargar encuentros'
+                            }));
+                        }
+                    });
                 } else {
-                    encuentroSelect.empty().append('<option value="">-- Primero seleccione un embarazo --</option>').prop('disabled', true);
+                    // 8. Si no hay embarazo seleccionado
+                    encuentroSelect.append($('<option>', {
+                        value: '',
+                        text: '-- Seleccione un embarazo primero --'
+                    }));
                 }
             });
-
-            function cargarEncuentros(idEmbarazo) {
-                var url = '@Url.Action("GetEncuentros", "Parto")?idEmbarazo=' + idEmbarazo;
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (data) {
-                        encuentroSelect.empty();
-                        encuentroSelect.prop('disabled', false);
-
-                        if (data && data.length > 0) {
-                            encuentroSelect.append('<option value="">-- Seleccione un encuentro --</option>');
-                            $.each(data, function (i, item) {
-                                encuentroSelect.append($('<option>', {
-                                    value: item.value,
-                                    text: item.text
-                                }));
-                            });
-                        } else {
-                            encuentroSelect.append('<option value="">-- No hay encuentros (Intraparto) para este embarazo --</option>');
-                        }
-                    },
-                    error: function () {
-                        alert('Error al cargar los encuentros.');
-                        encuentroSelect.empty().append('<option value="">-- Error al cargar --</option>').prop('disabled', true);
-                    }
-                });
-            }
-        });
-    </script>
-
-    <script>
-        document.getElementById('btn-add-intervencion').addEventListener('click', function () {
-            var div = document.createElement('div');
-            div.className = 'input-group mb-3';
-
-            var input = document.createElement('input');
-            input.type = 'text';
-            input.name = 'intervenciones'; // ¡Importante!
-            input.className = 'form-control form-control-lg';
-            input.placeholder = 'Ej: Episiotomía';
-
-            var btnRemove = document.createElement('button');
-            btnRemove.type = 'button';
-            btnRemove.className = 'btn btn-outline-danger btn-lg';
-            btnRemove.innerHTML = '<i class="fas fa-trash me-1"></i>Eliminar';
-            btnRemove.onclick = function() {
-                div.remove();
-            };
-
-            div.appendChild(input);
-            div.appendChild(btnRemove);
-            document.getElementById('intervenciones-container').appendChild(div);
         });
     </script>
 }
-
-<style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .card {
-        transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-    }
-
-    .form-floating > label {
-        padding: 1rem 0.75rem;
-    }
-
-    .btn {
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-
-    .alert {
-        border-radius: 10px;
-        border: none;
-    }
-
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-
-    .card-header h5 {
-        color: var(--primary-blue);
-        font-weight: 600;
-    }
-</style>

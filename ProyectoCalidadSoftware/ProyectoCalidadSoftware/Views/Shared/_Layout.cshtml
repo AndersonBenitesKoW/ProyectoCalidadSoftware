@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <!-- Navbar Profesional con Glassmorphism -->
     <nav class="navbar navbar-expand-lg navbar-custom shadow-lg">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
@@ -21,81 +20,119 @@
                 <span class="brand-text">Clínica Obstétrica</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon-custom">
-                    <i class="fas fa-bars"></i>
-                </span>
+                <span class="navbar-toggler-icon-custom"><i class="fas fa-bars"></i></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+
                 <ul class="navbar-nav mx-auto">
+
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" asp-controller="Home" asp-action="Index">
                             <i class="fas fa-home me-1"></i>Inicio
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="Usuario" asp-action="Index">
-                            <i class="fas fa-users me-1"></i>Usuarios
-                        </a>
-                    </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownPacientes" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-injured me-1"></i>Pacientes
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownGestion" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-friends me-1"></i>Gestión Central
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" asp-controller="Paciente" asp-action="Listar">
-                                <i class="fas fa-list me-2"></i>Listar Pacientes</a></li>
-                            <li><a class="dropdown-item" asp-controller="Paciente" asp-action="Insertar">
-                                <i class="fas fa-plus-circle me-2"></i>Registrar Paciente</a></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Paciente" asp-action="Listar">
+                                    <i class="fas fa-list me-2"></i>Listar Pacientes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Paciente" asp-action="Insertar">
+                                    <i class="fas fa-plus-circle me-2"></i>Nuevo Paciente
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Cita" asp-action="Listar">
+                                    <i class="fas fa-calendar-check me-2"></i>Gestionar Citas
+                                </a>
+                            </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="ProfesionalSalud" asp-action="Index">
-                            <i class="fas fa-user-md me-1"></i>Personal Salud
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="Embarazo" asp-action="Index">
-                            <i class="fas fa-baby me-1"></i>Embarazos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="Cita" asp-action="Listar">
-                            <i class="fas fa-calendar-check me-1"></i>Citas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="ControlPrenatal" asp-action="Listar">
-                            <i class="fas fa-stethoscope me-1"></i>Controles
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="SeguimientoPuerperio" asp-action="Listar">
-                            <i class="fas fa-heart me-1"></i>Puerperio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="OrdenAyudaDiagnostica" asp-action="Listar">
-                            <i class="fas fa-microscope me-1"></i>Ayudas Diagnósticas
-                        </a>
-                    </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownRegistros" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-plus-circle me-1"></i>Registros
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownClinica" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-heart-pulse me-1"></i>Atención Clínica
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
-                                <i class="fas fa-baby me-2"></i>Registrar Embarazo</a></li>
-                            <li><a class="dropdown-item" asp-controller="Encuentro" asp-action="RegistrarEncuentro">
-                                <i class="fas fa-handshake me-2"></i>Registrar Encuentro</a></li>
-                            <li><a class="dropdown-item" asp-controller="Parto" asp-action="RegistrarParto">
-                                <i class="fas fa-birthday-cake me-2"></i>Registrar Parto</a></li>
+                            <li class="dropdown-header">Embarazo</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Embarazo" asp-action="Index">
+                                    <i class="fas fa-baby me-2"></i>Listar Embarazos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
+                                    <i class="fas fa-plus-circle me-2"></i>Registrar Embarazo
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-header">Seguimiento</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Encuentro" asp-action="Listar">
+                                    <i class="fas fa-file-medical-alt me-2"></i>Encuentros
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="ControlPrenatal" asp-action="Listar">
+                                    <i class="fas fa-stethoscope me-2"></i>Controles Prenatales
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="AyudaDiagnostica" asp-action="Listar">
+                                    <i class="fas fa-microscope me-2"></i>Ayudas Diagnósticas
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-header">Cierre de Caso</li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Parto" asp-action="Index">
+                                    <i class="fas fa-list me-2"></i>Listar Partos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Parto" asp-action="RegistrarParto">
+                                    <i class="fas fa-birthday-cake me-2"></i>Registrar Parto
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="SeguimientoPuerperio" asp-action="Listar">
+                                    <i class="fas fa-heart me-2"></i>Seg. Puerperio
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Encuentro" asp-action="Insertar">
+                                    <i class="fas fa-handshake me-2"></i>Registrar Encuentro
+                                </a>
+                            </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="Parto" asp-action="Index">
-                            <i class="fas fa-list me-1"></i>Listado Partos
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cogs me-1"></i>Administración
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                    <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="ProfesionalSalud" asp-action="Index">
+                                    <i class="fas fa-user-md me-2"></i>Gestionar Personal
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                 </ul>
                 <div class="navbar-actions d-flex gap-2">
                     @if (User.IsInRole("ADMIN"))
@@ -105,10 +142,16 @@
                                 <i class="fas fa-cog me-1"></i>Admin
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
-                                    <i class="fas fa-users me-2"></i>Gestionar Usuarios</a></li>
-                                <li><a class="dropdown-item" asp-controller="Portal" asp-action="Index">
-                                    <i class="fas fa-globe me-2"></i>Portal Público</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                        <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Portal" asp-action="Index">
+                                        <i class="fas fa-globe me-2"></i>Portal Público
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     }
@@ -122,46 +165,12 @@
         </div>
     </nav>
 
-    <!-- Contenido Principal -->
     <div class="public-body" style="padding-top: 80px;">
         @RenderBody()
     </div>
 
-    <!-- Footer Moderno -->
     <footer class="bg-gradient-primary text-white py-4 mt-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="brand-icon me-2" style="width: 35px; height: 35px;">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <span class="fw-bold">Clínica Obstétrica</span>
-                    </div>
-                    <p class="mb-0 small">Cuidamos de ti y tu bebé con atención integral en embarazo, parto y puerperio.</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold mb-2">Enlaces Rápidos</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white-50 text-decoration-none">Sobre Nosotros</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Servicios</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Contacto</a></li>
-                        <li><a href="#" class="text-white-50 text-decoration-none">Política de Privacidad</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold mb-2">Contacto</h6>
-                    <div class="small">
-                        <p class="mb-1"><i class="fas fa-phone me-2"></i>+51 123 456 789</p>
-                        <p class="mb-1"><i class="fas fa-envelope me-2"></i>info@clinicaobstetrica.com</p>
-                        <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Lima, Perú</p>
-                    </div>
-                </div>
-            </div>
-            <hr class="my-3">
-            <div class="text-center small">
-                <p class="mb-0">&copy; 2025 Clínica Obstétrica. Todos los derechos reservados.</p>
-            </div>
         </div>
     </footer>
 

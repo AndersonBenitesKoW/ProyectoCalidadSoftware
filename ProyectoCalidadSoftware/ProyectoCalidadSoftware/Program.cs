@@ -73,17 +73,17 @@ var builder = WebApplication.CreateBuilder(args);
 // MVC
 builder.Services.AddControllersWithViews();
 
-// ?? SIEMPRE registra autenticaciÛn
+// ?? SIEMPRE registra autenticaci√≥n
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        // aquÌ pones tu login real
+        // aqu√≠ pones tu login real
         options.LoginPath = "/Portal/Login";
         options.AccessDeniedPath = "/Portal/Index";
     });
 
-// si quieres, puedes dejar autorizaciÛn b·sica
+// si quieres, puedes dejar autorizaci√≥n b√°sica
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

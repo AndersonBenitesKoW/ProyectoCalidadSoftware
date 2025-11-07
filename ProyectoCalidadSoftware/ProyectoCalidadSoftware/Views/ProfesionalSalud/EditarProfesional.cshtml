@@ -4,62 +4,87 @@
     ViewData["Title"] = "Editar Profesional de Salud";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditarProfesional" method="post">
+    <div class="col-md-8 col-lg-6 mx-auto">
 
-            @* Muestra mensajes de error *@
-            @if (ViewBag.MensajeError != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @ViewBag.MensajeError
-                </div>
-            }
+        <h1 class="display-6">@ViewData["Title"]</h1>
+        <hr />
 
-            @* Input OCULTO para el ID. ¡Es crucial para el UPDATE! *@
-            <input type="hidden" asp-for="IdProfesional" />
-
-            @* Input OCULTO para el IdUsuario (para que no se pierda al enviar) *@
-            <input type="hidden" asp-for="IdUsuario" />
-
-            <div class="form-group">
-                <label asp-for="Nombres" class="control-label"></label>
-                <input asp-for="Nombres" class="form-control" />
-                <span asp-validation-for="Nombres" class="text-danger"></span>
+        @if (ViewBag.MensajeError != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.MensajeError
             </div>
+        }
 
-            <div class="form-group">
-                <label asp-for="Apellidos" class="control-label"></label>
-                <input asp-for="Apellidos" class="form-control" />
-                <span asp-validation-for="Apellidos" class="text-danger"></span>
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-pencil-square me-2 text-primary"></i>Datos del Profesional</h5>
             </div>
+            <div class="card-body">
+                <form asp-action="EditarProfesional" method="post" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-            <div class="form-group">
-                <label asp-for="CMP" class="control-label">CMP (Colegiatura)</label>
-                <input asp-for="CMP" class="form-control" />
-                <span asp-validation-for="CMP" class="text-danger"></span>
-            </div>
+                    <input type="hidden" asp-for="IdProfesional" />
+                    <input type="hidden" asp-for="IdUsuario" />
 
-            <div class="form-group">
-                <label asp-for="Especialidad" class="control-label"></label>
-                <input asp-for="Especialidad" class="form-control" />
-                <span asp-validation-for="Especialidad" class="text-danger"></span>
-            </div>
+                    <div class="mb-3">
+                        <label asp-for="Nombres" class="form-label"><i class="bi bi-person-text me-1"></i> @Html.DisplayNameFor(model => model.Nombres)</label>
+                        <input asp-for="Nombres" class="form-control" />
+                        <span asp-validation-for="Nombres" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Estado" /> @Html.DisplayNameFor(model => model.Estado)
-                </label>
-            </div>
+                    <div class="mb-3">
+                        <label asp-for="Apellidos" class="form-label"><i class="bi bi-person-text me-1"></i> @Html.DisplayNameFor(model => model.Apellidos)</label>
+                        <input asp-for="Apellidos" class="form-control" />
+                        <span asp-validation-for="Apellidos" class="text-danger"></span>
+                    </div>
 
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <div class="mb-3">
+                        <label asp-for="CMP" class="form-label"><i class="bi bi-file-medical me-1"></i> CMP (Colegiatura)</label>
+                        <input asp-for="CMP" class="form-control" />
+                        <span asp-validation-for="CMP" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Especialidad" class="form-label"><i class="bi bi-star-fill me-1"></i> @Html.DisplayNameFor(model => model.Especialidad)</label>
+                        <input asp-for="Especialidad" class="form-control" />
+                        <span asp-validation-for="Especialidad" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+                    <h6 class="text-muted">Datos de Contacto (Usuario)</h6>
+
+                    <div class="mb-3">
+                        <label asp-for="EmailPrincipal" class="form-label"><i class="bi bi-envelope-at me-1"></i> Email Principal</label>
+                        <input asp-for="EmailPrincipal" class="form-control" type="email" />
+                        <span asp-validation-for="EmailPrincipal" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TelefonoPrincipal" class="form-label"><i class="bi bi-phone me-1"></i> Teléfono Principal</label>
+                        <input asp-for="TelefonoPrincipal" class="form-control" />
+                        <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
+                    </div>
+                    <hr />
+
+                    <div class="mb-3 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" asp-for="Estado" />
+                        <label class="form-check-label" asp-for="Estado">@Html.DisplayNameFor(model => model.Estado)</label>
+                    </div>
+
+                    <hr />
+                    <div class="text-end">
+                        <a asp-action="Index" class="btn btn-secondary me-2">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>

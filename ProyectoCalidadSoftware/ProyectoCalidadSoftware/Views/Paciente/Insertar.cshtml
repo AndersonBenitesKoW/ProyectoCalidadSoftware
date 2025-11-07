@@ -10,28 +10,15 @@
         <h4>Registrar Nuevo Paciente</h4>
     </div>
 
-    <form asp-action="Insertar">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger">
-                <i class="bi bi-exclamation-triangle"></i> @ViewBag.Error
-            </div>
-        }
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdUsuario" class="control-label">
-                        <i class="bi bi-person-badge"></i> ID Usuario (Opcional)
-                    </label>
-                    <input asp-for="IdUsuario" class="form-control" type="number" placeholder="Ingrese ID de usuario si aplica" />
-                    <span asp-validation-for="IdUsuario" class="text-danger"></span>
-                    <small class="form-text text-muted">Dejar vacío si no está asociado a un usuario</small>
-                </div>
-            </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>¡Error al registrar!</strong> @ViewBag.Error
         </div>
+    }
+    <form asp-action="Insertar">
+        <div asp-validation-summary="All" class="text-danger"></div>
 
         <div class="row">
             <div class="col-md-6">
@@ -79,6 +66,32 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="EmailPrincipal" class="control-label">
+                        <i class="bi bi-envelope-at"></i> Email Principal
+                    </label>
+                    <input asp-for="EmailPrincipal" class="form-control" placeholder="ejemplo@correo.com" type="email" />
+                    <span asp-validation-for="EmailPrincipal" class="text-danger"></span>
+                    <small class="form-text text-muted">Email de contacto principal</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="TelefonoPrincipal" class="control-label">
+                        <i class="bi bi-phone"></i> Teléfono Principal
+                    </label>
+                    <input asp-for="TelefonoPrincipal" class="form-control" placeholder="987654321" />
+                    <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
+                    <small class="form-text text-muted">Teléfono o celular de contacto</small>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+        </div>
+
+
         <div class="d-flex justify-content-between">
             <a asp-action="Listar" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver a la Lista
@@ -89,5 +102,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

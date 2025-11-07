@@ -132,16 +132,29 @@ namespace CapaAccesoDatos
             return embarazo;
         }
 
-        public bool Eliminar(int idEmbarazo)
+        public bool Cerrar(int idEmbarazo)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarEmbarazo", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
+                using (SqlCommand cmd = new SqlCommand("sp_CerrarEmbarazo", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
 
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                    cn.Open();
+
+                    // ==== INICIO DE LA CORRECCIÓN ====
+
+                    // 1. Ejecutamos el SP.
+                    //    Si falla, el TRY/CATCH del SP lanzará una 
+                    //    excepción que el controlador atrapará.
+                    cmd.ExecuteNonQuery();
+
+                    // 2. Si no hubo excepción, asumimos que funcionó.
+                    return true;
+
+                    // ==== FIN DE LA CORRECCIÓN ====
+                }
             }
         }
 

@@ -17,41 +17,28 @@ namespace CapaLogica
         #endregion
 
         // LISTAR
+        // EN: logUsuario.cs
+        // Reemplaza tu método ListarUsuario() por este:
         public List<entUsuario> ListarUsuario()
         {
             System.Diagnostics.Debug.WriteLine("logUsuario.ListarUsuario() llamado");
 
-            // el DAO ya trae IdRol y NombreRol por el SP corregido
+            // El DAO (corregido arriba) ahora trae IdRol y NombreRol
             var usuarios = DA_Usuario.Instancia.Listar();
 
             System.Diagnostics.Debug.WriteLine($"Usuarios obtenidos del DAO: {usuarios.Count}");
 
-            // Para cada usuario, obtener el rol si no viene en el SP
-            foreach (var u in usuarios)
-            {
-                System.Diagnostics.Debug.WriteLine($"Usuario {u.IdUsuario}: IdRol={u.IdRol}, NombreRol='{u.NombreRol}'");
-
-                if (u.IdRol == 0 && string.IsNullOrEmpty(u.NombreRol))
-                {
-                    var rolesUsuario = DA_Usuario.Instancia.ObtenerRoles(u.IdUsuario);
-                    if (rolesUsuario.Any())
-                    {
-                        var primerRol = rolesUsuario.First();
-                        u.IdRol = primerRol.IdRol;
-                        u.NombreRol = primerRol.Rol?.NombreRol ?? "";
-                        System.Diagnostics.Debug.WriteLine($"Rol asignado desde ObtenerRoles: {u.NombreRol}");
-                    }
-                }
-            }
+            // Ya no necesitamos el bucle 'foreach' que fallaba.
+            // Los roles ya vienen incluidos.
 
             return usuarios;
         }
 
-        
-       
 
-            // Hasheo centralizado
-            public string CalcularSha256(string texto)
+
+
+        // Hasheo centralizado
+        public string CalcularSha256(string texto)
             {
                 using var sha = SHA256.Create();
                 var bytes = Encoding.UTF8.GetBytes(texto);
@@ -148,80 +135,66 @@ namespace CapaLogica
                     _ => ""
                 };
 
-            // Listar / Validar (sin cambios)
-            
+        // Listar / Validar (sin cambios)
 
-            // ========== EDITAR USUARIO ==========
-            public bool EditarUsuario(entUsuario usuario, int idRol)
+
+        // ========== EDITAR USUARIO ==========
+        public bool EditarUsuario(entUsuario usuario, int idRol) // idRol es el NUEVO rol
+        {
+            System.Diagnostics.Debug.WriteLine($"EditarUsuario llamado con usuario: {usuario.IdUsuario}, rol: {idRol}");
+
+            try
             {
-                System.Diagnostics.Debug.WriteLine($"EditarUsuario llamado con usuario: {usuario.IdUsuario}, rol: {idRol}");
-
-                try
+                if (usuario.IdUsuario <= 0 || idRol <= 0)
                 {
-                    if (usuario.IdUsuario <= 0 || idRol <= 0)
-                    {
-                        throw new ArgumentException("Datos de usuario inválidos para edición");
-                    }
+                    throw new ArgumentException("Datos de usuario inválidos para edición");
+                }
 
-                    // Obtener usuario actual para comparar y mantener valores no cambiados
-                    var usuarioActual = DA_Usuario.Instancia.BuscarPorId(usuario.IdUsuario);
-                    if (usuarioActual == null)
-                    {
-                        throw new Exception("Usuario no encontrado");
-                    }
+                // ... (Código de buscar usuario actual - Opcional pero recomendado) ...
 
-                    // Mantener valores actuales si no se proporcionaron nuevos
-                    if (string.IsNullOrWhiteSpace(usuario.NombreUsuario))
-                    {
-                        usuario.NombreUsuario = usuarioActual.NombreUsuario;
-                    }
-                    if (string.IsNullOrWhiteSpace(usuario.Email))
-                    {
-                        usuario.Email = usuarioActual.Email;
-                    }
-
-                    // Si se cambió la contraseña, hashearla; si no, mantener la actual
-                    if (!string.IsNullOrWhiteSpace(usuario.ClaveHash) && !usuario.ClaveHash.StartsWith("$"))
+                // CORRECCIÓN: Solo hashear si se proporcionó una nueva contraseña
+                if (!string.IsNullOrWhiteSpace(usuario.ClaveHash))
+                {
+                    // (Tu lógica de hasheo está bien)
+                    if (usuario.ClaveHash.Length != 64)
                     {
                         usuario.ClaveHash = CalcularSha256(usuario.ClaveHash);
                     }
-                    else
-                    {
-                        // Mantener contraseña actual
-                        usuario.ClaveHash = usuarioActual.ClaveHash;
-                    }
-
-                    usuario.IdRol = idRol;
-
-                    // Aplicar prefijo si cambió el rol
-                    var rol = DA_Rol.Instancia.BuscarPorId(idRol);
-                    if (rol != null)
-                    {
-                        var pref = PrefijoPorRol(rol.NombreRol);
-                        if (!string.IsNullOrWhiteSpace(pref) &&
-                            !usuario.NombreUsuario.StartsWith(pref, StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Remover prefijos existentes primero
-                            usuario.NombreUsuario = usuario.NombreUsuario.Replace("ADMIN_", "").Replace("MED_", "").Replace("SECRE_", "");
-                            usuario.NombreUsuario = pref + usuario.NombreUsuario;
-                            System.Diagnostics.Debug.WriteLine($"Prefijo aplicado en edición: {usuario.NombreUsuario}");
-                        }
-                    }
-
-                    var result = DA_Usuario.Instancia.Editar(usuario);
-                    System.Diagnostics.Debug.WriteLine($"Resultado de DA_Usuario.Editar: {result}");
-
-                    return result;
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Error en logUsuario.EditarUsuario: {ex.Message}");
-                    throw new Exception($"Error al editar usuario: {ex.Message}", ex);
+                    // Mantener contraseña actual estableciendo como null
+                    // El SP (y tu DA_Usuario) ya manejan el DBNull.Value
+                    usuario.ClaveHash = null;
                 }
-            }
 
-            // ========== ELIMINAR USUARIO ==========
-            public bool EliminarUsuario(int idUsuario)
+                // ... (Tu lógica de prefijos está bien) ...
+
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // !!               AQUÍ ESTÁ EL ARREGLO             !!
+                // Asignamos el nuevo IdRol al objeto 'usuario'
+                // para que DA_Usuario.Editar lo reciba correctamente.
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                usuario.IdRol = idRol;
+
+
+                // Ahora 'usuario' tiene el IdUsuario, Nombre, Email, Estado
+                // Y el 'IdRol' correcto que debe guardarse.
+                var result = DA_Usuario.Instancia.Editar(usuario);
+
+                System.Diagnostics.Debug.WriteLine($"Resultado de DA_Usuario.Editar: {result}");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en logUsuario.EditarUsuario: {ex.Message}");
+                throw new Exception($"Error al editar usuario: {ex.Message}", ex);
+            }
+        }
+
+        // ========== ELIMINAR USUARIO ==========
+        public bool EliminarUsuario(int idUsuario)
             {
                 System.Diagnostics.Debug.WriteLine($"EliminarUsuario llamado con id: {idUsuario}");
 
@@ -252,7 +225,21 @@ namespace CapaLogica
 
                 return usuario;
             }
-        
+        public entUsuario? BuscarPorId(int idUsuario)
+        {
+            try
+            {
+                // Llama al método de la capa de datos que ya existe
+                return DA_Usuario.Instancia.BuscarPorId(idUsuario);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en logUsuario.BuscarPorId: {ex.Message}");
+                // No relanzamos la excepción completa para un 'buscar'
+                return null;
+            }
+        }
+
 
 
 

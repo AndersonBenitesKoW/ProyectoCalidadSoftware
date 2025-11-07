@@ -1,94 +1,148 @@
 ﻿using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    // Asumo que quieres la misma seguridad que Citas
+    [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
     public class EncuentroController : Controller
     {
-        /// <summary>
-        /// GET: /Encuentro/RegistrarEncuentro
-        /// Muestra el formulario para registrar un nuevo encuentro.
-        /// </summary>
-        public IActionResult RegistrarEncuentro()
-        {
-            CargarViewBags(null);
-
-            var modelo = new entEncuentro
-            {
-                FechaHoraInicio = DateTime.Now,
-                Estado = "Abierto"
-            };
-            return View(modelo);
-        }
-
-        /// <summary>
-        /// POST: /Encuentro/RegistrarEncuentro
-        /// Procesa el formulario.
-        /// </summary>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RegistrarEncuentro(entEncuentro encuentro)
-        {
-            if (ModelState.IsValid && encuentro.IdEmbarazo > 0 && encuentro.IdTipoEncuentro > 0)
-            {
-                try
-                {
-                    int idGenerado = logEncuentro.Instancia.RegistrarEncuentro(encuentro);
-                    if (idGenerado > 0)
-                    {
-                        TempData["MensajeExito"] = $"Encuentro ID {idGenerado} registrado exitosamente.";
-
-                        return RedirectToAction("RegistrarEncuentro");
-                    }
-                    else
-                    {
-                        ViewBag.MensajeError = "No se pudo registrar el encuentro.";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.MensajeError = "Error en el servidor: " + ex.Message;
-                }
-            }
-            else
-            {
-                ViewBag.MensajeError = "Datos inválidos. Revise el formulario.";
-            }
-
-            CargarViewBags(encuentro);
-            return View(encuentro);
-        }
-
-        /// <summary>
-        /// Carga los ViewBags para los dropdowns del formulario de Encuentro.
-        /// </summary>
-        private void CargarViewBags(entEncuentro? encuentro)
+        // GET: /Encuentro/Listar
+        [HttpGet]
+        public IActionResult Listar()
         {
             try
             {
-                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
-
-                var listaEmbarazosFormateada = embarazos.Select(e => new SelectListItem
-                {
-                    Value = e.IdEmbarazo.ToString(),
-                    Text = $"ID: {e.IdEmbarazo} - {e.NombrePaciente} (FPP: {e.FPP?.ToString("dd/MM/yyyy") ?? "N/A"})"
-                });
-                ViewBag.ListaEmbarazos = new SelectList(listaEmbarazosFormateada, "Value", "Text", encuentro?.IdEmbarazo);
-
-                var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
-                ViewBag.ListaProfesionales = new SelectList(profesionales, "IdProfesional", "Nombres", encuentro?.IdProfesional);
-
-                var tipos = logTipoEncuentro.Instancia.Listar();
-                ViewBag.ListaTipos = new SelectList(tipos, "IdTipoEncuentro", "Descripcion", encuentro?.IdTipoEncuentro);
+                var lista = logEncuentro.Instancia.ListarEncuentros();
+                return View(lista); // Views/Encuentro/Listar.cshtml
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error cargando listas: " + ex.Message;
-                ViewBag.ListaEmbarazos = new SelectList(new List<SelectListItem>());
-                ViewBag.ListaProfesionales = new SelectList(new List<entProfesionalSalud>());
-                ViewBag.ListaTipos = new SelectList(new List<entTipoEncuentro>());
+                ViewBag.Error = "Error al cargar la lista: " + ex.Message;
+                return View(new List<entEncuentro>());
+            }
+        }
+
+        // GET: /Encuentro/Insertar
+        [HttpGet]
+        public IActionResult Insertar()
+        {
+            CargarViewBags(null); // Carga los dropdowns
+            return View(new entEncuentro()); // Views/Encuentro/Insertar.cshtml
+        }
+
+        // POST: /Encuentro/Insertar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Insertar(entEncuentro entidad)
+        {
+            try
+            {
+                if (entidad.IdEmbarazo <= 0)
+                    ModelState.AddModelError(nameof(entidad.IdEmbarazo), "Seleccione un embarazo.");
+                if (entidad.IdTipoEncuentro <= 0)
+                    ModelState.AddModelError(nameof(entidad.IdTipoEncuentro), "Seleccione el tipo de encuentro.");
+                if (entidad.IdProfesional <= 0)
+                    ModelState.AddModelError(nameof(entidad.IdProfesional), "Seleccione un profesional.");
+
+                if (!ModelState.IsValid)
+                {
+                    CargarViewBags(entidad);
+                    return View(entidad);
+                }
+
+                bool ok = logEncuentro.Instancia.InsertarEncuentro(entidad);
+                if (ok)
+                {
+                    TempData["Ok"] = "Encuentro registrado correctamente.";
+                    return RedirectToAction(nameof(Listar));
+                }
+
+                ViewBag.Error = "No se pudo registrar el encuentro.";
+                CargarViewBags(entidad);
+                return View(entidad);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al registrar: " + ex.Message;
+                CargarViewBags(entidad);
+                return View(entidad);
+            }
+        }
+
+        // GET: /Encuentro/Anular/5
+        [HttpGet]
+        public IActionResult Anular(int id)
+        {
+            var encuentro = logEncuentro.Instancia.BuscarEncuentro(id);
+            if (encuentro == null)
+            {
+                TempData["Error"] = "Encuentro no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(encuentro); // Views/Encuentro/Anular.cshtml
+        }
+
+        // POST: /Encuentro/Anular/5
+        [HttpPost]
+        [ActionName("Anular")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AnularConfirmado(entEncuentro entidad)
+        {
+            try
+            {
+                bool ok = logEncuentro.Instancia.AnularEncuentro(entidad.IdEncuentro);
+                TempData[ok ? "Ok" : "Error"] = ok ? "Encuentro anulado." : "No se pudo anular el encuentro.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al anular: " + ex.Message;
+            }
+            return RedirectToAction(nameof(Listar));
+        }
+
+        // --- Método privado para cargar DropDownLists ---
+        private void CargarViewBags(entEncuentro? entidad)
+        {
+            try
+            {
+                // Cargar Embarazos Activos
+                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+                ViewBag.ListaEmbarazos = new SelectList(
+                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
+                    "IdEmbarazo",
+                    "Nombre",
+                    entidad?.IdEmbarazo
+                );
+
+                // Cargar Profesionales Activos
+                var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+                ViewBag.ListaProfesionales = new SelectList(
+                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
+                    "IdProfesional",
+                    "Nombre",
+                    entidad?.IdProfesional
+                );
+
+                // Cargar Tipos de Encuentro (¡De tu imagen!)
+                // (Necesitamos crear logTipoEncuentro)
+                var tipos = logTipoEncuentro.Instancia.ListarTiposEncuentro();
+                ViewBag.ListaTiposEncuentro = new SelectList(
+                    tipos,
+                    "IdTipoEncuentro", // El valor
+                    "Descripcion",     // El texto a mostrar
+                    entidad?.IdTipoEncuentro
+                );
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
     }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ProyectoCalidadSoftware.Models;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -97,51 +98,64 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // ===== Registro de PACIENTE =====
         [HttpGet]
-        public IActionResult Register() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
+        public IActionResult Register()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            // Enviamos un modelo vacío a la vista
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]
-        public IActionResult Register(string username, string email, string password, string confirmPassword)
+        [ValidateAntiForgeryToken] // <-- Buena práctica (requiere @Html.AntiForgeryToken() en la vista)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(username) ||
-                string.IsNullOrWhiteSpace(email) ||
-                string.IsNullOrWhiteSpace(password))
+            // 1. La validación (campos vacíos, email, contraseñas coinciden)
+            //    se hace automáticamente gracias al ViewModel.
+            if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Todos los campos son obligatorios.";
-                return View();
+                // Si algo falla, regresa a la vista y muestra los errores
+                return View(model);
             }
 
-            if (!string.Equals(password, confirmPassword))
-            {
-                TempData["Error"] = "Las contraseñas no coinciden.";
-                return View();
-            }
-
+            // 2. Si la validación pasa, creamos el usuario
             var usuario = new entUsuario
             {
-                NombreUsuario = username,
-                Email = email,
-                ClaveHash = password, // texto plano; se hashea en la lógica
+                NombreUsuario = model.Username,
+                Email = model.Email,
+                ClaveHash = model.Password, // La lógica lo hashea
                 Estado = true
             };
 
-            // usa el flujo de registro de pacientes (rol PACIENTE)
-            var exito = logUsuario.Instancia.RegistrarPaciente(usuario);
-
-            if (exito)
+            try
             {
-                TempData["Success"] = "Cuenta creada exitosamente. Ahora puedes iniciar sesión.";
-                return RedirectToAction("Login");
-            }
+                // 3. Llamamos a tu lógica de negocio
+                var exito = logUsuario.Instancia.RegistrarPaciente(usuario);
 
-            TempData["Error"] = "Error al crear la cuenta. Inténtalo nuevamente.";
-            return View();
+                if (exito)
+                {
+                    TempData["Success"] = "Cuenta creada exitosamente. Ahora puedes iniciar sesión.";
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    // Error de la base de datos (ej. usuario ya existe)
+                    ModelState.AddModelError("", "No se pudo crear la cuenta. Es posible que el usuario o email ya existan.");
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error inesperado
+                ModelState.AddModelError("", "Error al crear la cuenta: " + ex.Message);
+                return View(model);
+            }
+        }
+        // En PortalController.cs - AGREGA ESTE MÉTODO:
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Portal");
         }
 
     }

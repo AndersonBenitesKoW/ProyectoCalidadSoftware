@@ -76,7 +76,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     {
                         TempData["MensajeExito"] = $"Embarazo registrado con ID: {idGenerado} para la Paciente ID: {embarazo.IdPaciente}.";
 
-                        return RedirectToAction("RegistrarEmbarazo");
+                        return RedirectToAction("Index");
                     }
                     else
                     {
@@ -102,6 +102,59 @@ namespace ProyectoCalidadSoftware.Controllers
 
             CargarViewBags(embarazo);
             return View(embarazo);
+        }
+        // ==== PASO 1: AÑADIR ESTE MÉTODO (GET) ====
+        // GET: /Embarazo/CerrarEmbarazo/5
+        // (Esto muestra la página de confirmación)
+        [HttpGet]
+        public IActionResult CerrarEmbarazo(int id)
+        {
+            try
+            {
+                entEmbarazo? embarazo = logEmbarazo.Instancia.BuscarEmbarazoPorId(id);
+                if (embarazo == null)
+                {
+                    TempData["MensajeError"] = "No se encontró el registro de embarazo solicitado.";
+                    return RedirectToAction("Index");
+                }
+
+                // Devuelve la vista de confirmación que vamos a crear
+                return View("CerrarEmbarazo", embarazo);
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Error al cargar la confirmación: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+
+        // ==== PASO 2: MODIFICAR ESTE MÉTODO (POST) ====
+        // (Lo cambiamos para que reciba 'entEmbarazo' en lugar de 'int id')
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CerrarEmbarazo(entEmbarazo embarazo) // Recibe la entidad
+        {
+            try
+            {
+                // Usamos el ID de la entidad que viene del formulario
+                bool exito = logEmbarazo.Instancia.CerrarEmbarazo(embarazo.IdEmbarazo);
+
+                if (exito)
+                {
+                    TempData["MensajeExito"] = "El embarazo se ha cerrado/anulado correctamente.";
+                }
+                else
+                {
+                    TempData["MensajeError"] = "No se pudo cerrar el embarazo. Es posible que ya estuviera cerrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Error al intentar cerrar el embarazo: " + ex.Message;
+            }
+
+            return RedirectToAction("Index");
         }
 
 
