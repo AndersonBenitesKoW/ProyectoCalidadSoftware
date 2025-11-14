@@ -112,31 +112,46 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             try
             {
-                // Cargar Embarazos Activos
+                // 1) Embarazos activos
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+
+                // Para modales (lista cruda)
+                ViewBag.EmbarazosModal = embarazos;
+
+                // (Opcional: si alguna otra vista usa DropDownList)
                 ViewBag.ListaEmbarazos = new SelectList(
-                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
+                    embarazos.Select(e => new
+                    {
+                        e.IdEmbarazo,
+                        Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}"
+                    }),
                     "IdEmbarazo",
                     "Nombre",
                     entidad?.IdEmbarazo
                 );
 
-                // Cargar Profesionales Activos
+                // 2) Profesionales activos
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+
+                ViewBag.ProfesionalesModal = profesionales;
+
                 ViewBag.ListaProfesionales = new SelectList(
-                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
+                    profesionales.Select(p => new
+                    {
+                        p.IdProfesional,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})"
+                    }),
                     "IdProfesional",
                     "Nombre",
                     entidad?.IdProfesional
                 );
 
-                // Cargar Tipos de Encuentro (¡De tu imagen!)
-                // (Necesitamos crear logTipoEncuentro)
+                // 3) Tipos de encuentro (este sí seguirá siendo combo)
                 var tipos = logTipoEncuentro.Instancia.ListarTiposEncuentro();
                 ViewBag.ListaTiposEncuentro = new SelectList(
                     tipos,
-                    "IdTipoEncuentro", // El valor
-                    "Descripcion",     // El texto a mostrar
+                    "IdTipoEncuentro", // value
+                    "Descripcion",     // text
                     entidad?.IdTipoEncuentro
                 );
             }

@@ -32,15 +32,16 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpGet]
         public IActionResult RegistrarParto(int? idEmbarazo)
         {
-            CargarViewBags(null);
             var modelo = new entParto
             {
                 IdEmbarazo = idEmbarazo ?? 0,
-                Fecha = DateTime.Now,
+                Fecha = DateTime.Now.Date,   // solo fecha actual
                 Estado = true
             };
+
+            CargarViewBags(modelo);
             return View(modelo); // Views/Parto/RegistrarParto.cshtml
-        }
+        }   
 
         // POST: /Parto/RegistrarParto
         [HttpPost]
@@ -187,34 +188,58 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // --- Método privado para cargar DropDownLists ---
+        // --- Método privado para cargar listas / datos de modals ---
         private void CargarViewBags(entParto? parto)
         {
             try
             {
-                // Cargar Embarazos (Activos)
+                // ====== EMBARAZOS ======
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+
+                // Para vistas antiguas con <select>
                 ViewBag.ListaEmbarazos = new SelectList(
                     embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
-                    "IdEmbarazo", "Nombre", parto?.IdEmbarazo
+                    "IdEmbarazo",
+                    "Nombre",
+                    parto?.IdEmbarazo
                 );
 
-                // Cargar Profesionales Activos
+                // Para los MODALS (lista cruda)
+                ViewBag.EmbarazosModal = embarazos;
+
+                // ====== PROFESIONALES ======
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+
                 ViewBag.ListaProfesionales = new SelectList(
                     profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
-                    "IdProfesional", "Nombre", parto?.IdProfesional
+                    "IdProfesional",
+                    "Nombre",
+                    parto?.IdProfesional
                 );
 
-                // Cargar Vias de Parto (¡de tu imagen!)
+                ViewBag.ProfesionalesModal = profesionales;
+
+                // ====== ENCUENTROS ======
+                // Si quieres precargar todos los encuentros (y filtrar en el front por IdEmbarazo):
+                var encuentros = logEncuentro.Instancia.ListarEncuentros(); // o tu método existente
+                ViewBag.EncuentrosModal = encuentros;
+
+                // ====== VÍAS DE PARTO ======
                 var vias = logViaParto.Instancia.ListarViasParto();
                 ViewBag.ListaViasParto = new SelectList(
-                    vias, "IdViaParto", "Descripcion", parto?.IdViaParto
+                    vias,
+                    "IdViaParto",
+                    "Descripcion",
+                    parto?.IdViaParto
                 );
 
-                // Cargar Líquidos Amnióticos (¡de tu imagen!)
+                // ====== LÍQUIDO AMNIÓTICO ======
                 var liquidos = logLiquidoAmniotico.Instancia.ListarLiquidos();
                 ViewBag.ListaLiquidos = new SelectList(
-                    liquidos, "IdLiquido", "Descripcion", parto?.IdLiquido
+                    liquidos,
+                    "IdLiquido",
+                    "Descripcion",
+                    parto?.IdLiquido
                 );
             }
             catch (Exception ex)

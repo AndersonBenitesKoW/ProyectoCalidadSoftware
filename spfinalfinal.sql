@@ -1653,6 +1653,24 @@ BEGIN
         e.FechaHoraInicio DESC;
 END
 GO
+CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerPorNombre
+  @NombreUsuario NVARCHAR(50)
+AS
+BEGIN
+    SELECT 
+        u.IdUsuario, 
+        u.NombreUsuario, 
+        u.ClaveHash, 
+        u.Email, 
+        u.Estado,
+        ur.IdRol,
+        r.NombreRol
+    FROM Usuario u
+    LEFT JOIN UsuarioRol ur ON u.IdUsuario = ur.IdUsuario
+    LEFT JOIN Rol r ON ur.IdRol = r.IdRol
+    WHERE u.NombreUsuario = @NombreUsuario AND u.Estado = 1;
+END
+
 IF NOT EXISTS (SELECT 1 FROM MetodoPF WHERE Nombre = 'DIU T de Cobre')
     INSERT INTO MetodoPF (Nombre) VALUES ('DIU T de Cobre');
 IF NOT EXISTS (SELECT 1 FROM MetodoPF WHERE Nombre = 'Implante Subdérmico')
@@ -1672,6 +1690,22 @@ IF NOT EXISTS (SELECT 1 FROM MetodoPF WHERE Nombre = 'Método del Ritmo (MELA)')
 IF NOT EXISTS (SELECT 1 FROM MetodoPF WHERE Nombre = 'Ninguno')
     INSERT INTO MetodoPF (Nombre) VALUES ('Ninguno');
 GO
+CREATE OR ALTER PROCEDURE sp_Usuario_ObtenerRoles
+  @IdUsuario INT
+AS
+BEGIN
+    SELECT 
+        ur.IdUsuarioRol,     -- 👈 importante
+        ur.IdUsuario,
+        r.IdRol,
+        r.NombreRol,
+        r.Descripcion,
+        r.Estado
+    FROM UsuarioRol ur
+    INNER JOIN Rol r ON ur.IdRol = r.IdRol
+    WHERE ur.IdUsuario = @IdUsuario AND r.Estado = 1;
+END
+
 IF NOT EXISTS (SELECT 1 FROM TipoAyudaDiagnostica WHERE Nombre = 'Ecografía Obstétrica')
     INSERT INTO TipoAyudaDiagnostica (Nombre) VALUES ('Ecografía Obstétrica');
 IF NOT EXISTS (SELECT 1 FROM TipoAyudaDiagnostica WHERE Nombre = 'Perfil Biofísico')
@@ -1685,3 +1719,203 @@ IF NOT EXISTS (SELECT 1 FROM TipoAyudaDiagnostica WHERE Nombre = 'Análisis de O
 IF NOT EXISTS (SELECT 1 FROM TipoAyudaDiagnostica WHERE Nombre = 'Test de Tolerancia a la Glucosa')
     INSERT INTO TipoAyudaDiagnostica (Nombre) VALUES ('Test de Tolerancia a la Glucosa');
 GO
+CREATE OR ALTER PROCEDURE sp_ListarEmbarazosActivos
+(
+    @Estado BIT 
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        E.IdEmbarazo,
+        E.IdPaciente,
+        P.Nombres + ' ' + P.Apellidos AS NombrePaciente,
+        E.FPP,
+        E.Estado 
+    FROM
+        Embarazo E
+    JOIN
+        Paciente P ON E.IdPaciente = P.IdPaciente
+    WHERE
+        E.Estado = @Estado 
+    ORDER BY
+        P.Apellidos, P.Nombres;
+END
+
+
+CREATE OR ALTER PROCEDURE sp_ListarRol
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdRol,
+        NombreRol,
+        Descripcion,
+        Estado
+    FROM Rol
+    ORDER BY IdRol;
+END;
+GO
+CREATE OR ALTER PROCEDURE sp_EditarUsuario
+(
+    @IdUsuario     INT,
+    @Username      NVARCHAR(50)   = NULL,  -- NombreUsuario (nullable: si viene NULL, no cambia)
+    @PasswordHash  NVARCHAR(500)  = NULL,  -- ClaveHash     (nullable: si viene NULL, no cambia)
+    @Correo        NVARCHAR(100)  = NULL,  -- email         (nullable: si viene NULL, no cambia)
+    @IdRol         INT,                    -- rol requerido
+    @Estado        BIT                     -- estado requerido
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRAN;
+
+        -- 1) Validaciones
+        IF NOT EXISTS (SELECT 1 FROM dbo.Usuario WHERE IdUsuario = @IdUsuario)
+            THROW 50000, 'El usuario indicado no existe.', 1;
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.Rol WHERE IdRol = @IdRol AND Estado = 1)
+            THROW 50001, 'El rol indicado no existe o está inactivo.', 1;
+
+        IF @Username IS NOT NULL
+           AND EXISTS (SELECT 1 FROM dbo.Usuario WHERE NombreUsuario = @Username AND IdUsuario <> @IdUsuario)
+            THROW 50002, 'El NombreUsuario ya está en uso por otro usuario.', 1;
+
+        -- (Opcional) Validar correo único si lo quieres único:
+        -- IF @Correo IS NOT NULL
+        --    AND EXISTS (SELECT 1 FROM dbo.Usuario WHERE email = @Correo AND IdUsuario <> @IdUsuario)
+        --     THROW 50003, 'El correo ya está en uso por otro usuario.', 1;
+
+        -- 2) Actualización parcial: solo cambia lo que no llega NULL
+        UPDATE dbo.Usuario
+        SET
+            NombreUsuario = COALESCE(@Username, NombreUsuario),
+            ClaveHash     = COALESCE(@PasswordHash, ClaveHash),
+            email         = COALESCE(@Correo, email),
+            Estado        = @Estado
+        WHERE IdUsuario = @IdUsuario;
+
+        -- 3) Asegurar el rol (un único rol por usuario):
+        --    Si ya tiene el mismo rol, se conservan; si no, se reemplazan.
+        IF EXISTS (SELECT 1 FROM dbo.UsuarioRol WHERE IdUsuario = @IdUsuario AND IdRol = @IdRol)
+        BEGIN
+            -- El rol ya es el correcto; elimina otros si existen
+            DELETE FROM dbo.UsuarioRol
+            WHERE IdUsuario = @IdUsuario AND IdRol <> @IdRol;
+        END
+        ELSE
+        BEGIN
+            -- Reemplazar roles actuales por el nuevo
+            DELETE FROM dbo.UsuarioRol WHERE IdUsuario = @IdUsuario;
+            INSERT INTO dbo.UsuarioRol (IdUsuario, IdRol)
+            VALUES (@IdUsuario, @IdRol);
+        END
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0 ROLLBACK;
+        THROW; -- Propaga el error a C#
+    END CATCH
+END;
+GO
+CREATE OR ALTER PROCEDURE sp_BuscarRol
+    @IdRol INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT IdRol,
+           NombreRol,
+           Descripcion,
+           Estado
+    FROM Rol
+    WHERE IdRol = @IdRol;
+END;
+GO
+CREATE OR ALTER PROCEDURE sp_Rol_ObtenerPorNombre
+    @NombreRol NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT IdRol,
+           NombreRol,
+           Descripcion,
+           Estado
+    FROM Rol
+    WHERE UPPER(NombreRol) = UPPER(@NombreRol);
+END;
+CREATE OR ALTER  PROCEDURE sp_InsertarUsuario
+    @Username      NVARCHAR(50),
+    @PasswordHash  NVARCHAR(500),
+    @Correo        NVARCHAR(100),
+    @IdRol         INT,
+    @Estado        BIT,
+    @NewIdUsuario  INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Usuario (NombreUsuario, ClaveHash, Email, Estado)
+    VALUES (@Username, @PasswordHash, @Correo, @Estado);
+
+    SET @NewIdUsuario = CAST(SCOPE_IDENTITY() AS INT);
+
+    INSERT INTO UsuarioRol (IdUsuario, IdRol)
+    VALUES (@NewIdUsuario, @IdRol);
+END;
+
+CREATE OR ALTER PROCEDURE sp_InsertarEmbarazo
+(
+    @IdPaciente INT,
+    @FUR DATE = NULL, -- Fecha Última Regla (opcional)
+    @FPP DATE = NULL, -- Fecha Probable de Parto (opcional)
+    @Riesgo NVARCHAR(50) = NULL -- (opcional)
+)
+AS
+BEGIN
+    INSERT INTO Embarazo (
+        IdPaciente,
+        FUR,
+        FPP,
+        Riesgo,
+        Estado
+        -- FechaApertura usa DEFAULT SYSUTCDATETIME()
+        -- Estado usa DEFAULT 1
+    )
+    VALUES (
+        @IdPaciente,
+        @FUR,
+        @FPP,
+        @Riesgo,
+        1 -- 1 = Activo
+    );
+    
+    -- Devolvemos el ID del Embarazo recién creado
+    SELECT SCOPE_IDENTITY(); 
+END
+GO
+CREATE OR ALTER PROCEDURE sp_BuscarEmbarazoPorId
+(
+    @IdEmbarazo INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        E.*, -- Todos los campos de Embarazo
+        P.Nombres + ' ' + P.Apellidos AS NombrePaciente
+    FROM 
+        Embarazo E
+    JOIN 
+        Paciente P ON E.IdPaciente = P.IdPaciente
+    WHERE 
+        E.IdEmbarazo = @IdEmbarazo;
+END
+

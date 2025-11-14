@@ -32,14 +32,15 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpGet]
         public IActionResult Registrar(int? idEmbarazo)
         {
-            CargarViewBags(null); // Carga los dropdowns
             var modelo = new entSeguimientoPuerperio
             {
                 IdEmbarazo = idEmbarazo ?? 0,
-                Fecha = DateTime.Now,
+                Fecha = DateTime.Now.Date,
                 Estado = true
             };
-            return View(modelo); // Views/SeguimientoPuerperio/Registrar.cshtml
+
+            CargarViewBags(modelo);
+            return View(modelo);   // Views/SeguimientoPuerperio/Registrar.cshtml
         }
 
         // POST: /SeguimientoPuerperio/Registrar
@@ -51,7 +52,8 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 if (control.IdEmbarazo <= 0)
                     ModelState.AddModelError(nameof(control.IdEmbarazo), "Debe seleccionar un embarazo válido.");
-                if (control.Fecha == default)
+
+                if (control.Fecha == default(DateTime))
                     ModelState.AddModelError(nameof(control.Fecha), "Debe ingresar una fecha válida.");
 
                 if (!ModelState.IsValid)
@@ -90,6 +92,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 TempData["Error"] = "Registro no encontrado.";
                 return RedirectToAction(nameof(Listar));
             }
+
             CargarViewBags(control);
             return View(control); // Views/SeguimientoPuerperio/Editar.cshtml
         }
@@ -106,12 +109,14 @@ namespace ProyectoCalidadSoftware.Controllers
                     CargarViewBags(control);
                     return View(control);
                 }
+
                 bool editado = logSeguimientoPuerperio.Instancia.EditarSeguimiento(control);
                 if (editado)
                 {
                     TempData["Ok"] = "Seguimiento actualizado.";
                     return RedirectToAction(nameof(Listar));
                 }
+
                 ViewBag.Error = "No se pudo actualizar el seguimiento.";
                 CargarViewBags(control);
                 return View(control);
@@ -169,31 +174,35 @@ namespace ProyectoCalidadSoftware.Controllers
             return RedirectToAction(nameof(Listar));
         }
 
-        // --- Método privado para cargar DropDownLists ---
-        private void CargarViewBags(entSeguimientoPuerperio? control)
+        // -------- Cargar combos + datos para modals --------
+        private void CargarViewBags(entSeguimientoPuerperio? entidad)
         {
             try
             {
-                // Cargar Embarazos (Activos y Cerrados, por si acaso)
-                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true)
-                    .Concat(logEmbarazo.Instancia.ListarEmbarazosPorEstado(false));
-
+                // EMBARAZOS ACTIVOS
+                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
                 ViewBag.ListaEmbarazos = new SelectList(
                     embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
-                    "IdEmbarazo", "Nombre", control?.IdEmbarazo
+                    "IdEmbarazo", "Nombre", entidad?.IdEmbarazo
                 );
+                ViewBag.EmbarazosModal = embarazos;
 
-                // Cargar Profesionales Activos
+                // PROFESIONALES ACTIVOS
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
                 ViewBag.ListaProfesionales = new SelectList(
                     profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
-                    "IdProfesional", "Nombre", control?.IdProfesional
+                    "IdProfesional", "Nombre", entidad?.IdProfesional
                 );
+                ViewBag.ProfesionalesModal = profesionales;
 
-                // Cargar Métodos PF
-                var metodos = logMetodoPF.Instancia.ListarMetodosPF();
+                // MÉTODOS PF  ✅ AQUÍ EL CAMBIO
+                var metodos = logMetodoPF.Instancia.ListarMetodosPF() ?? new List<entMetodoPF>();
+
                 ViewBag.ListaMetodosPF = new SelectList(
-                    metodos, "IdMetodoPF", "Nombre", control?.IdMetodoPF
+                    metodos,          // lista de entMetodoPF
+                    "IdMetodoPF",     // value
+                    "Nombre",         // text (antes pusiste "Descripcion")
+                    entidad?.IdMetodoPF
                 );
             }
             catch (Exception ex)

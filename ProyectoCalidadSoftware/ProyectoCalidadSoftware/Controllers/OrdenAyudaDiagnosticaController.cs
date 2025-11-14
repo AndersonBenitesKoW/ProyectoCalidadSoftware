@@ -1,6 +1,7 @@
 using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -19,7 +20,15 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpGet]
         public IActionResult Insertar()
         {
-            return View(new entAyudaDiagnosticaOrden());
+            var modelo = new entAyudaDiagnosticaOrden
+            {
+                FechaOrden = DateTime.Now,
+                Urgente = false,
+                Estado = "Activo"
+            };
+
+            CargarViewBags(modelo);
+            return View(modelo);
         }
 
         // POST: /core/ayudas/insertar
@@ -52,6 +61,72 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.Error = "Error al insertar: " + ex.Message;
                 return View(entidad);
+            }
+        }
+        // --- Listas para combos y modals ---
+        private void CargarViewBags(entAyudaDiagnosticaOrden? orden)
+        {
+            try
+            {
+                // PACIENTES
+                var pacientes = logPaciente.Instancia.ListarPacientesActivos();
+                ViewBag.PacientesModal = pacientes;
+
+                ViewBag.ListaPacientes = new SelectList(
+                    pacientes.Select(p => new
+                    {
+                        p.IdPaciente,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (DNI: {p.DNI})"
+                    }),
+                    "IdPaciente",
+                    "Nombre",
+                    orden?.IdPaciente
+                );
+
+                // PROFESIONALES
+                var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+                ViewBag.ProfesionalesModal = profesionales;
+
+                ViewBag.ListaProfesionales = new SelectList(
+                    profesionales.Select(p => new
+                    {
+                        p.IdProfesional,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})"
+                    }),
+                    "IdProfesional",
+                    "Nombre",
+                    orden?.IdProfesional
+                );
+
+                // EMBARAZOS (opcional)
+                var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+                ViewBag.EmbarazosModal = embarazos;
+
+                ViewBag.ListaEmbarazos = new SelectList(
+                    embarazos.Select(e => new
+                    {
+                        e.IdEmbarazo,
+                        Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}"
+                    }),
+                    "IdEmbarazo",
+                    "Nombre",
+                    orden?.IdEmbarazo
+                );
+
+                // TIPOS DE AYUDA
+                var tipos = logTipoAyudaDiagnostica.Instancia.ListarTiposAyuda(); // ajusta al nombre real
+                ViewBag.TiposAyudaModal = tipos;
+
+                ViewBag.ListaTiposAyuda = new SelectList(
+                    tipos,
+                    "IdTipoAyuda",    // nombre de la columna en tu entidad de tipo
+                    "Descripcion",    // texto a mostrar
+                    orden?.IdTipoAyuda
+                );
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
     }

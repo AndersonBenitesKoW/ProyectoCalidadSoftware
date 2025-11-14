@@ -33,8 +33,14 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpGet]
         public IActionResult Insertar()
         {
-            CargarViewBags(null); // Carga los dropdowns
-            return View(new entCita()); // Views/Cita/Insertar.cshtml
+            var modelo = new entCita
+            {
+                // Fecha por defecto: ahora mismo
+                FechaCita = DateTime.Now
+            };
+
+            CargarViewBags(modelo); // pásale el modelo para que marque selecciones si hiciera falta
+            return View(modelo);
         }
 
         // POST: /Cita/Insertar
@@ -163,28 +169,51 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             try
             {
-                // Cargar Pacientes (Asumiendo que tienes entPaciente.NombreCompleto)
+                // ---------- PACIENTES ----------
                 var pacientes = logPaciente.Instancia.ListarPacientesActivos();
+
+                // Para MODAL (tabla)
+                ViewBag.PacientesModal = pacientes;
+
+                // (Opcional) Para combobox clásico, por si lo usas en otras vistas
                 ViewBag.ListaPacientes = new SelectList(
-                    pacientes.Select(p => new { p.IdPaciente, Nombre = $"{p.Nombres} {p.Apellidos} (DNI: {p.DNI})" }),
+                    pacientes.Select(p => new
+                    {
+                        p.IdPaciente,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (DNI: {p.DNI})"
+                    }),
                     "IdPaciente",
                     "Nombre",
                     cita?.IdPaciente
                 );
 
-                // Cargar Profesionales (Asumiendo que tienes entProfesionalSalud.NombreCompleto)
+                // ---------- PROFESIONALES ----------
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+
+                ViewBag.ProfesionalesModal = profesionales;
+
                 ViewBag.ListaProfesionales = new SelectList(
-                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
+                    profesionales.Select(p => new
+                    {
+                        p.IdProfesional,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})"
+                    }),
                     "IdProfesional",
                     "Nombre",
                     cita?.IdProfesional
                 );
 
-                // Cargar Embarazos Activos (Opcional)
+                // ---------- EMBARAZOS (Opcional) ----------
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+
+                ViewBag.EmbarazosModal = embarazos;
+
                 ViewBag.ListaEmbarazos = new SelectList(
-                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
+                    embarazos.Select(e => new
+                    {
+                        e.IdEmbarazo,
+                        Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}"
+                    }),
                     "IdEmbarazo",
                     "Nombre",
                     cita?.IdEmbarazo
