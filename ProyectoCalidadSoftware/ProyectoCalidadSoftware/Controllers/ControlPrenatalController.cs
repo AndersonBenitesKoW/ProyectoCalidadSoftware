@@ -32,15 +32,17 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpGet]
         public IActionResult Registrar(int? idEmbarazo)
         {
-            CargarViewBags(null); // Carga los dropdowns
             var modelo = new entControlPrenatal
             {
                 IdEmbarazo = idEmbarazo ?? 0,
-                Fecha = DateTime.Now,
+                Fecha = DateTime.Now, // fecha actual
                 Estado = true
             };
-            return View(modelo); // Views/ControlPrenatal/Registrar.cshtml
+
+            CargarViewBags(modelo); // <--- pásale el modelo, no null
+            return View(modelo);    // Views/ControlPrenatal/Registrar.cshtml
         }
+
 
         // POST: /ControlPrenatal/Registrar
         [HttpPost]
@@ -174,22 +176,45 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         // --- Método privado para cargar DropDownLists ---
+        // --- Método privado para cargar DropDownLists y listas para modales ---
         private void CargarViewBags(entControlPrenatal? control)
         {
             try
             {
-                // Cargar Embarazos Activos
+                // ---------- EMBARAZOS ACTIVOS ----------
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+
+                // Para MODAL en Control Prenatal
+                ViewBag.EmbarazosModalPrenatal = embarazos;
+
+                // (Opcional) Para combobox clásico
                 ViewBag.ListaEmbarazos = new SelectList(
-                    embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
-                    "IdEmbarazo", "Nombre", control?.IdEmbarazo
+                    embarazos.Select(e => new
+                    {
+                        e.IdEmbarazo,
+                        Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}"
+                    }),
+                    "IdEmbarazo",
+                    "Nombre",
+                    control?.IdEmbarazo
                 );
 
-                // Cargar Profesionales Activos
+                // ---------- PROFESIONALES ACTIVOS ----------
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
+
+                // Para MODAL
+                ViewBag.ProfesionalesModalPrenatal = profesionales;
+
+                // (Opcional) Para combobox
                 ViewBag.ListaProfesionales = new SelectList(
-                    profesionales.Select(p => new { p.IdProfesional, Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})" }),
-                    "IdProfesional", "Nombre", control?.IdProfesional
+                    profesionales.Select(p => new
+                    {
+                        p.IdProfesional,
+                        Nombre = $"{p.Nombres} {p.Apellidos} (CMP: {p.CMP})"
+                    }),
+                    "IdProfesional",
+                    "Nombre",
+                    control?.IdProfesional
                 );
             }
             catch (Exception ex)
@@ -197,5 +222,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
+
     }
 }

@@ -1,6 +1,10 @@
 ﻿@model CapaEntidad.entParto
 @{
     ViewData["Title"] = "Registrar Parto";
+
+    var embarazosModal = ViewBag.EmbarazosModal as IEnumerable<CapaEntidad.entEmbarazo>;
+    var encuentrosModal = ViewBag.EncuentrosModal as IEnumerable<CapaEntidad.entEncuentro>;
+    var profesionalesModal = ViewBag.ProfesionalesModal as IEnumerable<CapaEntidad.entProfesionalSalud>;
 }
 
 <div class="row">
@@ -20,43 +24,82 @@
                     }
                     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
+                    <!-- ================= INFORMACIÓN GENERAL ================= -->
                     <h5><i class="bi bi-info-circle me-2"></i>Información General</h5>
                     <hr class="mt-0" />
+
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
-                                    <option value="">-- Seleccione Embarazo --</option>
-                                </select>
-                                <label asp-for="IdEmbarazo">Embarazo (Paciente)</label>
-                                <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
+                        <!-- Embarazo (Paciente) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Embarazo (Paciente)</label>
+                            <div class="input-group">
+                                <input class="form-control"
+                                       id="txtEmbarazo"
+                                       readonly
+                                       placeholder="-- Seleccione Embarazo --" />
+                                <input asp-for="IdEmbarazo" type="hidden" id="hdnIdEmbarazo" />
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEmbarazo">
+                                    Buscar
+                                </button>
                             </div>
+                            <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <select asp-for="IdEncuentro" class="form-select" disabled>
-                                    <option value="">-- Seleccione un embarazo primero --</option>
-                                </select>
-                                <label asp-for="IdEncuentro">Encuentro (Consulta)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
-                                    <option value="">-- Seleccione Profesional --</option>
-                                </select>
-                                <label asp-for="IdProfesional">Profesional</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input asp-for="Fecha" class="form-control" type="date" />
-                                <label asp-for="Fecha">Fecha del Parto</label>
+                        <!-- Encuentro (Consulta) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Encuentro (Consulta)</label>
+                            <div class="input-group">
+                                <input class="form-control"
+                                       id="txtEncuentro"
+                                       readonly
+                                       placeholder="-- Seleccione un embarazo primero --" />
+                                <input asp-for="IdEncuentro" type="hidden" id="hdnIdEncuentro" />
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        id="btnAbrirEncuentro"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEncuentro"
+                                        disabled>
+                                    Buscar
+                                </button>
                             </div>
                         </div>
                     </div>
 
+                    <div class="row">
+                        <!-- Profesional -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Profesional</label>
+                            <div class="input-group">
+                                <input class="form-control"
+                                       id="txtProfesional"
+                                       readonly
+                                       placeholder="-- Seleccione Profesional --" />
+                                <input asp-for="IdProfesional" type="hidden" id="hdnIdProfesional" />
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalProfesional">
+                                    Buscar
+                                </button>
+                            </div>
+                            <span asp-validation-for="IdProfesional" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Fecha del Parto -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                <input asp-for="Fecha" class="form-control" type="date" />
+                                <label asp-for="Fecha">Fecha del Parto</label>
+                                <span asp-validation-for="Fecha" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= TIEMPOS Y EVALUACIÓN ================= -->
                     <h5 class="mt-4"><i class="bi bi-clock-history me-2"></i>Tiempos y Evaluación</h5>
                     <div class="row">
                         <div class="col-md-3">
@@ -87,6 +130,7 @@
                         </div>
                     </div>
 
+                    <!-- ================= DETALLES DEL PARTO ================= -->
                     <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Detalles del Parto</h5>
                     <hr class="mt-0" />
                     <div class="row">
@@ -119,6 +163,7 @@
                         </div>
                     </div>
 
+                    <!-- ================= COMPLICACIONES ================= -->
                     <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
                     <hr class="mt-0" />
                     <div class="row">
@@ -137,10 +182,211 @@
                     </div>
 
                     <div class="d-flex justify-content-between mt-4">
-                        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
-                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Registrar Parto</button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i> Registrar Parto
+                        </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============= MODAL EMBARAZO ============= -->
+<div class="modal fade" id="modalEmbarazo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Embarazo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button"
+                            id="btnBuscarEmbarazo"
+                            class="btn btn-primary btn-sm me-2">
+                        Buscar
+                    </button>
+                    <div style="max-width:150px;">
+                        <input type="number"
+                               id="buscarEmbarazo"
+                               class="form-control form-control-sm text-end"
+                               placeholder="ID" />
+                    </div>
+                </div>
+
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Paciente</th>
+                            <th>FUR</th>
+                            <th>FPP</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (embarazosModal != null)
+                        {
+                            foreach (var e in embarazosModal)
+                            {
+                                <tr>
+                                    <td>@e.IdEmbarazo</td>
+                                    <td>@e.NombrePaciente</td>
+                                    <td>@e.FUR?.ToString("dd/MM/yyyy")</td>
+                                    <td>@e.FPP?.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btnSeleccionarEmbarazo"
+                                                data-id="@e.IdEmbarazo"
+                                                data-nombre="@e.NombrePaciente">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============= MODAL ENCUENTRO ============= -->
+<div class="modal fade" id="modalEncuentro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Encuentro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button"
+                            id="btnBuscarEncuentro"
+                            class="btn btn-primary btn-sm me-2">
+                        Buscar
+                    </button>
+                    <div style="max-width:150px;">
+                        <input type="number"
+                               id="buscarEncuentro"
+                               class="form-control form-control-sm text-end"
+                               placeholder="ID" />
+                    </div>
+                </div>
+
+                <small class="text-muted d-block mb-2">
+                    Se mostrarán solo los encuentros del embarazo seleccionado.
+                </small>
+
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha / Hora</th>
+                            <th>Tipo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (encuentrosModal != null)
+                        {
+                            foreach (var en in encuentrosModal)
+                            {
+                                <tr data-embarazo="@en.IdEmbarazo">
+                                    <td>@en.IdEncuentro</td>
+                                    <td>@en.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@en.TipoEncuentroDesc</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btnSeleccionarEncuentro"
+                                                data-id="@en.IdEncuentro"
+                                                data-nombre="@en.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm")">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============= MODAL PROFESIONAL ============= -->
+<div class="modal fade" id="modalProfesional" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Profesional de Salud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button"
+                            id="btnBuscarProfesional"
+                            class="btn btn-primary btn-sm me-2">
+                        Buscar
+                    </button>
+                    <div style="max-width:150px;">
+                        <input type="number"
+                               id="buscarProfesional"
+                               class="form-control form-control-sm text-end"
+                               placeholder="ID" />
+                    </div>
+                </div>
+
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>CMP</th>
+                            <th>Nombre</th>
+                            <th>Especialidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (profesionalesModal != null)
+                        {
+                            foreach (var pr in profesionalesModal)
+                            {
+                                <tr>
+                                    <td>@pr.IdProfesional</td>
+                                    <td>@pr.CMP</td>
+                                    <td>@(pr.Nombres + " " + pr.Apellidos)</td>
+                                    <td>@pr.Especialidad</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btnSeleccionarProfesional"
+                                                data-id="@pr.IdProfesional"
+                                                data-nombre="@(pr.Nombres + " " + pr.Apellidos)">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -152,72 +398,94 @@
     }
 
     <script>
-        $(document).ready(function () {
-            // 1. Define los dropdowns
-            var embarazoSelect = $('#IdEmbarazo');
-            var encuentroSelect = $('#IdEncuentro');
+        document.addEventListener('DOMContentLoaded', function () {
 
-            // 2. Evento 'change' para el dropdown de Embarazo
-            embarazoSelect.on('change', function () {
-                var selectedEmbarazoId = $(this).val();
+            // ----------------- SELECCIÓN DESDE MODALS -----------------
+            document.addEventListener('click', function (e) {
 
-                // 3. Limpiar y deshabilitar el dropdown de Encuentros
-                encuentroSelect.empty();
-                encuentroSelect.attr('disabled', 'disabled');
+                // Embarazo
+                if (e.target.classList.contains('btnSeleccionarEmbarazo')) {
+                    const id     = e.target.getAttribute('data-id');
+                    const nombre = e.target.getAttribute('data-nombre');
 
-                if (selectedEmbarazoId) {
-                    // 4. Si se seleccionó un embarazo, buscar sus encuentros
-                    encuentroSelect.append($('<option>', {
-                        value: '',
-                        text: 'Cargando encuentros...'
-                    }));
+                    document.getElementById('hdnIdEmbarazo').value = id;
+                    document.getElementById('txtEmbarazo').value   = nombre;
 
-                    $.ajax({
-                        // 5. Llamada al endpoint del controlador
-                        url: '@Url.Action("GetEncuentrosPorEmbarazo", "Parto")',
-                        type: 'GET',
-                        data: { idEmbarazo: selectedEmbarazoId },
-                        success: function (data) {
-                            // 6. Éxito: Llenar el dropdown
-                            encuentroSelect.empty();
-                            encuentroSelect.append($('<option>', {
-                                value: '',
-                                text: '-- Seleccione un Encuentro (Opcional) --'
-                            }));
+                    // Reset encuentro
+                    document.getElementById('hdnIdEncuentro').value = '';
+                    document.getElementById('txtEncuentro').value   = '';
+                    document.getElementById('txtEncuentro').placeholder = '-- Seleccione Encuentro --';
 
-                            if (data.length > 0) {
-                                $.each(data, function (i, item) {
-                                    encuentroSelect.append($('<option>', {
-                                        value: item.idEncuentro,
-                                        text: item.encuentroDesc
-                                    }));
-                                });
-                                encuentroSelect.removeAttr('disabled'); // Habilitar
-                            } else {
-                                encuentroSelect.empty();
-                                encuentroSelect.append($('<option>', {
-                                    value: '',
-                                    text: 'No hay encuentros para este embarazo'
-                                }));
-                            }
-                        },
-                        error: function () {
-                            // 7. Error
-                            encuentroSelect.empty();
-                            encuentroSelect.append($('<option>', {
-                                value: '',
-                                text: 'Error al cargar encuentros'
-                            }));
-                        }
-                    });
-                } else {
-                    // 8. Si no hay embarazo seleccionado
-                    encuentroSelect.append($('<option>', {
-                        value: '',
-                        text: '-- Seleccione un embarazo primero --'
-                    }));
+                    // Habilitar botón de encuentro
+                    const btnEnc = document.getElementById('btnAbrirEncuentro');
+                    if (btnEnc) btnEnc.disabled = false;
+
+                    // Filtrar encuentros del modal
+                    filtrarEncuentrosPorEmbarazo(id);
+
+                    const modalEl = document.getElementById('modalEmbarazo');
+                    const modal   = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+
+                // Encuentro
+                if (e.target.classList.contains('btnSeleccionarEncuentro')) {
+                    const id     = e.target.getAttribute('data-id');
+                    const nombre = e.target.getAttribute('data-nombre');
+
+                    document.getElementById('hdnIdEncuentro').value = id;
+                    document.getElementById('txtEncuentro').value   = nombre;
+
+                    const modalEl = document.getElementById('modalEncuentro');
+                    const modal   = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+
+                // Profesional
+                if (e.target.classList.contains('btnSeleccionarProfesional')) {
+                    const id     = e.target.getAttribute('data-id');
+                    const nombre = e.target.getAttribute('data-nombre');
+
+                    document.getElementById('hdnIdProfesional').value = id;
+                    document.getElementById('txtProfesional').value   = nombre;
+
+                    const modalEl = document.getElementById('modalProfesional');
+                    const modal   = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
                 }
             });
+
+            // ----------------- BÚSQUEDAS POR ID -----------------
+
+            function configurarBusqueda(btnId, inputId, selectorFilas, columnaId) {
+                const btn  = document.getElementById(btnId);
+                const txt  = document.getElementById(inputId);
+
+                if (btn && txt) {
+                    btn.addEventListener('click', function () {
+                        const filtro = txt.value.trim();
+                        const filas  = document.querySelectorAll(selectorFilas);
+
+                        filas.forEach(fila => {
+                            const id = fila.children[columnaId].innerText.trim();
+                            fila.style.display = (filtro === '' || id === filtro) ? '' : 'none';
+                        });
+                    });
+                }
+            }
+
+            configurarBusqueda('btnBuscarEmbarazo',   'buscarEmbarazo',   '#modalEmbarazo tbody tr',   0);
+            configurarBusqueda('btnBuscarEncuentro',  'buscarEncuentro',  '#modalEncuentro tbody tr',  0);
+            configurarBusqueda('btnBuscarProfesional','buscarProfesional','#modalProfesional tbody tr',0);
+
+            // ----------------- FILTRO POR EMBARAZO EN MODAL ENCUENTRO -----------------
+            function filtrarEncuentrosPorEmbarazo(idEmbarazo) {
+                const filas = document.querySelectorAll('#modalEncuentro tbody tr');
+                filas.forEach(fila => {
+                    const idEmb = fila.getAttribute('data-embarazo');
+                    fila.style.display = (idEmb === idEmbarazo) ? '' : 'none';
+                });
+            }
         });
     </script>
 }

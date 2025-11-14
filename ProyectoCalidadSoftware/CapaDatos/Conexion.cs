@@ -17,7 +17,7 @@ namespace CapaAccesoDatos
             SqlConnection cn = new SqlConnection();
 
             // MODIFICADO: Apunta a TU servidor y usa tu autenticación de Windows.
-            cn.ConnectionString = "Data Source=LAPTOP-HBAEIJGS\\SQLEXPRESS;" +
+            cn.ConnectionString = "Data Source=MARACUYAKUN\\SQLEXPRESS;" +
                                   "Initial Catalog=ProyectoCalidad;" +
                                   "Integrated Security=True;"; // <-- Esto reemplaza al User ID y Password
             return cn;
