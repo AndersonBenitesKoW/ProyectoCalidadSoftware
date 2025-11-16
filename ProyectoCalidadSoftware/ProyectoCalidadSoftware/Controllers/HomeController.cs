@@ -53,6 +53,23 @@ namespace ProyectoCalidadSoftware.Controllers
                 puerperiosActivos = listaPuerperios
                     .Where(p => p.Estado && p.Fecha >= seisMesesAtras)
                     .Count();
+
+                // Datos para gráficos
+                var controlesPorMes = new List<int>();
+                var partosPorMes = new List<int>();
+                for (int i = 5; i >= 0; i--)
+                {
+                    var fecha = DateTime.Now.AddMonths(-i);
+                    var controlesCount = listaControles
+                        .Where(c => c.Fecha.Month == fecha.Month && c.Fecha.Year == fecha.Year)
+                        .Count();
+                    var partosCount = listaPartos
+                        .Where(p => p.Fecha.Month == fecha.Month && p.Fecha.Year == fecha.Year)
+                        .Count();
+                    controlesPorMes.Add(controlesCount);
+                    partosPorMes.Add(partosCount);
+                }
+
             }
             catch (Exception ex)
             {
@@ -68,6 +85,46 @@ namespace ProyectoCalidadSoftware.Controllers
                 MensajeBienvenida = "Sistema de Gestión Obstétrica - Control prenatal, parto y puerperio.",
                 EstaLogueado = HttpContext.User?.Identity?.IsAuthenticated ?? false
             };
+
+            // Datos para gráficos (fuera del try para evitar errores)
+            try
+            {
+                var listaControles = logControlPrenatal.Instancia.ListarControlPrenatal();
+                var listaPartos = logParto.Instancia.ListarPartos(true);
+                var listaEmbarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
+
+                var controlesPorMes = new List<int>();
+                var partosPorMes = new List<int>();
+                for (int i = 5; i >= 0; i--)
+                {
+                    var fecha = DateTime.Now.AddMonths(-i);
+                    var controlesCount = listaControles
+                        .Where(c => c.Fecha.Month == fecha.Month && c.Fecha.Year == fecha.Year)
+                        .Count();
+                    var partosCount = listaPartos
+                        .Where(p => p.Fecha.Month == fecha.Month && p.Fecha.Year == fecha.Year)
+                        .Count();
+                    controlesPorMes.Add(controlesCount);
+                    partosPorMes.Add(partosCount);
+                }
+
+                // Distribución por trimestres
+                var distribucionEstados = new List<int>();
+                var primerTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 12).Count();
+                var segundoTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 12 && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 26).Count();
+                var tercerTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 26).Count();
+                distribucionEstados.Add(primerTrimestre);
+                distribucionEstados.Add(segundoTrimestre);
+                distribucionEstados.Add(tercerTrimestre);
+
+                vm.ControlesPorMes = controlesPorMes;
+                vm.PartosPorMes = partosPorMes;
+                vm.DistribucionEstados = distribucionEstados;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos para gráficos del dashboard.");
+            }
 
             return View(vm);
         }

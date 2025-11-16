@@ -27,24 +27,22 @@
                     }
                     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                    <!-- === EMBARAZO: input + modal === -->
+                    <!-- === EMBARAZO: select + modal === -->
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-heart-pulse me-2"></i>Embarazo (Paciente)
                         </label>
                         <div class="input-group">
-                            <!-- Texto visible -->
-                            <input asp-for="NombrePaciente"
-                                   class="form-control"
-                                   id="txtEmbarazo"
-                                   placeholder="-- Seleccione un Embarazo (Paciente) --"
-                                   readonly />
-
-                            <!-- Id real que se envía al controlador -->
-                            <input asp-for="IdEmbarazo"
-                                   type="hidden"
-                                   id="hdnIdEmbarazo" />
-
+                            <select asp-for="IdEmbarazo" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (embarazos != null)
+                                {
+                                    foreach (var e in embarazos)
+                                    {
+                                        <option value="@e.IdEmbarazo">@e.IdEmbarazo</option>
+                                    }
+                                }
+                            </select>
                             <button type="button"
                                     class="btn btn-outline-primary"
                                     data-bs-toggle="modal"
@@ -69,24 +67,22 @@
                         <span asp-validation-for="IdTipoEncuentro" class="text-danger small"></span>
                     </div>
 
-                    <!-- === PROFESIONAL: input + modal === -->
+                    <!-- === PROFESIONAL: select + modal === -->
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud
                         </label>
                         <div class="input-group">
-                            <!-- Texto visible -->
-                            <input asp-for="NombreProfesional"
-                                   class="form-control"
-                                   id="txtProfesional"
-                                   placeholder="-- Seleccione el Profesional que atendió --"
-                                   readonly />
-
-                            <!-- Id real que se envía al controlador -->
-                            <input asp-for="IdProfesional"
-                                   type="hidden"
-                                   id="hdnIdProfesional" />
-
+                            <select asp-for="IdProfesional" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (profesionales != null)
+                                {
+                                    foreach (var p in profesionales)
+                                    {
+                                        <option value="@p.IdProfesional">@p.IdProfesional</option>
+                                    }
+                                }
+                            </select>
                             <button type="button"
                                     class="btn btn-outline-primary"
                                     data-bs-toggle="modal"
@@ -142,10 +138,12 @@
 
                 <!-- Input de ID (cortito, a la derecha) -->
                 <div style="max-width: 150px;">
-                    <input type="number"
+                    <input type="text"
                            id="buscarEmbarazo"
                            class="form-control form-control-sm text-end"
-                           placeholder="ID">
+                           placeholder="DNI"
+                           maxlength="8"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
 
             </div>
@@ -156,6 +154,7 @@
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>DNI</th>
                             <th>Paciente</th>
                             <th>FUR</th>
                             <th>FPP</th>
@@ -169,6 +168,7 @@
                             {
                                 <tr>
                                     <td>@e.IdEmbarazo</td>
+                                    <td>@e.DNIPaciente</td>
                                     <td>@e.NombrePaciente</td>
                                     <td>@e.FUR?.ToString("dd/MM/yyyy")</td>
                                     <td>@e.FPP?.ToString("dd/MM/yyyy")</td>
@@ -278,10 +278,8 @@
                 // Selección de Embarazo
                 if (e.target.classList.contains('btnSeleccionarEmbarazo')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdEmbarazo').value = id;
-                    document.getElementById('txtEmbarazo').value   = nombre;
+                    document.getElementById('IdEmbarazo').value = id;
 
                     const modalEl = document.getElementById('modalEmbarazo');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -291,10 +289,8 @@
                 // Selección de Profesional
                 if (e.target.classList.contains('btnSeleccionarProfesional')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdProfesional').value = id;
-                    document.getElementById('txtProfesional').value   = nombre;
+                    document.getElementById('IdProfesional').value = id;
 
                     const modalEl = document.getElementById('modalProfesional');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -312,9 +308,9 @@
                     const filas = document.querySelectorAll("#modalEmbarazo tbody tr");
 
                     filas.forEach(fila => {
-                        const id = fila.children[0].innerText.trim();
-                        // muestra solo el ID exacto, o todo si está vacío
-                        fila.style.display = (filtro === "" || id === filtro) ? "" : "none";
+                        const dni = fila.children[1].innerText.trim();
+                        // muestra solo el DNI exacto, o todo si está vacío
+                        fila.style.display = (filtro === "" || dni === filtro) ? "" : "none";
                     });
                 });
             }

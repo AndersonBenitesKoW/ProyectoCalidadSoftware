@@ -76,6 +76,19 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
+        // GET: /Encuentro/Detalles/5
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            var encuentro = logEncuentro.Instancia.BuscarEncuentro(id);
+            if (encuentro == null)
+            {
+                TempData["Error"] = "Encuentro no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(encuentro); // Views/Encuentro/Detalles.cshtml
+        }
+
         // GET: /Encuentro/Anular/5
         [HttpGet]
         public IActionResult Anular(int id)

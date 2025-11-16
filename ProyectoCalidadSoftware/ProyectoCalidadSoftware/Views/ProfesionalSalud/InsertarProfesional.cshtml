@@ -61,7 +61,7 @@
 
                     <div class="mb-3">
                         <label asp-for="TelefonoPrincipal" class="form-label"><i class="bi bi-phone me-1"></i> Teléfono Principal</label>
-                        <input asp-for="TelefonoPrincipal" class="form-control" />
+                        <input asp-for="TelefonoPrincipal" class="form-control" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                         <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
                     </div>
                     <hr />

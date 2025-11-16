@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";   // 👈 usa el layout del panel de administración
 }
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- Dashboard Moderno con Métricas Interactivas -->
 <div class="container-fluid px-4 py-5">
     <!-- Hero Section con Gradiente Animado -->
@@ -127,24 +129,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="chart-placeholder">
-                        <div class="chart-bars">
-                            <div class="bar" style="height: 60%"></div>
-                            <div class="bar" style="height: 80%"></div>
-                            <div class="bar" style="height: 40%"></div>
-                            <div class="bar" style="height: 90%"></div>
-                            <div class="bar" style="height: 70%"></div>
-                            <div class="bar" style="height: 85%"></div>
-                        </div>
-                        <div class="chart-labels">
-                            <span>Ene</span>
-                            <span>Feb</span>
-                            <span>Mar</span>
-                            <span>Abr</span>
-                            <span>May</span>
-                            <span>Jun</span>
-                        </div>
-                    </div>
+                    <canvas id="activityChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -157,25 +142,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="pie-chart-placeholder">
-                        <div class="pie-segment" style="background: #667eea; --percentage: 45%"></div>
-                        <div class="pie-segment" style="background: #764ba2; --percentage: 30%"></div>
-                        <div class="pie-segment" style="background: #f093fb; --percentage: 25%"></div>
-                    </div>
-                    <div class="pie-legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #667eea"></div>
-                            <span>Activos (45%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #764ba2"></div>
-                            <span>En Progreso (30%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #f093fb"></div>
-                            <span>Completados (25%)</span>
-                        </div>
-                    </div>
+                    <canvas id="distributionChart" width="250" height="250"></canvas>
                 </div>
             </div>
         </div>
@@ -250,6 +217,73 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Datos del modelo
+            const controlesPorMes = @Html.Raw(Json.Serialize(Model.ControlesPorMes));
+            const partosPorMes = @Html.Raw(Json.Serialize(Model.PartosPorMes));
+            const distribucionEstados = @Html.Raw(Json.Serialize(Model.DistribucionEstados));
+
+            // Gráfico de barras: Actividad Mensual
+            const ctxBar = document.getElementById('activityChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['6 meses atrás', '5 meses atrás', '4 meses atrás', '3 meses atrás', '2 meses atrás', 'Mes actual'],
+                    datasets: [{
+                        label: 'Controles Prenatales',
+                        data: controlesPorMes,
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Partos',
+                        data: partosPorMes,
+                        backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                        borderColor: 'rgba(118, 75, 162, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de pastel: Distribución por Estados
+            const ctxPie = document.getElementById('distributionChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Primer Trimestre', 'Segundo Trimestre', 'Tercer Trimestre'],
+                    datasets: [{
+                        data: distribucionEstados,
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(240, 147, 251, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(102, 126, 234, 1)',
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(240, 147, 251, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        });
+    </script>
+}
 
 <style>
     /* Hero Dashboard */

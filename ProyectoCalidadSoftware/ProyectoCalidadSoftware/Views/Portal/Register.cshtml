@@ -10,17 +10,22 @@
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 
 <div class="container">
-    <div class="main-content">
-        <div class="branding-section">
+    <div class="main-content register-main">
+        <div class="branding-section" style="display: block; position: relative;">
+            <video autoplay muted loop class="background-video" controls>
+                <source src="~/videos/embarazada.mp4" type="video/mp4">
+                Tu navegador no soporta el elemento video.
+            </video>
         </div>
 
         <div class="auth-section">
-            <div class="auth-card">
+            <div class="auth-card animate__animated">
 
-                <h2 style="color:white; margin-bottom:1rem;">
+                <h2 style="color:white; margin-bottom:1rem;" class="animate__animated">
                     <i class="fas fa-user-plus"></i> Crear cuenta
                 </h2>
 
@@ -30,7 +35,7 @@
 
                     <div asp-validation-summary="ModelOnly" class="text-danger message-container"></div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                         <label asp-for="Username">
                             <i class="fas fa-user"></i> Usuario
                         </label>
@@ -38,7 +43,7 @@
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                         <label asp-for="Email">
                             <i class="fas fa-envelope"></i> Correo electrónico
                         </label>
@@ -46,7 +51,7 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                         <label asp-for="Password">
                             <i class="fas fa-lock"></i> Contraseña
                         </label>
@@ -59,7 +64,7 @@
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                         <label asp-for="ConfirmPassword">
                             <i class="fas fa-lock"></i> Confirmar contraseña
                         </label>
@@ -72,10 +77,10 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group animate__animated">
                         <label asp-for="PrivacyAccepted" class="checkbox-label privacy-label">
                             <input asp-for="PrivacyAccepted" class="form-check-input" />
                             <i class="fas fa-file-contract"></i>
@@ -101,6 +106,35 @@
 
 @section Scripts {
     <script src="/js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar la tarjeta principal
+            const card = document.querySelector('.auth-card');
+            setTimeout(() => {
+                card.classList.add('animate__fadeInUp');
+            }, 100);
+
+            // Animar el título
+            const title = document.querySelector('h2');
+            setTimeout(() => {
+                title.classList.add('animate__fadeIn');
+            }, 300);
+
+            // Animar los grupos de formulario secuencialmente
+            const groups = document.querySelectorAll('.form-group');
+            groups.forEach((group, index) => {
+                setTimeout(() => {
+                    group.classList.add('animate__fadeInLeft');
+                }, 500 + (index * 200));
+            });
+
+            // Animar el botón de submit
+            const submitBtn = document.querySelector('.submit-btn');
+            setTimeout(() => {
+                submitBtn.classList.add('animate__animated', 'animate__bounceIn');
+            }, 1500);
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

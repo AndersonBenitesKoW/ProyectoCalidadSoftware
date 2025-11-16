@@ -187,10 +187,12 @@
                         Buscar
                     </button>
                     <div style="max-width:150px;">
-                        <input type="number"
+                        <input type="text"
                                id="buscarEmbarazo"
                                class="form-control form-control-sm text-end"
-                               placeholder="ID" />
+                               placeholder="DNI"
+                               maxlength="8"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     </div>
                 </div>
 
@@ -198,6 +200,7 @@
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>DNI</th>
                             <th>Paciente</th>
                             <th>FUR</th>
                             <th>FPP</th>
@@ -211,6 +214,7 @@
                             {
                                 <tr>
                                     <td>@e.IdEmbarazo</td>
+                                    <td>@e.DNIPaciente</td>
                                     <td>@e.NombrePaciente</td>
                                     <td>@e.FUR?.ToString("dd/MM/yyyy")</td>
                                     <td>@e.FPP?.ToString("dd/MM/yyyy")</td>
@@ -355,7 +359,7 @@
                 });
             }
 
-            configurarBusqueda('btnBuscarEmbarazo',   'buscarEmbarazo',   '#modalEmbarazo tbody tr',   0);
+            configurarBusqueda('btnBuscarEmbarazo',   'buscarEmbarazo',   '#modalEmbarazo tbody tr',   1);
             configurarBusqueda('btnBuscarProfesional','btnBuscarProfesional' ? 'buscarProfesional' : 'buscarProfesional', '#modalProfesional tbody tr', 0);
         });
     </script>

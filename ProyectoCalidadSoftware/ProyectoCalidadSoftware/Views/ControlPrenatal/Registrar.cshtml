@@ -35,13 +35,16 @@
                         <div class="col-md-4">
                             <label class="form-label">Embarazo (Paciente)</label>
                             <div class="input-group mb-3">
-                                <input class="form-control"
-                                       id="txtEmbarazoPrenatal"
-                                       readonly
-                                       placeholder="-- Seleccione --" />
-
-                                <input asp-for="IdEmbarazo" type="hidden" id="hdnIdEmbarazoPrenatal" />
-
+                                <select asp-for="IdEmbarazo" class="form-select">
+                                    <option value="">-- Seleccione --</option>
+                                    @if (embarazosPrenatal != null)
+                                    {
+                                        foreach (var e in embarazosPrenatal)
+                                        {
+                                            <option value="@e.IdEmbarazo">@e.NombrePaciente</option>
+                                        }
+                                    }
+                                </select>
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         data-bs-toggle="modal"
@@ -56,13 +59,16 @@
                         <div class="col-md-4">
                             <label class="form-label">Profesional que atiende</label>
                             <div class="input-group mb-3">
-                                <input class="form-control"
-                                       id="txtProfesionalPrenatal"
-                                       readonly
-                                       placeholder="-- Seleccione --" />
-
-                                <input asp-for="IdProfesional" type="hidden" id="hdnIdProfesionalPrenatal" />
-
+                                <select asp-for="IdProfesional" class="form-select">
+                                    <option value="">-- Seleccione --</option>
+                                    @if (profesionalesPrenatal != null)
+                                    {
+                                        foreach (var p in profesionalesPrenatal)
+                                        {
+                                            <option value="@p.IdProfesional">@(p.Nombres + " " + p.Apellidos)</option>
+                                        }
+                                    }
+                                </select>
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         data-bs-toggle="modal"
@@ -201,10 +207,12 @@
                         Buscar
                     </button>
                     <div style="max-width:150px;">
-                        <input type="number"
+                        <input type="text"
                                id="buscarEmbarazoPrenatal"
                                class="form-control form-control-sm text-end"
-                               placeholder="ID" />
+                               placeholder="DNI"
+                               maxlength="8"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     </div>
                 </div>
 
@@ -212,6 +220,7 @@
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>DNI</th>
                             <th>Paciente</th>
                             <th>FUR</th>
                             <th>FPP</th>
@@ -225,6 +234,7 @@
                             {
                                 <tr>
                                     <td>@e.IdEmbarazo</td>
+                                    <td>@e.DNIPaciente</td>
                                     <td>@e.NombrePaciente</td>
                                     <td>@e.FUR?.ToString("dd/MM/yyyy")</td>
                                     <td>@e.FPP?.ToString("dd/MM/yyyy")</td>
@@ -331,10 +341,8 @@
                 // Embarazo (Paciente)
                 if (e.target.classList.contains('btnSeleccionarEmbarazoPrenatal')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdEmbarazoPrenatal').value = id;
-                    document.getElementById('txtEmbarazoPrenatal').value   = nombre;
+                    document.getElementById('IdEmbarazo').value = id;
 
                     const modalEl = document.getElementById('modalEmbarazoPrenatal');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -344,10 +352,8 @@
                 // Profesional
                 if (e.target.classList.contains('btnSeleccionarProfesionalPrenatal')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdProfesionalPrenatal').value = id;
-                    document.getElementById('txtProfesionalPrenatal').value   = nombre;
+                    document.getElementById('IdProfesional').value = id;
 
                     const modalEl = document.getElementById('modalProfesionalPrenatal');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -364,8 +370,8 @@
                     const filas = document.querySelectorAll("#modalEmbarazoPrenatal tbody tr");
 
                     filas.forEach(fila => {
-                        const id = fila.children[0].innerText.trim();
-                        fila.style.display = (filtro === "" || id === filtro) ? "" : "none";
+                        const dni = fila.children[1].innerText.trim();
+                        fila.style.display = (filtro === "" || dni === filtro) ? "" : "none";
                     });
                 });
             }

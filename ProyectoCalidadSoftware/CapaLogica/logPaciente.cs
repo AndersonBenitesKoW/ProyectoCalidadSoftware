@@ -45,7 +45,7 @@ namespace CapaLogica
         }
 
         // BUSCAR (CORREGIDO)
-        public entPaciente BuscarPaciente(int id)
+        public entPaciente? BuscarPaciente(int id)
         {
             // CORRECCIÓN: Tu DA_Paciente.BuscarPorId(id) ahora devuelve
             // un 'entPaciente' directamente, no un 'DataTable'.

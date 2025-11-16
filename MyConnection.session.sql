@@ -3,11 +3,11 @@
    Versi�n con GO tras cada bloque
    ========================================================= */
 
+
 CREATE DATABASE ProyectoCalidad;
 GO
 USE ProyectoCalidad;
 GO
-
 
 
 /* ==================  SEGURIDAD / USUARIOS  ================== */
@@ -27,9 +27,10 @@ CREATE TABLE Usuario(
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
-select * from paciente
 
-
+/* SELECT *FROM PACIENTE
+select *  from Encuentro
+select * from ControlPrenatal */
 CREATE TABLE UsuarioRol(
   IdUsuarioRol INT IDENTITY(1,1) PRIMARY KEY,
   IdUsuario INT NOT NULL FOREIGN KEY REFERENCES Usuario(IdUsuario),

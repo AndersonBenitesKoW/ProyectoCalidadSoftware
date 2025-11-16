@@ -1,26 +1,26 @@
-/* CSS Variables - Medical Blue Palette */
+/* CSS Variables - Matching Home Page Palette */
 :root {
-  --primary-blue: #1e40af;
-  --primary-blue-light: #3b82f6;
+  --primary-blue: #667eea;
+  --primary-blue-light: #764ba2;
   --primary-blue-dark: #1e3a8a;
-  --secondary-blue: #60a5fa;
-  --accent-blue: #93c5fd;
+  --secondary-blue: #f093fb;
+  --accent-pink: #f5576c;
   --light-blue: #dbeafe;
   --very-light-blue: #eff6ff;
 
   --white: #ffffff;
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
   --gray-300: #cbd5e1;
   --gray-400: #94a3b8;
   --gray-500: #64748b;
-  --gray-600: #475569;
+  --gray-600: #4b5563;
   --gray-700: #334155;
-  --gray-800: #1e293b;
+  --gray-800: #1f2937;
   --gray-900: #0f172a;
 
-  --success: #10b981;
+  --success: #4ade80;
   --error: #ef4444;
   --warning: #f59e0b;
 
@@ -40,7 +40,7 @@
   --navbar-height: 70px;
   --navbar-bg: rgba(255, 255, 255, 0.95);
   --navbar-blur: blur(20px);
-  --navbar-border: rgba(59, 130, 246, 0.1);
+  --navbar-border: rgba(102, 126, 234, 0.1);
 }
 
 * {
@@ -51,13 +51,8 @@
 
 body {
   font-family: "Inter", sans-serif;
-  /* Modern background with medical image and overlay */
-  background: linear-gradient(
-      135deg,
-      rgba(76, 85, 112, 0.85) 0%,
-      rgba(115, 140, 182, 0.75) 50%,
-      rgba(147, 197, 253, 0.65) 100%
-    ), url("/assets/medical-bg.png") center / cover no-repeat fixed;
+  /* Matching home page hero gradient with pink and purple tones */
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 50%, var(--secondary-blue) 100%);
   min-height: 100vh;
   color: var(--gray-800);
   line-height: 1.6;
@@ -1123,6 +1118,25 @@ body::before {
   }
 }
 
+/* Register Page Specific Styles */
+.register-main .branding-section {
+  display: block !important;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: var(--border-radius-xl);
+}
+
 /* Responsive Design */
 @media (min-width: 1024px) {
   .branding-section {
@@ -1323,3 +1337,100 @@ h4::after {
     .navbar-custom .dropdown-header {
         color: #6c757d; /* Color de cabecera estándar */
     }
+
+/* Improved Admin Forms and Tables Typography and Design */
+.table-container h1 {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.table-container p.text-muted {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gray-600) !important;
+}
+
+.table th {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-800);
+    border-bottom: 2px solid var(--primary-blue-light);
+}
+
+.table td {
+    font-size: 0.95rem;
+    vertical-align: middle;
+    color: var(--gray-700);
+}
+
+.form-container h1 {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-container h4 {
+    color: var(--gray-700);
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+}

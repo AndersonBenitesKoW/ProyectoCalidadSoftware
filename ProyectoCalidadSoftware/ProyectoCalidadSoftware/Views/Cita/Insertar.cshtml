@@ -28,17 +28,22 @@
                     }
                     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                    <!-- PACIENTE (modal) -->
+                    <!-- PACIENTE (select con modal) -->
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-person me-2"></i>Paciente
                         </label>
                         <div class="input-group">
-                            <input class="form-control"
-                                   id="txtPaciente"
-                                   readonly
-                                   placeholder="-- Seleccione una Paciente --" />
-                            <input asp-for="IdPaciente" type="hidden" id="hdnIdPaciente" />
+                            <select asp-for="IdPaciente" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (pacientesModal != null)
+                                {
+                                    foreach (var p in pacientesModal)
+                                    {
+                                        <option value="@p.IdPaciente">@(p.Nombres + " " + p.Apellidos)</option>
+                                    }
+                                }
+                            </select>
                             <button type="button"
                                     class="btn btn-outline-primary"
                                     data-bs-toggle="modal"
@@ -49,17 +54,22 @@
                         <span asp-validation-for="IdPaciente" class="text-danger small"></span>
                     </div>
 
-                    <!-- PROFESIONAL (modal, opcional) -->
+                    <!-- PROFESIONAL (select con modal, opcional) -->
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud (Opcional)
                         </label>
                         <div class="input-group">
-                            <input class="form-control"
-                                   id="txtProfesionalCita"
-                                   readonly
-                                   placeholder="-- Asignar Profesional (Opcional) --" />
-                            <input asp-for="IdProfesional" type="hidden" id="hdnIdProfesionalCita" />
+                            <select asp-for="IdProfesional" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (profesionalesModal != null)
+                                {
+                                    foreach (var pr in profesionalesModal)
+                                    {
+                                        <option value="@pr.IdProfesional">@(pr.Nombres + " " + pr.Apellidos)</option>
+                                    }
+                                }
+                            </select>
                             <button type="button"
                                     class="btn btn-outline-primary"
                                     data-bs-toggle="modal"
@@ -69,17 +79,22 @@
                         </div>
                     </div>
 
-                    <!-- EMBARAZO (modal, opcional) -->
+                    <!-- EMBARAZO (select con modal, opcional) -->
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-heart-pulse me-2"></i>Embarazo (Si aplica)
                         </label>
                         <div class="input-group">
-                            <input class="form-control"
-                                   id="txtEmbarazoCita"
-                                   readonly
-                                   placeholder="-- Embarazo Relacionado (Opcional) --" />
-                            <input asp-for="IdEmbarazo" type="hidden" id="hdnIdEmbarazoCita" />
+                            <select asp-for="IdEmbarazo" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (embarazosModal != null)
+                                {
+                                    foreach (var e in embarazosModal)
+                                    {
+                                        <option value="@e.IdEmbarazo">@e.NombrePaciente</option>
+                                    }
+                                }
+                            </select>
                             <button type="button"
                                     class="btn btn-outline-primary"
                                     data-bs-toggle="modal"
@@ -142,10 +157,10 @@
                         Buscar
                     </button>
                     <div style="max-width:150px;">
-                        <input type="number"
+                        <input type="text"
                                id="buscarPaciente"
                                class="form-control form-control-sm text-end"
-                               placeholder="ID" />
+                               placeholder="DNI" />
                     </div>
                 </div>
 
@@ -337,10 +352,8 @@
                 // Paciente
                 if (e.target.classList.contains('btnSeleccionarPaciente')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdPaciente').value = id;
-                    document.getElementById('txtPaciente').value   = nombre;
+                    document.getElementById('IdPaciente').value = id;
 
                     const modalEl = document.getElementById('modalPaciente');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -350,10 +363,8 @@
                 // Profesional
                 if (e.target.classList.contains('btnSeleccionarProfesionalCita')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdProfesionalCita').value = id;
-                    document.getElementById('txtProfesionalCita').value   = nombre;
+                    document.getElementById('IdProfesional').value = id;
 
                     const modalEl = document.getElementById('modalProfesionalCita');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -363,10 +374,8 @@
                 // Embarazo
                 if (e.target.classList.contains('btnSeleccionarEmbarazoCita')) {
                     const id     = e.target.getAttribute('data-id');
-                    const nombre = e.target.getAttribute('data-nombre');
 
-                    document.getElementById('hdnIdEmbarazoCita').value = id;
-                    document.getElementById('txtEmbarazoCita').value   = nombre;
+                    document.getElementById('IdEmbarazo').value = id;
 
                     const modalEl = document.getElementById('modalEmbarazoCita');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -374,7 +383,7 @@
                 }
             });
 
-            // Buscar Paciente por ID
+            // Buscar Paciente por DNI
             const btnPac = document.getElementById("btnBuscarPaciente");
             const txtPac = document.getElementById("buscarPaciente");
             if (btnPac && txtPac) {
@@ -383,8 +392,8 @@
                     const filas = document.querySelectorAll("#modalPaciente tbody tr");
 
                     filas.forEach(fila => {
-                        const id = fila.children[0].innerText.trim();
-                        fila.style.display = (filtro === "" || id === filtro) ? "" : "none";
+                        const dni = fila.children[2].innerText.trim();
+                        fila.style.display = (filtro === "" || dni === filtro) ? "" : "none";
                     });
                 });
             }

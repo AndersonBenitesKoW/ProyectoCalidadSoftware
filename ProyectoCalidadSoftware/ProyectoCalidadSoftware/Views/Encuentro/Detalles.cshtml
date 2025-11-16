@@ -1,0 +1,64 @@
+@model CapaEntidad.entEncuentro
+
+@{
+    ViewData["Title"] = "Detalles del Encuentro";
+}
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-medical me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary"><i class="bi bi-person me-2"></i>Paciente</h5>
+                        <p class="mb-3">@Model.NombrePaciente</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary"><i class="bi bi-clipboard-pulse me-2"></i>Tipo de Encuentro</h5>
+                        <p class="mb-3">@Model.TipoEncuentroDesc</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary"><i class="bi bi-person-lines-fill me-2"></i>Profesional</h5>
+                        <p class="mb-3">@Model.NombreProfesional</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary"><i class="bi bi-calendar-event me-2"></i>Fecha y Hora</h5>
+                        <p class="mb-3">@Model.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary"><i class="bi bi-info-circle me-2"></i>Estado</h5>
+                        <p class="mb-3">
+                            @{
+                                string clase = Model.Estado == "Anulado" ? "text-danger" : "text-success";
+                            }
+                            <span class="@clase fw-semibold">@Model.Estado</span>
+                        </p>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Notas))
+                    {
+                        <div class="col-md-6">
+                            <h5 class="text-primary"><i class="bi bi-sticky me-2"></i>Notas</h5>
+                            <p class="mb-3">@Model.Notas</p>
+                        </div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Listar" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver a la Lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 15,
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": false,
+                "trustServerCertificate": true,
+                "instanceName": "SQL2024"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "ANDERSON\\SQL2024",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "MyConnection",
+            "database": "ProyectoCalidad",
+            "username": "vscode",
+            "password": "vscode123"
+        }
+    ]
+}

@@ -21,9 +21,13 @@ namespace CapaAccesoDatos
             List<entEmbarazo> lista = new List<entEmbarazo>();
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                using (SqlCommand cmd = new SqlCommand("sp_ListarEmbarazosActivos", cn))
+                string query = @"
+                    SELECT e.IdEmbarazo, e.IdPaciente, p.Nombres + ' ' + p.Apellidos as NombrePaciente, e.FPP, e.Estado, p.DNI
+                    FROM Embarazo e
+                    INNER JOIN Paciente p ON e.IdPaciente = p.IdPaciente
+                    WHERE e.Estado = @Estado";
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Estado", estado);
 
                     cn.Open();
@@ -36,6 +40,7 @@ namespace CapaAccesoDatos
                                 IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
                                 IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
                                 NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty,
+                                DNIPaciente = dr["DNI"].ToString() ?? string.Empty,
                                 FPP = dr["FPP"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FPP"]) : null,
                                 Estado = Convert.ToBoolean(dr["Estado"])
                             });
@@ -103,9 +108,13 @@ namespace CapaAccesoDatos
             entEmbarazo? embarazo = null;
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                using (SqlCommand cmd = new SqlCommand("sp_BuscarEmbarazoPorId", cn))
+                string query = @"
+                    SELECT e.IdEmbarazo, e.IdPaciente, p.Nombres + ' ' + p.Apellidos as NombrePaciente, e.FUR, e.FPP, e.Riesgo, e.FechaApertura, e.FechaCierre, e.Estado, p.DNI
+                    FROM Embarazo e
+                    INNER JOIN Paciente p ON e.IdPaciente = p.IdPaciente
+                    WHERE e.IdEmbarazo = @IdEmbarazo";
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@IdEmbarazo", idEmbarazo);
 
                     cn.Open();
@@ -123,7 +132,8 @@ namespace CapaAccesoDatos
                                 FechaApertura = Convert.ToDateTime(dr["FechaApertura"]),
                                 FechaCierre = dr["FechaCierre"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaCierre"]) : null,
                                 Estado = Convert.ToBoolean(dr["Estado"]),
-                                NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty
+                                NombrePaciente = dr["NombrePaciente"].ToString() ?? string.Empty,
+                                DNIPaciente = dr["DNI"].ToString() ?? string.Empty
                             };
                         }
                     }

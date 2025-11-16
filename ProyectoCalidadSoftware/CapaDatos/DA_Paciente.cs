@@ -144,9 +144,9 @@ namespace CapaAccesoDatos
         }
 
         // Reemplaza el método que devolvía DataTable
-        public entPaciente BuscarPorId(int idPaciente)
+        public entPaciente? BuscarPorId(int idPaciente)
         {
-            entPaciente paciente = null;
+            entPaciente? paciente = null;
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {

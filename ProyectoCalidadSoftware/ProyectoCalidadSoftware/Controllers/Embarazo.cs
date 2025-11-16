@@ -66,11 +66,27 @@ namespace ProyectoCalidadSoftware.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult RegistrarEmbarazo(entEmbarazo embarazo)
         {
+            System.Diagnostics.Debug.WriteLine($"[LOG] IdPaciente recibido: {embarazo.IdPaciente}");
+            System.Diagnostics.Debug.WriteLine($"[LOG] ModelState.IsValid: {ModelState.IsValid}");
+            System.Diagnostics.Debug.WriteLine($"[LOG] FUR: {embarazo.FUR}, FPP: {embarazo.FPP}, Riesgo: {embarazo.Riesgo}");
+
             if (ModelState.IsValid && embarazo.IdPaciente > 0)
             {
+                System.Diagnostics.Debug.WriteLine($"[LOG] Entrando al try, IdPaciente: {embarazo.IdPaciente}");
                 try
                 {
+                    // Verificar que el paciente existe y está activo
+                    entPaciente? paciente = logPaciente.Instancia.BuscarPaciente(embarazo.IdPaciente);
+                    System.Diagnostics.Debug.WriteLine($"[LOG] Paciente encontrado: {paciente != null}, Estado: {paciente?.Estado}");
+                    if (paciente == null || !paciente.Estado)
+                    {
+                        ViewBag.MensajeError = "El paciente seleccionado no existe o no está activo.";
+                        CargarViewBags(embarazo);
+                        return View(embarazo);
+                    }
+
                     int idGenerado = logEmbarazo.Instancia.RegistrarEmbarazo(embarazo);
+                    System.Diagnostics.Debug.WriteLine($"[LOG] ID generado: {idGenerado}");
 
                     if (idGenerado > 0)
                     {
@@ -85,11 +101,13 @@ namespace ProyectoCalidadSoftware.Controllers
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[LOG] Error en try: {ex.Message}");
                     ViewBag.MensajeError = "Ocurrió un error en el servidor: " + ex.Message;
                 }
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine($"[LOG] No entró al try, IdPaciente: {embarazo.IdPaciente}, ModelState errors: {string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))}");
                 if (embarazo.IdPaciente <= 0)
                 {
                     ViewBag.MensajeError = "Error: Debe seleccionar una paciente de la lista.";
@@ -173,11 +191,15 @@ namespace ProyectoCalidadSoftware.Controllers
                 });
                 ViewBag.ListaPacientes = new SelectList(listaPacientesFormateada, "Value", "Text", embarazo?.IdPaciente);
 
+                // Para modal
+                ViewBag.PacientesModal = pacientes;
+
             }
             catch (Exception ex)
             {
                 ViewBag.Error = "Error al cargar la lista de pacientes: " + ex.Message;
                 ViewBag.ListaPacientes = new SelectList(new List<SelectListItem>());
+                ViewBag.PacientesModal = new List<entPaciente>();
             }
         }
     }

@@ -137,6 +137,9 @@
                 <div class="navbar-actions d-flex gap-2">
                     @if (User.IsInRole("ADMIN"))
                     {
+                        <a class="btn btn-cta-primary" asp-controller="Portal" asp-action="Index">
+                            <i class="fas fa-globe me-1"></i>Portal Público
+                        </a>
                         <div class="dropdown">
                             <button class="btn btn-cta-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-cog me-1"></i>Admin
@@ -145,11 +148,6 @@
                                 <li>
                                     <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
                                         <i class="fas fa-users me-2"></i>Gestionar Usuarios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Portal" asp-action="Index">
-                                        <i class="fas fa-globe me-2"></i>Portal Público
                                     </a>
                                 </li>
                             </ul>

@@ -68,6 +68,9 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group" role="group">
+                                        <a asp-action="Detalles" asp-route-id="@item.IdEncuentro" class="btn btn-sm btn-outline-primary" title="Ver Detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
                                         @if (item.Estado != "Anulado")
                                         {
                                             <a asp-action="Anular" asp-route-id="@item.IdEncuentro" class="btn btn-sm btn-outline-danger" title="Anular Encuentro">

@@ -12,5 +12,6 @@
         public bool Estado { get; set; }
 
         public string NombrePaciente { get; set; } = string.Empty;
+        public string DNIPaciente { get; set; } = string.Empty;
     }
 }

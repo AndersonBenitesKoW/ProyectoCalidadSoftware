@@ -9,6 +9,10 @@
         public string? MensajeBienvenida { get; set; }
         public bool EstaLogueado { get; set; }
 
+        // Datos para gráficos
+        public List<int> ControlesPorMes { get; set; } = new List<int>();
+        public List<int> PartosPorMes { get; set; } = new List<int>();
+        public List<int> DistribucionEstados { get; set; } = new List<int>(); // Activos, En Progreso, Completados
 
     }
 }
