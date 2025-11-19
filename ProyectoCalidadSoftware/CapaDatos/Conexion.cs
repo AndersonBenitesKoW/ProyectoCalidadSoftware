@@ -26,6 +26,7 @@ namespace CapaAccesoDatos
         //          "Initial Catalog=ProyectoCalidad;" +
         //          "User ID=tuUsuarioSQL;" +
         //          "Password=tuContraseñaSQL;";
+        //
 
     }
 
