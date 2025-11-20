@@ -116,8 +116,22 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
+                                <input asp-for="HoraExpulsion" class="form-control" type="time" />
+                                <label asp-for="HoraExpulsion">Hora Expulsión</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
                                 <input asp-for="Membranas" class="form-control" placeholder="Integras/Rotas" />
                                 <label asp-for="Membranas">Membranas</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TiempoRoturaMembranasHoras" class="form-control" type="number" />
+                                <label asp-for="TiempoRoturaMembranasHoras">Tiempo Rotura (horas)</label>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -126,6 +140,12 @@
                                     <option value="">-- Líquido Amniótico --</option>
                                 </select>
                                 <label asp-for="IdLiquido"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="AspectoLiquido" class="form-control" />
+                                <label asp-for="AspectoLiquido">Aspecto Líquido</label>
                             </div>
                         </div>
                     </div>
@@ -144,16 +164,58 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
+                                <input asp-for="TipoParto" class="form-control" />
+                                <label asp-for="TipoParto">Tipo de Parto</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
                                 <input asp-for="Analgesia" class="form-control" />
                                 <label asp-for="Analgesia">Analgesia</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PosicionMadre" class="form-control" />
+                                <label asp-for="PosicionMadre">Posición Madre</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Acompanante" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Acompanante" class="form-check-label">Acompañante</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="LugarNacimiento" class="form-control" />
+                                <label asp-for="LugarNacimiento">Lugar Nacimiento</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="DuracionSegundaEtapaMinutos" class="form-control" type="number" />
+                                <label asp-for="DuracionSegundaEtapaMinutos">Duración 2da Etapa (min)</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
                                 <input asp-for="PerdidasML" class="form-control" type="number" />
-                                <label asp-for="PerdidasML"></label>
+                                <label asp-for="PerdidasML">Pérdidas (ml)</label>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Episiotomia" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Episiotomia" class="form-check-label">Episiotomía</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating mb-3">
                                 <input asp-for="IndicacionCesarea" class="form-control" placeholder="N/A" />
@@ -177,6 +239,60 @@
                             <div class="form-floating mb-3">
                                 <textarea asp-for="Complicaciones" class="form-control" placeholder="N/A" style="height: 100px"></textarea>
                                 <label asp-for="Complicaciones">Otras Complicaciones</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="ComplicacionesMaternas" class="form-control" placeholder="N/A" style="height: 80px"></textarea>
+                                <label asp-for="ComplicacionesMaternas">Complicaciones Maternas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="SeguroTipo" class="form-control" />
+                                <label asp-for="SeguroTipo">Tipo de Seguro</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroHijosPrevios" class="form-control" type="number" />
+                                <label asp-for="NumeroHijosPrevios">Hijos Previos</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroCesareasPrevias" class="form-control" type="number" />
+                                <label asp-for="NumeroCesareasPrevias">Cesáreas Previas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="EmbarazoMultiple" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="EmbarazoMultiple" class="form-check-label">Embarazo Múltiple</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroGemelos" class="form-control" type="number" />
+                                <label asp-for="NumeroGemelos">Número Gemelos</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Derivacion" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Derivacion" class="form-check-label">Derivación</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Observaciones" class="form-control" placeholder="N/A" style="height: 80px"></textarea>
+                                <label asp-for="Observaciones">Observaciones</label>
                             </div>
                         </div>
                     </div>

@@ -48,7 +48,7 @@ namespace CapaAccesoDatos
             return lista;
         }
 
-        public bool Insertar(entEncuentro entidad)
+        public int Insertar(entEncuentro entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
@@ -61,8 +61,7 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
 
                 cn.Open();
-                cmd.ExecuteNonQuery();
-                return true;
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 

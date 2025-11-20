@@ -59,6 +59,22 @@
                         <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="Lactancia" class="form-control" /><label asp-for="Lactancia">Lactancia</label> </div> </div>
                         <div class="col-md-3"> <div class="form-floating mb-3"> <select asp-for="SignosInfeccion" class="form-select"> <option value="">-- Seleccione --</option> <option value="true">Sí</option> <option value="false">No</option> </select> <label asp-for="SignosInfeccion"></label> </div> </div>
                         <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="TamizajeDepresion" class="form-control" /><label asp-for="TamizajeDepresion"></label> </div> </div>
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="DiasPosparto" class="form-control" type="number" /><label asp-for="DiasPosparto">Días Posparto</label> </div> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="InvolucionUterina" class="form-control" /><label asp-for="InvolucionUterina">Involución Uterina</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="HemorragiaResidual" class="form-control" /><label asp-for="HemorragiaResidual">Hemorragia Residual</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-check mb-3"> <input asp-for="ApoyoLactancia" class="form-check-input" /> <label asp-for="ApoyoLactancia" class="form-check-label">Apoyo Lactancia</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-check mb-3"> <input asp-for="ConsejoPlanificacion" class="form-check-input" /> <label asp-for="ConsejoPlanificacion" class="form-check-label">Consejo Planificación</label> </div> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="VisitaDomiciliariaFecha" class="form-control" type="date" /><label asp-for="VisitaDomiciliariaFecha">Fecha Visita Domiciliaria</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <input asp-for="SeguroTipo" class="form-control" /><label asp-for="SeguroTipo">Tipo de Seguro</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-floating mb-3"> <textarea asp-for="ComplicacionesMaternas" class="form-control" style="height: 60px"></textarea><label asp-for="ComplicacionesMaternas">Complicaciones Maternas</label> </div> </div>
+                        <div class="col-md-3"> <div class="form-check mb-3"> <input asp-for="Derivacion" class="form-check-input" /> <label asp-for="Derivacion" class="form-check-label">Derivación</label> </div> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"> <div class="form-floating mb-3"> <input asp-for="EstablecimientoAtencion" class="form-control" /><label asp-for="EstablecimientoAtencion">Establecimiento de Atención</label> </div> </div>
                     </div>
 
                     <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Planificación Familiar y Notas</h5>

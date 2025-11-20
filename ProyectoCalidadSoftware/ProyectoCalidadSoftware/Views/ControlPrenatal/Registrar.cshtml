@@ -5,6 +5,7 @@
 
     var embarazosPrenatal = ViewBag.EmbarazosModalPrenatal as IEnumerable<CapaEntidad.entEmbarazo>;
     var profesionalesPrenatal = ViewBag.ProfesionalesModalPrenatal as IEnumerable<CapaEntidad.entProfesionalSalud>;
+    var tiposAyuda = ViewBag.TiposAyudaDiagnostica as IEnumerable<SelectListItem>;
 }
 
 <div class="row">
@@ -94,26 +95,92 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="PesoKg" class="form-control" type="number" step="0.1" />
+                                <input asp-for="PesoKg" class="form-control" type="number" placeholder="25-250 kg" />
                                 <label asp-for="PesoKg">Peso (Kg)</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="TallaM" class="form-control" type="number" step="0.01" />
+                                <input asp-for="PesoPreGestacionalKg" class="form-control" type="number" />
+                                <label asp-for="PesoPreGestacionalKg">Peso Pre-Gestacional (Kg)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TallaM" class="form-control" type="number" placeholder="1.20-2.20 m" />
                                 <label asp-for="TallaM">Talla (m)</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="PA_Sistolica" class="form-control" type="number" />
+                                <input asp-for="IMCPreGestacional" class="form-control" type="number" />
+                                <label asp-for="IMCPreGestacional">IMC Pre-Gestacional</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PA_Sistolica" class="form-control" type="number" placeholder="50-250 mmHg" />
                                 <label asp-for="PA_Sistolica">PA Sistólica (mmHg)</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="PA_Diastolica" class="form-control" type="number" />
+                                <input asp-for="PA_Diastolica" class="form-control" type="number" placeholder="30-180 mmHg" />
                                 <label asp-for="PA_Diastolica">PA Diastólica (mmHg)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Pulso" class="form-control" type="number" />
+                                <label asp-for="Pulso">Pulso (lpm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="FrecuenciaRespiratoria" class="form-control" type="number" />
+                                <label asp-for="FrecuenciaRespiratoria">Frecuencia Respiratoria</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Temperatura" class="form-control" type="number" />
+                                <label asp-for="Temperatura">Temperatura (°C)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroControl" class="form-control" type="number" />
+                                <label asp-for="NumeroControl">Número de Control</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="EdadGestSemanas" class="form-control" type="number" />
+                                <label asp-for="EdadGestSemanas">Edad Gestacional (Semanas)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="EdadGestDias" class="form-control" type="number" />
+                                <label asp-for="EdadGestDias">Edad Gestacional (Días)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="MetodoEdadGest" class="form-control" />
+                                <label asp-for="MetodoEdadGest">Método Edad Gestacional</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TipoEmbarazo" class="form-control" />
+                                <label asp-for="TipoEmbarazo">Tipo de Embarazo</label>
                             </div>
                         </div>
                     </div>
@@ -123,13 +190,13 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="AlturaUterina_cm" class="form-control" type="number" step="0.1" />
+                                <input asp-for="AlturaUterina_cm" class="form-control" type="number" />
                                 <label asp-for="AlturaUterina_cm">Altura Uterina (cm)</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="FCF_bpm" class="form-control" type="number" />
+                                <input asp-for="FCF_bpm" class="form-control" type="number" placeholder="60-220 lpm" />
                                 <label asp-for="FCF_bpm">FCF (lpm)</label>
                             </div>
                         </div>
@@ -141,21 +208,160 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="Proteinuria" class="form-control" />
-                                <label asp-for="Proteinuria">Proteinuria (trazas)</label>
+                                <input asp-for="DinamicaUterina" class="form-control" />
+                                <label asp-for="DinamicaUterina">Dinámica Uterina</label>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="LiquidoAmniotico" class="form-control" />
+                                <label asp-for="LiquidoAmniotico">Líquido Amniótico</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="IndiceLiquidoAmniotico" class="form-control" type="number" />
+                                <label asp-for="IndiceLiquidoAmniotico">Índice Líquido Amniótico</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PerfilBiofisico" class="form-control" />
+                                <label asp-for="PerfilBiofisico">Perfil Biofísico</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Proteinuria" class="form-control" />
+                                <label asp-for="Proteinuria">Proteinuria</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Edemas" class="form-control" />
+                                <label asp-for="Edemas">Edemas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Reflejos" class="form-control" />
+                                <label asp-for="Reflejos">Reflejos</label>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-floating mb-3">
-                                <select asp-for="MovFetales" class="form-select">
-                                    <option value="">-- No Registrar --</option>
-                                    <option value="true">Sí</option>
-                                    <option value="false">No</option>
-                                </select>
-                                <label asp-for="MovFetales">Paciente refiere Movimientos Fetales</label>
+                                <input asp-for="Hemoglobina" class="form-control" type="number" />
+                                <label asp-for="Hemoglobina">Hemoglobina (g/dL)</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="ResultadoVIH" class="form-control" />
+                                <label asp-for="ResultadoVIH">Resultado VIH</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="ResultadoSifilis" class="form-control" />
+                                <label asp-for="ResultadoSifilis">Resultado Sífilis</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="GrupoSanguineoRh" class="form-control" />
+                                <label asp-for="GrupoSanguineoRh">Grupo Sanguíneo Rh</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check mb-3">
+                                <input asp-for="EcografiaRealizada" class="form-check-input" type="checkbox" />
+                                <label asp-for="EcografiaRealizada" class="form-check-label">Ecografía Realizada</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="FechaEcografia" class="form-control" type="date" />
+                                <label asp-for="FechaEcografia">Fecha Ecografía</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="LugarEcografia" class="form-control" />
+                                <label asp-for="LugarEcografia">Lugar Ecografía</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mb-3">
+                                <input asp-for="PlanPartoEntregado" class="form-check-input" type="checkbox" />
+                                <label asp-for="PlanPartoEntregado" class="form-check-label">Plan Parto Entregado</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="MicronutrientesEntregados" class="form-control" />
+                                <label asp-for="MicronutrientesEntregados">Micronutrientes Entregados</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mb-3">
+                                <input asp-for="ViajoUltSemanas" class="form-check-input" type="checkbox" />
+                                <label asp-for="ViajoUltSemanas" class="form-check-label">Viajó Últimas Semanas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mb-3">
+                                <input asp-for="ReferenciaObstetrica" class="form-check-input" type="checkbox" />
+                                <label asp-for="ReferenciaObstetrica" class="form-check-label">Referencia Obstétrica</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="ProximaCitaFecha" class="form-control" type="date" />
+                                <label asp-for="ProximaCitaFecha">Próxima Cita Fecha</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input asp-for="EstablecimientoAtencion" class="form-control" />
+                                <label asp-for="EstablecimientoAtencion">Establecimiento de Atención</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clipboard-data me-2"></i>Ayudas Diagnósticas Solicitadas</h5>
+                    <hr class="mt-0" />
+                    <div class="mb-3">
+                        <button type="button" id="btnAgregarAyuda" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Agregar Ayuda Diagnóstica
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tablaAyudas">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tipo de Ayuda</th>
+                                    <th>Descripción</th>
+                                    <th>Urgente</th>
+                                    <th>Comentario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas dinámicas -->
+                            </tbody>
+                        </table>
                     </div>
 
                     <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Notas Adicionales</h5>
@@ -333,7 +539,14 @@
     }
 
     <script>
+        let contadorAyudas = 0;
+
         document.addEventListener('DOMContentLoaded', function () {
+
+            // Botón agregar ayuda
+            document.getElementById('btnAgregarAyuda').addEventListener('click', function () {
+                agregarFilaAyuda();
+            });
 
             // Selección desde los modals
             document.addEventListener('click', function (e) {
@@ -358,6 +571,11 @@
                     const modalEl = document.getElementById('modalProfesionalPrenatal');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
                     if (modal) modal.hide();
+                }
+
+                // Eliminar fila ayuda
+                if (e.target.classList.contains('btnEliminarAyuda')) {
+                    e.target.closest('tr').remove();
                 }
             });
 
@@ -391,5 +609,34 @@
                 });
             }
         });
+
+        function agregarFilaAyuda() {
+            const tbody = document.querySelector('#tablaAyudas tbody');
+            const row = document.createElement('tr');
+
+            let opcionesTipo = '<option value="">-- Seleccione --</option>';
+            @if (tiposAyuda != null)
+            {
+                foreach (var tipo in tiposAyuda)
+                {
+                    <text>opcionesTipo += '<option value="@tipo.Value">@tipo.Text</option>';</text>
+                }
+            }
+
+            row.innerHTML = `
+                <td>
+                    <select name="AyudasDiagnosticas[${contadorAyudas}].IdTipoAyuda" class="form-select">
+                        ${opcionesTipo}
+                    </select>
+                </td>
+                <td><input type="text" name="AyudasDiagnosticas[${contadorAyudas}].DescripcionAyuda" class="form-control" placeholder="Descripción específica" /></td>
+                <td><input type="checkbox" name="AyudasDiagnosticas[${contadorAyudas}].Urgente" value="true" class="form-check-input" /></td>
+                <td><input type="text" name="AyudasDiagnosticas[${contadorAyudas}].Comentario" class="form-control" placeholder="Comentario" /></td>
+                <td><button type="button" class="btn btn-danger btn-sm btnEliminarAyuda"><i class="bi bi-trash"></i></button></td>
+            `;
+
+            tbody.appendChild(row);
+            contadorAyudas++;
+        }
     </script>
 }

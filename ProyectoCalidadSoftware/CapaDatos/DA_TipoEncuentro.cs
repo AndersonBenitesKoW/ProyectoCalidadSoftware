@@ -16,6 +16,18 @@ namespace CapaAccesoDatos
         }
         #endregion
 
+        public short ObtenerIdPorCodigo(string codigo)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("SELECT IdTipoEncuentro FROM TipoEncuentro WHERE Codigo = @Codigo", cn))
+            {
+                cmd.Parameters.AddWithValue("@Codigo", codigo);
+                cn.Open();
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt16(result) : (short)0;
+            }
+        }
+
         #region Métodos
 
         // Este es el único método que necesitamos para este módulo

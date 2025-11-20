@@ -49,7 +49,7 @@ namespace CapaAccesoDatos
             return lista;
         }
 
-        public bool Insertar(entAyudaDiagnosticaOrden entidad)
+        public int Insertar(entAyudaDiagnosticaOrden entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
@@ -62,8 +62,7 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@Descripcion", (object)entidad.Descripcion ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Urgente", entidad.Urgente);
                 cn.Open();
-                cmd.ExecuteNonQuery();
-                return true;
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 

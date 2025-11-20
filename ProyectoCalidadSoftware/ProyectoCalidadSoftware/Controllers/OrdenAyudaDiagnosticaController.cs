@@ -51,7 +51,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 entidad.Estado = "Activo";
 
-                bool ok = logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad);
+                bool ok =Convert.ToBoolean(logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad));
                 if (ok) return RedirectToAction(nameof(Listar));
 
                 ViewBag.Error = "No se pudo insertar la orden de ayuda diagnóstica.";

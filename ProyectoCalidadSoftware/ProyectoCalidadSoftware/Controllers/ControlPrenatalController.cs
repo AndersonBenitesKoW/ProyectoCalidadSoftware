@@ -49,35 +49,85 @@ namespace ProyectoCalidadSoftware.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entControlPrenatal control)
         {
+            Console.WriteLine("LOG: Iniciando registro de Control Prenatal");
+            Console.WriteLine($"LOG: IdEmbarazo={control.IdEmbarazo}, Fecha={control.Fecha}, IdProfesional={control.IdProfesional}");
             try
             {
                 if (control.IdEmbarazo <= 0)
                     ModelState.AddModelError(nameof(control.IdEmbarazo), "Debe seleccionar un embarazo válido.");
                 if (control.Fecha == default)
                     ModelState.AddModelError(nameof(control.Fecha), "Debe ingresar una fecha válida.");
-                if (control.IdProfesional <= 0)
-                    ModelState.AddModelError(nameof(control.IdProfesional), "Debe seleccionar un profesional.");
+                // IdProfesional es opcional según la tabla
 
                 if (!ModelState.IsValid)
                 {
+                    Console.WriteLine("LOG: ModelState no válido");
                     CargarViewBags(control);
                     return View(control);
                 }
 
-                bool registrado = logControlPrenatal.Instancia.InsertarControlPrenatal(control);
+                Console.WriteLine("LOG: ModelState válido, procediendo a registrar");
 
-                if (registrado)
+                // Obtener idProfesional del usuario logueado (asumiendo que está en sesión o claims)
+                int idProfesional = 1; // TODO: Obtener del contexto de usuario logueado
+                Console.WriteLine($"LOG: Usando idProfesional={idProfesional}");
+                int idControl = logControlPrenatal.Instancia.RegistrarControlPrenatalConEncuentro(control, idProfesional);
+                Console.WriteLine($"LOG: idControl retornado={idControl}");
+
+                if (idControl > 0)
                 {
+                    Console.WriteLine("LOG: Control registrado, procesando ayudas diagnósticas");
+                    // Insertar ayudas diagnósticas
+                    var embarazo = logEmbarazo.Instancia.BuscarEmbarazoPorId(control.IdEmbarazo);
+                    Console.WriteLine($"LOG: Embarazo encontrado: {embarazo != null}, IdPaciente={embarazo?.IdPaciente}");
+                    if (embarazo != null)
+                    {
+                        foreach (var ayuda in control.AyudasDiagnosticas.Where(a => a.IdTipoAyuda.HasValue && a.IdTipoAyuda > 0))
+                        {
+                            Console.WriteLine($"LOG: Procesando ayuda: IdTipoAyuda={ayuda.IdTipoAyuda}");
+                            // Crear la orden de ayuda diagnóstica
+                            var orden = new entAyudaDiagnosticaOrden
+                            {
+                                IdPaciente = embarazo.IdPaciente,
+                                IdEmbarazo = control.IdEmbarazo,
+                                IdProfesional = control.IdProfesional,
+                                IdTipoAyuda = ayuda.IdTipoAyuda,
+                                Descripcion = ayuda.DescripcionAyuda,
+                                Urgente = ayuda.Urgente,
+                                Estado = "Solicitada"
+                            };
+                            int idAyuda = logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(orden);
+                            Console.WriteLine($"LOG: idAyuda insertado={idAyuda}");
+
+                            if (idAyuda > 0)
+                            {
+                                // Insertar en la tabla puente
+                                var puente = new entControlPrenatal_AyudaDiagnostica
+                                {
+                                    IdControl = idControl,
+                                    IdAyuda = idAyuda,
+                                    FechaOrden = DateTime.Now,
+                                    Comentario = ayuda.Comentario
+                                };
+                                logControlPrenatal_AyudaDiagnostica.Instancia.InsertarAyudaDiagnosticaAlControl(puente);
+                                Console.WriteLine("LOG: Puente insertado");
+                            }
+                        }
+                    }
+
+                    Console.WriteLine("LOG: Registro completado exitosamente");
                     TempData["Ok"] = "Control prenatal registrado correctamente.";
                     return RedirectToAction(nameof(Listar));
                 }
 
+                Console.WriteLine("LOG: No se pudo registrar el control prenatal");
                 ViewBag.Error = "No se pudo registrar el control prenatal.";
                 CargarViewBags(control);
                 return View(control);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"LOG: Error en registro: {ex.Message}");
                 ViewBag.Error = "Error al registrar: " + ex.Message;
                 CargarViewBags(control);
                 return View(control);
@@ -94,6 +144,8 @@ namespace ProyectoCalidadSoftware.Controllers
                 TempData["Error"] = "Control no encontrado.";
                 return RedirectToAction(nameof(Listar));
             }
+            // Cargar ayudas diagnósticas asociadas
+            control.AyudasDiagnosticas = logControlPrenatal_AyudaDiagnostica.Instancia.ListarAyudasPorControl(id);
             CargarViewBags(control);
             return View(control); // Views/ControlPrenatal/Editar.cshtml
         }
@@ -115,6 +167,46 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 if (editado)
                 {
+                    // Gestionar ayudas diagnósticas: eliminar existentes y reinsertar
+                    var ayudasExistentes = logControlPrenatal_AyudaDiagnostica.Instancia.ListarAyudasPorControl(control.IdControlPrenatal);
+                    foreach (var ayuda in ayudasExistentes)
+                    {
+                        logControlPrenatal_AyudaDiagnostica.Instancia.InhabilitarAyudaDiagnosticaDelControl(ayuda.IdCP_AD);
+                    }
+
+                    var embarazo = logEmbarazo.Instancia.BuscarEmbarazoPorId(control.IdEmbarazo);
+                    if (embarazo != null)
+                    {
+                        foreach (var ayuda in control.AyudasDiagnosticas.Where(a => a.IdTipoAyuda.HasValue && a.IdTipoAyuda > 0))
+                        {
+                            // Crear la orden de ayuda diagnóstica
+                            var orden = new entAyudaDiagnosticaOrden
+                            {
+                                IdPaciente = embarazo.IdPaciente,
+                                IdEmbarazo = control.IdEmbarazo,
+                                IdProfesional = control.IdProfesional,
+                                IdTipoAyuda = ayuda.IdTipoAyuda,
+                                Descripcion = ayuda.DescripcionAyuda,
+                                Urgente = ayuda.Urgente,
+                                Estado = "Solicitada"
+                            };
+                            int idAyuda = logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(orden);
+
+                            if (idAyuda > 0)
+                            {
+                                // Insertar en la tabla puente
+                                var puente = new entControlPrenatal_AyudaDiagnostica
+                                {
+                                    IdControl = control.IdControlPrenatal,
+                                    IdAyuda = idAyuda,
+                                    FechaOrden = DateTime.Now,
+                                    Comentario = ayuda.Comentario
+                                };
+                                logControlPrenatal_AyudaDiagnostica.Instancia.InsertarAyudaDiagnosticaAlControl(puente);
+                            }
+                        }
+                    }
+
                     TempData["Ok"] = "Control prenatal actualizado.";
                     return RedirectToAction(nameof(Listar));
                 }
@@ -216,6 +308,10 @@ namespace ProyectoCalidadSoftware.Controllers
                     "Nombre",
                     control?.IdProfesional
                 );
+
+                // ---------- TIPOS DE AYUDA DIAGNÓSTICA ----------
+                var tiposAyuda = logTipoAyudaDiagnostica.Instancia.ListarTiposAyuda();
+                ViewBag.TiposAyudaDiagnostica = new SelectList(tiposAyuda, "IdTipoAyuda", "Nombre");
             }
             catch (Exception ex)
             {

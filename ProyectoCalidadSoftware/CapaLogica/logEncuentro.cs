@@ -28,7 +28,7 @@ namespace CapaLogica
             }
         }
 
-        public bool InsertarEncuentro(entEncuentro entidad)
+        public int InsertarEncuentro(entEncuentro entidad)
         {
             try
             {

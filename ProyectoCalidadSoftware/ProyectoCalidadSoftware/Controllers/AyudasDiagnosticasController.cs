@@ -82,7 +82,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     return View(entidad);
                 }
 
-                bool ok = logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad);
+                bool ok = Convert.ToBoolean(logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad));
                 if (ok)
                 {
                     TempData["Ok"] = "Orden de ayuda diagnóstica registrada.";
@@ -126,6 +126,7 @@ namespace ProyectoCalidadSoftware.Controllers
         public IActionResult Anular(int id)
         {
             // (Esta llamada a "BuscarOrden" está bien,
+            // ya que no la renombramos en la capa lógica)
             // ya que no la renombramos en la capa lógica)
             var orden = logAyudaDiagnosticaOrden.Instancia.BuscarOrden(id);
             if (orden == null)

@@ -50,6 +50,26 @@
                     <dd class="col-sm-3">@(Model.SignosInfeccion == true ? "Sí" : "No")</dd>
                     <dt class="col-sm-3">Tamizaje Depresión</dt>
                     <dd class="col-sm-9">@Model.TamizajeDepresion</dd>
+                    <dt class="col-sm-3">Días Posparto</dt>
+                    <dd class="col-sm-3">@Model.DiasPosparto</dd>
+                    <dt class="col-sm-3">Involución Uterina</dt>
+                    <dd class="col-sm-3">@Model.InvolucionUterina</dd>
+                    <dt class="col-sm-3">Hemorragia Residual</dt>
+                    <dd class="col-sm-3">@Model.HemorragiaResidual</dd>
+                    <dt class="col-sm-3">Apoyo Lactancia</dt>
+                    <dd class="col-sm-3">@(Model.ApoyoLactancia == true ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Consejo Planificación</dt>
+                    <dd class="col-sm-3">@(Model.ConsejoPlanificacion == true ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Fecha Visita Domiciliaria</dt>
+                    <dd class="col-sm-3">@Model.VisitaDomiciliariaFecha?.ToString("dd/MM/yyyy")</dd>
+                    <dt class="col-sm-3">Tipo de Seguro</dt>
+                    <dd class="col-sm-3">@Model.SeguroTipo</dd>
+                    <dt class="col-sm-3">Complicaciones Maternas</dt>
+                    <dd class="col-sm-9">@Model.ComplicacionesMaternas</dd>
+                    <dt class="col-sm-3">Derivación</dt>
+                    <dd class="col-sm-3">@(Model.Derivacion == true ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Establecimiento de Atención</dt>
+                    <dd class="col-sm-9">@Model.EstablecimientoAtencion</dd>
                 </dl>
 
                 <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Planificación y Notas</h5>

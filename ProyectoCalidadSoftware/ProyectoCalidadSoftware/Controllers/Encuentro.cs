@@ -57,7 +57,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     return View(entidad);
                 }
 
-                bool ok = logEncuentro.Instancia.InsertarEncuentro(entidad);
+                bool ok = Convert.ToBoolean(logEncuentro.Instancia.InsertarEncuentro(entidad));
                 if (ok)
                 {
                     TempData["Ok"] = "Encuentro registrado correctamente.";

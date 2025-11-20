@@ -28,5 +28,17 @@ namespace CapaLogica
                 throw new ApplicationException("Error al listar tipos de encuentro: " + ex.Message, ex);
             }
         }
+
+        public short ObtenerIdPorCodigo(string codigo)
+        {
+            try
+            {
+                return DA_TipoEncuentro.Instancia.ObtenerIdPorCodigo(codigo);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al obtener ID del tipo de encuentro: " + ex.Message, ex);
+            }
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace CapaLogica
 
         // ==== CORRECCIÓN ====
         // Renombrado de "InsertarOrden" a "InsertarAyudaDiagnosticaOrden"
-        public bool InsertarAyudaDiagnosticaOrden(entAyudaDiagnosticaOrden entidad)
+        public int InsertarAyudaDiagnosticaOrden(entAyudaDiagnosticaOrden entidad)
         {
             try
             {

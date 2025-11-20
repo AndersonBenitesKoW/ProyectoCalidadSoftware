@@ -39,10 +39,50 @@ namespace CapaEntidad
         public string? Complicaciones { get; set; }
         public bool Estado { get; set; }
 
+        // Campos adicionales de la tabla Parto
+        [DataType(DataType.Time)]
+        public DateTime? HoraExpulsion { get; set; }
+
+        public string? TipoParto { get; set; }
+
+        public int? TiempoRoturaMembranasHoras { get; set; }
+
+        public string? AspectoLiquido { get; set; }
+
+        public string? PosicionMadre { get; set; }
+
+        public bool Acompanante { get; set; }
+
+        public string? LugarNacimiento { get; set; }
+
+        public int? DuracionSegundaEtapaMinutos { get; set; }
+
+        public bool Episiotomia { get; set; }
+
+        public string? ComplicacionesMaternas { get; set; }
+
+        public bool Derivacion { get; set; }
+
+        public string? SeguroTipo { get; set; }
+
+        public int? NumeroHijosPrevios { get; set; }
+
+        public int? NumeroCesareasPrevias { get; set; }
+
+        public bool EmbarazoMultiple { get; set; }
+
+        public int? NumeroGemelos { get; set; }
+
+        public string? Observaciones { get; set; }
+
         // --- Propiedades de JOINs (para Vistas) ---
         public string NombrePaciente { get; set; } = string.Empty;
         public string NombreProfesional { get; set; } = string.Empty;
         public string NombreViaParto { get; set; } = string.Empty;
         public string NombreLiquido { get; set; } = string.Empty;
+
+        // --- Relaciones ---
+        public List<entPartoIntervencion> Intervenciones { get; set; } = new List<entPartoIntervencion>();
+        public List<entBebe> Bebes { get; set; } = new List<entBebe>();
     }
 }

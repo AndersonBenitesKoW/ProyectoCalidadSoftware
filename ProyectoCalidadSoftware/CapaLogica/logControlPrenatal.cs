@@ -2,6 +2,7 @@
 using CapaEntidad;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
 
 namespace CapaLogica
 {
@@ -28,7 +29,7 @@ namespace CapaLogica
             }
         }
 
-        public bool InsertarControlPrenatal(entControlPrenatal entidad)
+        public int InsertarControlPrenatal(entControlPrenatal entidad)
         {
             try
             {
@@ -80,6 +81,51 @@ namespace CapaLogica
             catch (Exception ex)
             {
                 throw new ApplicationException("Error al inhabilitar control: " + ex.Message, ex);
+            }
+        }
+
+        public int RegistrarControlPrenatalConEncuentro(entControlPrenatal control, int idProfesional)
+        {
+            Console.WriteLine("LOG LOGICA: Iniciando RegistrarControlPrenatalConEncuentro");
+            Console.WriteLine($"LOG LOGICA: IdEmbarazo={control.IdEmbarazo}, idProfesional={idProfesional}");
+            using (var scope = new TransactionScope())
+            {
+                try
+                {
+                    // 1. Obtener IdTipoEncuentro para "ANC"
+                    short idTipoEncuentro = logTipoEncuentro.Instancia.ObtenerIdPorCodigo("ANC");
+                    Console.WriteLine($"LOG LOGICA: idTipoEncuentro={idTipoEncuentro}");
+                    if (idTipoEncuentro == 0)
+                        throw new ApplicationException("Tipo de encuentro 'ANC' no encontrado.");
+
+                    // 2. Crear Encuentro
+                    var enc = new entEncuentro
+                    {
+                        IdEmbarazo = control.IdEmbarazo,
+                        IdProfesional = idProfesional,
+                        IdTipoEncuentro = idTipoEncuentro,
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado"
+                    };
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(enc);
+                    Console.WriteLine($"LOG LOGICA: idEncuentro insertado={idEncuentro}");
+
+                    // 3. Asignar el IdEncuentro al control
+                    control.IdEncuentro = idEncuentro;
+
+                    // 4. Insertar el Control Prenatal
+                    int idControl = DA_ControlPrenatal.Instancia.Insertar(control);
+                    Console.WriteLine($"LOG LOGICA: idControl insertado={idControl}");
+
+                    scope.Complete();
+                    Console.WriteLine("LOG LOGICA: Transacción completada");
+                    return idControl;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"LOG LOGICA: Error en RegistrarControlPrenatalConEncuentro: {ex.Message}");
+                    throw new ApplicationException("Error al registrar control prenatal con encuentro: " + ex.Message, ex);
+                }
             }
         }
     }

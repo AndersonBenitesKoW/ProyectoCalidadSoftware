@@ -28,14 +28,34 @@ namespace CapaEntidad
         public string? Loquios { get; set; }
         public string? Lactancia { get; set; }
 
+        public int? DiasPosparto { get; set; }
+
+        public string? InvolucionUterina { get; set; }
+
+        public string? HemorragiaResidual { get; set; } // Cambié a string ya que en tabla es NVARCHAR
+
         [Display(Name = "Signos de Infección")]
-        public bool? SignosInfeccion { get; set; }
+        public bool SignosInfeccion { get; set; }
 
         [Display(Name = "Tamizaje Depresión")]
         public string? TamizajeDepresion { get; set; }
 
+        public bool ApoyoLactancia { get; set; }
+
         [Display(Name = "Método PF")]
         public short? IdMetodoPF { get; set; }
+
+        public bool ConsejoPlanificacion { get; set; }
+
+        public DateTime? VisitaDomiciliariaFecha { get; set; }
+
+        public string? SeguroTipo { get; set; }
+
+        public string? ComplicacionesMaternas { get; set; }
+
+        public bool Derivacion { get; set; }
+
+        public string? EstablecimientoAtencion { get; set; }
 
         public string? Observaciones { get; set; }
         public bool Estado { get; set; }
