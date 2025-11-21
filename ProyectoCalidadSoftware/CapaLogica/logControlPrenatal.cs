@@ -31,20 +31,42 @@ namespace CapaLogica
 
         public int InsertarControlPrenatal(entControlPrenatal entidad)
         {
-            try
+            using (var scope = new TransactionScope())
             {
-                // Aquí puedes añadir validaciones de negocio
-                if (entidad.IdEmbarazo <= 0)
-                    throw new ApplicationException("El IdEmbarazo es obligatorio.");
-                if (entidad.Fecha > DateTime.Now.AddDays(1))
-                    throw new ApplicationException("La fecha del control no puede ser futura.");
+                try
+                {
+                    // Aquí puedes añadir validaciones de negocio
+                    if (entidad.IdEmbarazo <= 0)
+                        throw new ApplicationException("El IdEmbarazo es obligatorio.");
+                    if (entidad.Fecha > DateTime.Now.AddDays(1))
+                        throw new ApplicationException("La fecha del control no puede ser futura.");
 
-                entidad.Estado = true; // Aseguramos que se inserte como activo
-                return DA_ControlPrenatal.Instancia.Insertar(entidad);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Error al insertar control: " + ex.Message, ex);
+                    entidad.Estado = true; // Aseguramos que se inserte como activo
+
+                    // Crear encuentro automáticamente para el control prenatal
+                    var encuentro = new entEncuentro
+                    {
+                        IdEmbarazo = entidad.IdEmbarazo,
+                        IdProfesional = entidad.IdProfesional,
+                        IdTipoEncuentro = 1, // Asumiendo que 1 es ANC (Atención prenatal)
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado",
+                        Notas = $"Control prenatal registrado - Fecha: {entidad.Fecha.ToShortDateString()}"
+                    };
+
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(encuentro);
+                    entidad.IdEncuentro = idEncuentro;
+
+                    // Insertar el control prenatal
+                    int idControl = DA_ControlPrenatal.Instancia.Insertar(entidad);
+
+                    scope.Complete();
+                    return idControl;
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Error al insertar control: " + ex.Message, ex);
+                }
             }
         }
 

@@ -143,11 +143,17 @@ namespace CapaAccesoDatos
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarControlPrenatal", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                AddControlParameters(cmd, entidad); // Usa el método helper
+                AddControlParameters(cmd, entidad);
+
                 cn.Open();
-                return Convert.ToInt32(cmd.ExecuteScalar()); // Devuelve el SCOPE_IDENTITY()
+                object result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : 0;
             }
         }
+
+
+  
+
 
         public bool Editar(entControlPrenatal entidad)
         {

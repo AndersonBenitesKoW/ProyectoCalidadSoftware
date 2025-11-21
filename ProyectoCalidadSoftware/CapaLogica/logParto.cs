@@ -2,6 +2,7 @@
 using CapaEntidad;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
 
 namespace CapaLogica
 {
@@ -27,16 +28,43 @@ namespace CapaLogica
 
         public bool RegistrarParto(entParto entidad)
         {
-            try
+            using (var scope = new TransactionScope())
             {
-                if (entidad.IdEmbarazo <= 0)
-                    throw new ApplicationException("El IdEmbarazo es obligatorio.");
-                entidad.Estado = true;
-                return DA_Parto.Instancia.Insertar(entidad);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Error al registrar parto: " + ex.Message, ex);
+                try
+                {
+                    if (entidad.IdEmbarazo <= 0)
+                        throw new ApplicationException("El IdEmbarazo es obligatorio.");
+
+                    entidad.Estado = true;
+
+                    // Crear encuentro automáticamente para el parto
+                    short idTipoEncuentro = logTipoEncuentro.Instancia.ObtenerIdPorCodigo("INTRAPARTO");
+                    if (idTipoEncuentro == 0)
+                        throw new ApplicationException("Tipo de encuentro 'INTRAPARTO' no encontrado.");
+
+                    var encuentro = new entEncuentro
+                    {
+                        IdEmbarazo = entidad.IdEmbarazo,
+                        IdProfesional = entidad.IdProfesional,
+                        IdTipoEncuentro = idTipoEncuentro,
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado",
+                        Notas = $"Encuentro generado automáticamente al registrar el parto - Fecha: {entidad.Fecha.ToShortDateString()}"
+                    };
+
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(encuentro);
+                    entidad.IdEncuentro = idEncuentro;
+
+                    // Insertar el parto
+                    bool resultado = DA_Parto.Instancia.Insertar(entidad);
+
+                    scope.Complete();
+                    return resultado;
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Error al registrar parto: " + ex.Message, ex);
+                }
             }
         }
 
@@ -73,6 +101,44 @@ namespace CapaLogica
             catch (Exception ex)
             {
                 throw new ApplicationException("Error al anular parto: " + ex.Message, ex);
+            }
+        }
+
+        public int RegistrarPartoConEncuentro(entParto parto, int idProfesional)
+        {
+            using (var scope = new TransactionScope())
+            {
+                try
+                {
+                    // 1. Obtener IdTipoEncuentro para "INTRAPARTO" (Trabajo de parto/Parto)
+                    short idTipoEncuentro = logTipoEncuentro.Instancia.ObtenerIdPorCodigo("INTRAPARTO");
+                    if (idTipoEncuentro == 0)
+                        throw new ApplicationException("Tipo de encuentro 'INTRAPARTO' no encontrado.");
+
+                    // 2. Crear Encuentro
+                    var enc = new entEncuentro
+                    {
+                        IdEmbarazo = parto.IdEmbarazo,
+                        IdProfesional = idProfesional,
+                        IdTipoEncuentro = idTipoEncuentro,
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado"
+                    };
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(enc);
+
+                    // 3. Asignar el IdEncuentro al parto
+                    parto.IdEncuentro = idEncuentro;
+
+                    // 4. Insertar el Parto
+                    int idParto = DA_Parto.Instancia.InsertarConId(parto);
+
+                    scope.Complete();
+                    return idParto;
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Error al registrar parto con encuentro: " + ex.Message, ex);
+                }
             }
         }
     }

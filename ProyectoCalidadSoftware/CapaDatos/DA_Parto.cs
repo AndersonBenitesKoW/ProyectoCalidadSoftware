@@ -68,7 +68,6 @@ namespace CapaAccesoDatos
             cmd.Parameters.AddWithValue("@PerdidasML", (object)entidad.PerdidasML ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Desgarro", (object)entidad.Desgarro ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Episiotomia", (object)entidad.Episiotomia ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Complicaciones", (object)entidad.Complicaciones ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@ComplicacionesMaternas", (object)entidad.ComplicacionesMaternas ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Derivacion", (object)entidad.Derivacion ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@SeguroTipo", (object)entidad.SeguroTipo ?? DBNull.Value);
@@ -88,11 +87,44 @@ namespace CapaAccesoDatos
                 cmd.CommandType = CommandType.StoredProcedure;
                 AddParameters(cmd, entidad);
                 cn.Open();
-                var idParto = (int)cmd.ExecuteScalar();
+                var idParto = Convert.ToInt32(cmd.ExecuteScalar());
+                // Insertar intervenciones
+
+                Console.WriteLine("punto 1 " );
+                foreach (var interv in entidad.Intervenciones)
+                {
+                    DA_PartoIntervencion.Instancia.Insertar(
+                        new entPartoIntervencion { IdParto = idParto, Intervencion = interv.Intervencion }
+                    );
+                }
+
+                Console.WriteLine("punto 2 ");  
+                // Insertar bebes
+                foreach (var bebe in entidad.Bebes)
+                {
+                    bebe.IdParto = idParto;
+                    DA_Bebe.Instancia.Insertar(bebe);
+                }
+                Console.WriteLine("punto 3 ");  
+                return true;
+            }
+        }
+
+        public int InsertarConId(entParto entidad)
+        {
+            using (var cn = Conexion.Instancia.Conectar())
+            {
+                var cmd = new SqlCommand("sp_InsertarParto", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                AddParameters(cmd, entidad);
+                cn.Open();
+                var idParto = Convert.ToInt32(cmd.ExecuteScalar());
                 // Insertar intervenciones
                 foreach (var interv in entidad.Intervenciones)
                 {
-                    DA_PartoIntervencion.Instancia.Insertar(new entPartoIntervencion { IdParto = idParto, Intervencion = interv.Intervencion });
+                    DA_PartoIntervencion.Instancia.Insertar(
+                        new entPartoIntervencion { IdParto = idParto, Intervencion = interv.Intervencion }
+                    );
                 }
                 // Insertar bebes
                 foreach (var bebe in entidad.Bebes)
@@ -100,9 +132,10 @@ namespace CapaAccesoDatos
                     bebe.IdParto = idParto;
                     DA_Bebe.Instancia.Insertar(bebe);
                 }
-                return true;
+                return idParto;
             }
         }
+
 
         public bool Editar(entParto entidad)
         {
@@ -169,7 +202,6 @@ namespace CapaAccesoDatos
                             IndicacionCesarea = dr["IndicacionCesarea"].ToString(),
                             PerdidasML = dr["PerdidasML"] != DBNull.Value ? (int?)Convert.ToInt32(dr["PerdidasML"]) : null,
                             Desgarro = dr["Desgarro"].ToString(),
-                            Complicaciones = dr["Complicaciones"].ToString(),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             HoraExpulsion = dr["HoraExpulsion"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["HoraExpulsion"]) : null,
                             TipoParto = dr["TipoParto"].ToString(),

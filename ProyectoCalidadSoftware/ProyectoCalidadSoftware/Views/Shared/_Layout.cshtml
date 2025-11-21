@@ -62,24 +62,40 @@
                                 </a>
                             </li>
 
-                            <li>
+                           @*  <li>
                                 <a class="dropdown-item" asp-controller="Encuentro" asp-action="Insertar">
                                     <i class="fas fa-handshake me-2"></i>Registrar Encuentro
                                 </a>
-                            </li>
+                            </li> *@
                         </ul>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="Cita" asp-action="Listar">
-                            <i class="fas fa-calendar-check me-2"></i>Citas Medicas
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownCore" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-heartbeat me-1"></i>Core
                         </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="ControlPrenatal" asp-action="Listar">
-                            <i class="fas fa-stethoscope me-2"></i>Controles Prenatales
-                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Cita" asp-action="Listar">
+                                    <i class="fas fa-calendar-check me-2"></i>Citas Medicas
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="ControlPrenatal" asp-action="Listar">
+                                    <i class="fas fa-stethoscope me-2"></i>Controles Prenatales
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="SeguimientoPuerperio" asp-action="Listar">
+                                    <i class="fas fa-heart me-2"></i>Seg. Puerperio
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Parto" asp-action="Index">
+                                    <i class="fas fa-birthday-cake me-2"></i>Listar Partos
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="nav-item">
@@ -89,10 +105,11 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom" asp-controller="SeguimientoPuerperio" asp-action="Listar">
-                            <i class="fas fa-heart me-2"></i>Seg. Puerperio
+                        <a class="nav-link nav-link-custom" asp-controller="ResultadoDiagnostico" asp-action="Listar">
+                            <i class="fas fa-file-medical me-2"></i>Resultados Diagnósticos
                         </a>
                     </li>
+
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownClinica" role="button" data-bs-toggle="dropdown">
@@ -111,19 +128,6 @@
                                 </a>
                             </li>
 
-                            <li><hr class="dropdown-divider"></li>
-
-                            <li class="dropdown-header">Gestion Parto</li>
-                            <li>
-                                <a class="dropdown-item" asp-controller="Parto" asp-action="Index">
-                                    <i class="fas fa-list me-2"></i>Listar Partos
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" asp-controller="Parto" asp-action="RegistrarParto">
-                                    <i class="fas fa-birthday-cake me-2"></i>Registrar Parto
-                                </a>
-                            </li>
 
                         </ul>
                     </li>

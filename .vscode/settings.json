@@ -16,8 +16,8 @@
             "driver": "MSSQL",
             "name": "MyConnection",
             "database": "ProyectoCalidad",
-            "username": "vscode",
-            "password": "vscode123"
+            "username": "sa",
+            "password": "anderson123"
         }
     ]
 }

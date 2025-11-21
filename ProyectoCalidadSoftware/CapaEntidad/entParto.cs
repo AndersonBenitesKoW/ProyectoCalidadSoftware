@@ -36,7 +36,6 @@ namespace CapaEntidad
         public int? PerdidasML { get; set; }
 
         public string? Desgarro { get; set; } // (Grado I, II, etc.)
-        public string? Complicaciones { get; set; }
         public bool Estado { get; set; }
 
         // Campos adicionales de la tabla Parto

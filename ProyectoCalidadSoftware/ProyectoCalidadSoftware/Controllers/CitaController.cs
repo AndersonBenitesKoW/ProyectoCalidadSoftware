@@ -10,11 +10,12 @@ using System.Security.Claims; // Para obtener el ID del usuario
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")] // Protege todo el controlador
+    [Authorize] // Protege todo el controlador
     public class CitaController : Controller
     {
         // GET: /Cita/Listar (o /Cita/Index)
         [HttpGet]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         public IActionResult Listar()
         {
             try
@@ -31,6 +32,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Cita/Insertar
         [HttpGet]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN,PACIENTE")]
         public IActionResult Insertar()
         {
             var modelo = new entCita
@@ -100,6 +102,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Cita/Anular/5
         [HttpGet]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         public IActionResult Anular(int id)
         {
             var cita = logCita.Instancia.BuscarCita(id);
@@ -144,6 +147,7 @@ namespace ProyectoCalidadSoftware.Controllers
             return RedirectToAction(nameof(Listar));
         }
         [HttpGet]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         public IActionResult DetallesCita(int id)
         {
             try

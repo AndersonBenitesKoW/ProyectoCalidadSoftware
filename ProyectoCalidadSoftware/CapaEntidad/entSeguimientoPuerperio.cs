@@ -32,7 +32,7 @@ namespace CapaEntidad
 
         public string? InvolucionUterina { get; set; }
 
-        public string? HemorragiaResidual { get; set; } // Cambié a string ya que en tabla es NVARCHAR
+        public bool? HemorragiaResidual { get; set; } // Cambié a string ya que en tabla es NVARCHAR
 
         [Display(Name = "Signos de Infección")]
         public bool SignosInfeccion { get; set; }

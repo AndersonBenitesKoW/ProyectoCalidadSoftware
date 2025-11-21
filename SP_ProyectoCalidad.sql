@@ -139,65 +139,127 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE sp_InsertarParto
-    @IdEmbarazo INT,
-    @IdEncuentro INT, -- 👈 RE-AGREGADO: Ahora es un parámetro obligatorio
-    @IdProfesional INT = NULL,
-    @Fecha DATE,
-    @HoraIngreso DATETIME2 = NULL,
-    @HoraInicioTrabajo DATETIME2 = NULL,
-    @Membranas NVARCHAR(10) = NULL,
-    @IdLiquido SMALLINT = NULL,
-    @Analgesia NVARCHAR(50) = NULL,
-    @IdViaParto SMALLINT = NULL,
-    @IndicacionCesarea NVARCHAR(150) = NULL,
-    @PerdidasML INT = NULL,
-    @Desgarro NVARCHAR(10) = NULL,
-    @Complicaciones NVARCHAR(200) = NULL,
-    @Estado BIT = 1
+    @IdEmbarazo                    INT,
+    @IdEncuentro                   INT             = NULL,
+    @IdProfesional                 INT             = NULL,
+    @Fecha                         DATE,
+    @HoraIngreso                   DATETIME2       = NULL,
+    @HoraInicioTrabajo             DATETIME2       = NULL,
+    @HoraExpulsion                 DATETIME2       = NULL,
+    @TipoParto                     NVARCHAR(50)    = NULL,
+    @IdViaParto                    SMALLINT        = NULL,
+    @IndicacionCesarea             NVARCHAR(150)   = NULL,
+
+    @Membranas                     NVARCHAR(10)    = NULL,
+    @TiempoRoturaMembranasHoras    INT             = NULL,
+    @IdLiquido                     SMALLINT        = NULL,
+    @AspectoLiquido                NVARCHAR(50)    = NULL,
+
+    @Analgesia                     NVARCHAR(50)    = NULL,
+    @PosicionMadre                 NVARCHAR(50)    = NULL,
+    @Acompanante                   BIT             = NULL,
+    @LugarNacimiento               NVARCHAR(100)   = NULL,
+
+    @DuracionSegundaEtapaMinutos   INT             = NULL,
+    @PerdidasML                    INT             = NULL,
+    @Desgarro                      NVARCHAR(10)    = NULL,
+    @Episiotomia                   BIT             = NULL,
+
+    @ComplicacionesMaternas        NVARCHAR(300)   = NULL,
+    @Derivacion                    BIT             = NULL,
+    @SeguroTipo                    NVARCHAR(50)    = NULL,
+
+    @NumeroHijosPrevios            INT             = NULL,
+    @NumeroCesareasPrevias         INT             = NULL,
+    @EmbarazoMultiple              BIT             = NULL,
+    @NumeroGemelos                 INT             = NULL,
+
+    @Observaciones                 NVARCHAR(500)   = NULL,
+    @Estado                        BIT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- 1. ELIMINAMOS la lógica que creaba el Encuentro automáticamente.
-    
-    -- 2. Insertar el Parto (usando el @IdEncuentro manual)
     INSERT INTO Parto (
-        IdEmbarazo, 
-        IdEncuentro, -- 👈 Usamos el ID que viene del formulario
-        IdProfesional, 
-        Fecha, 
-        HoraIngreso, 
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        HoraIngreso,
         HoraInicioTrabajo,
-        Membranas, 
-        IdLiquido, 
-        Analgesia, 
-        IdViaParto, 
+        HoraExpulsion,
+        TipoParto,
+        IdViaParto,
         IndicacionCesarea,
-        PerdidasML, 
-        Desgarro, 
-        Complicaciones, 
+
+        Membranas,
+        TiempoRoturaMembranasHoras,
+        IdLiquido,
+        AspectoLiquido,
+
+        Analgesia,
+        PosicionMadre,
+        Acompanante,
+        LugarNacimiento,
+
+        DuracionSegundaEtapaMinutos,
+        PerdidasML,
+        Desgarro,
+        Episiotomia,
+
+        ComplicacionesMaternas,
+        Derivacion,
+        SeguroTipo,
+
+        NumeroHijosPrevios,
+        NumeroCesareasPrevias,
+        EmbarazoMultiple,
+        NumeroGemelos,
+
+        Observaciones,
         Estado
     )
     VALUES (
-        @IdEmbarazo, 
-        @IdEncuentro, -- 👈 VALOR ASIGNADO
-        @IdProfesional, 
-        @Fecha, 
-        @HoraIngreso, 
+        @IdEmbarazo,
+        @IdEncuentro,
+        @IdProfesional,
+        @Fecha,
+        @HoraIngreso,
         @HoraInicioTrabajo,
-        @Membranas, 
-        @IdLiquido, 
-        @Analgesia, 
-        @IdViaParto, 
+        @HoraExpulsion,
+        @TipoParto,
+        @IdViaParto,
         @IndicacionCesarea,
-        @PerdidasML, 
-        @Desgarro, 
-        @Complicaciones, 
+
+        @Membranas,
+        @TiempoRoturaMembranasHoras,
+        @IdLiquido,
+        @AspectoLiquido,
+
+        @Analgesia,
+        @PosicionMadre,
+        @Acompanante,
+        @LugarNacimiento,
+
+        @DuracionSegundaEtapaMinutos,
+        @PerdidasML,
+        @Desgarro,
+        @Episiotomia,
+
+        @ComplicacionesMaternas,
+        @Derivacion,
+        @SeguroTipo,
+
+        @NumeroHijosPrevios,
+        @NumeroCesareasPrevias,
+        @EmbarazoMultiple,
+        @NumeroGemelos,
+
+        @Observaciones,
         @Estado
     );
-    
-    -- 3. Devolvemos el ID del Parto
-    SELECT SCOPE_IDENTITY(); 
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS IdParto;
 END
 GO
 
@@ -291,6 +353,92 @@ BEGIN
     WHERE 
         IdParto = @IdParto;
 
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EditarParto
+    @IdParto INT,
+    @IdEmbarazo INT,
+    @IdEncuentro INT = NULL,
+    @IdProfesional INT = NULL,
+    @Fecha DATE,
+    @HoraIngreso DATETIME2 = NULL,
+    @HoraInicioTrabajo DATETIME2 = NULL,
+    @HoraExpulsion DATETIME2 = NULL,
+    @TipoParto NVARCHAR(50) = NULL,
+    @IdViaParto SMALLINT = NULL,
+    @IndicacionCesarea NVARCHAR(150) = NULL,
+
+    @Membranas NVARCHAR(10) = NULL,
+    @TiempoRoturaMembranasHoras INT = NULL,
+    @IdLiquido SMALLINT = NULL,
+    @AspectoLiquido NVARCHAR(50) = NULL,
+
+    @Analgesia NVARCHAR(50) = NULL,
+    @PosicionMadre NVARCHAR(50) = NULL,
+    @Acompanante BIT = NULL,
+    @LugarNacimiento NVARCHAR(100) = NULL,
+
+    @DuracionSegundaEtapaMinutos INT = NULL,
+    @PerdidasML INT = NULL,
+    @Desgarro NVARCHAR(10) = NULL,
+    @Episiotomia BIT = NULL,
+
+    @ComplicacionesMaternas NVARCHAR(300) = NULL,
+    @Derivacion BIT = NULL,
+    @SeguroTipo NVARCHAR(50) = NULL,
+
+    @NumeroHijosPrevios INT = NULL,
+    @NumeroCesareasPrevias INT = NULL,
+    @EmbarazoMultiple BIT = NULL,
+    @NumeroGemelos INT = NULL,
+
+    @Observaciones NVARCHAR(500) = NULL,
+    @Estado BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Parto
+    SET
+        IdEmbarazo = @IdEmbarazo,
+        IdEncuentro = @IdEncuentro,
+        IdProfesional = @IdProfesional,
+        Fecha = @Fecha,
+        HoraIngreso = @HoraIngreso,
+        HoraInicioTrabajo = @HoraInicioTrabajo,
+        HoraExpulsion = @HoraExpulsion,
+        TipoParto = @TipoParto,
+        IdViaParto = @IdViaParto,
+        IndicacionCesarea = @IndicacionCesarea,
+
+        Membranas = @Membranas,
+        TiempoRoturaMembranasHoras = @TiempoRoturaMembranasHoras,
+        IdLiquido = @IdLiquido,
+        AspectoLiquido = @AspectoLiquido,
+
+        Analgesia = @Analgesia,
+        PosicionMadre = @PosicionMadre,
+        Acompanante = @Acompanante,
+        LugarNacimiento = @LugarNacimiento,
+
+        DuracionSegundaEtapaMinutos = @DuracionSegundaEtapaMinutos,
+        PerdidasML = @PerdidasML,
+        Desgarro = @Desgarro,
+        Episiotomia = @Episiotomia,
+
+        ComplicacionesMaternas = @ComplicacionesMaternas,
+        Derivacion = @Derivacion,
+        SeguroTipo = @SeguroTipo,
+
+        NumeroHijosPrevios = @NumeroHijosPrevios,
+        NumeroCesareasPrevias = @NumeroCesareasPrevias,
+        EmbarazoMultiple = @EmbarazoMultiple,
+        NumeroGemelos = @NumeroGemelos,
+
+        Observaciones = @Observaciones,
+        Estado = @Estado
+    WHERE IdParto = @IdParto;
 END
 GO
 
@@ -525,3 +673,152 @@ BEGIN
     SELECT SCOPE_IDENTITY() AS IdControlPrenatal; -- devuelve el nuevo ID
 END
 GO
+
+-- SP PARA BEBE --
+
+CREATE OR ALTER PROCEDURE sp_ListarBebe
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        b.IdBebe,
+        b.IdParto,
+        b.NumeroBebe,
+        b.Sexo,
+        b.FechaHoraNacimiento,
+        b.Apgar1,
+        b.Apgar5,
+        b.PesoGr,
+        b.TallaCm,
+        b.PerimetroCefalico,
+        b.EG_Semanas,
+        b.Reanimacion,
+        b.Observaciones,
+        b.Estado
+    FROM Bebe b
+    ORDER BY b.IdBebe;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertarBebe
+    @IdParto INT,
+    @NumeroBebe INT = 1,
+    @Sexo CHAR(1) = NULL,
+    @FechaHoraNacimiento DATETIME2 = NULL,
+    @Apgar1 TINYINT = NULL,
+    @Apgar5 TINYINT = NULL,
+    @PesoGr INT = NULL,
+    @TallaCm DECIMAL(4,1) = NULL,
+    @PerimetroCefalico DECIMAL(4,1) = NULL,
+    @EG_Semanas DECIMAL(4,1) = NULL,
+    @Reanimacion BIT = NULL,
+    @Observaciones NVARCHAR(200) = NULL,
+    @Estado BIT = 1
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Bebe (
+        IdParto,
+        NumeroBebe,
+        Sexo,
+        FechaHoraNacimiento,
+        Apgar1,
+        Apgar5,
+        PesoGr,
+        TallaCm,
+        PerimetroCefalico,
+        EG_Semanas,
+        Reanimacion,
+        Observaciones,
+        Estado
+    )
+    VALUES (
+        @IdParto,
+        @NumeroBebe,
+        @Sexo,
+        @FechaHoraNacimiento,
+        @Apgar1,
+        @Apgar5,
+        @PesoGr,
+        @TallaCm,
+        @PerimetroCefalico,
+        @EG_Semanas,
+        @Reanimacion,
+        @Observaciones,
+        @Estado
+    );
+    SELECT SCOPE_IDENTITY();
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EditarBebe
+    @IdBebe INT,
+    @IdParto INT,
+    @NumeroBebe INT = 1,
+    @Sexo CHAR(1) = NULL,
+    @FechaHoraNacimiento DATETIME2 = NULL,
+    @Apgar1 TINYINT = NULL,
+    @Apgar5 TINYINT = NULL,
+    @PesoGr INT = NULL,
+    @TallaCm DECIMAL(4,1) = NULL,
+    @PerimetroCefalico DECIMAL(4,1) = NULL,
+    @EG_Semanas DECIMAL(4,1) = NULL,
+    @Reanimacion BIT = NULL,
+    @Observaciones NVARCHAR(200) = NULL,
+    @Estado BIT = 1
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE Bebe
+    SET
+        IdParto = @IdParto,
+        NumeroBebe = @NumeroBebe,
+        Sexo = @Sexo,
+        FechaHoraNacimiento = @FechaHoraNacimiento,
+        Apgar1 = @Apgar1,
+        Apgar5 = @Apgar5,
+        PesoGr = @PesoGr,
+        TallaCm = @TallaCm,
+        PerimetroCefalico = @PerimetroCefalico,
+        EG_Semanas = @EG_Semanas,
+        Reanimacion = @Reanimacion,
+        Observaciones = @Observaciones,
+        Estado = @Estado
+    WHERE IdBebe = @IdBebe;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_BuscarBebe
+    @IdBebe INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        b.IdBebe,
+        b.IdParto,
+        b.NumeroBebe,
+        b.Sexo,
+        b.FechaHoraNacimiento,
+        b.Apgar1,
+        b.Apgar5,
+        b.PesoGr,
+        b.TallaCm,
+        b.PerimetroCefalico,
+        b.EG_Semanas,
+        b.Reanimacion,
+        b.Observaciones,
+        b.Estado
+    FROM Bebe b
+    WHERE b.IdBebe = @IdBebe;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EliminarBebe
+    @IdBebe INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM Bebe WHERE IdBebe = @IdBebe;
+END
+GO
+

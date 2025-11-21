@@ -137,64 +137,111 @@ GO
 
 CREATE PROCEDURE sp_InsertarParto
     @IdEmbarazo INT,
-    @IdEncuentro INT, -- 👈 RE-AGREGADO: Ahora es un parámetro obligatorio
+    @IdEncuentro INT = NULL,
     @IdProfesional INT = NULL,
     @Fecha DATE,
     @HoraIngreso DATETIME2 = NULL,
     @HoraInicioTrabajo DATETIME2 = NULL,
+    @HoraExpulsion DATETIME2 = NULL,
+    @TipoParto NVARCHAR(50) = NULL,
     @Membranas NVARCHAR(10) = NULL,
+    @TiempoRoturaMembranasHoras INT = NULL,
     @IdLiquido SMALLINT = NULL,
+    @AspectoLiquido NVARCHAR(50) = NULL,
     @Analgesia NVARCHAR(50) = NULL,
+    @PosicionMadre NVARCHAR(50) = NULL,
+    @Acompanante BIT = NULL,
     @IdViaParto SMALLINT = NULL,
     @IndicacionCesarea NVARCHAR(150) = NULL,
+    @LugarNacimiento NVARCHAR(100) = NULL,
+    @DuracionSegundaEtapaMinutos INT = NULL,
     @PerdidasML INT = NULL,
     @Desgarro NVARCHAR(10) = NULL,
-    @Complicaciones NVARCHAR(200) = NULL,
+    @Episiotomia BIT = NULL,
+    @Complicaciones NVARCHAR(300) = NULL,
+    @ComplicacionesMaternas NVARCHAR(300) = NULL,
+    @Derivacion BIT = NULL,
+    @SeguroTipo NVARCHAR(50) = NULL,
+    @NumeroHijosPrevios INT = NULL,
+    @NumeroCesareasPrevias INT = NULL,
+    @EmbarazoMultiple BIT = NULL,
+    @NumeroGemelos INT = NULL,
+    @Observaciones NVARCHAR(500) = NULL,
     @Estado BIT = 1
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- 1. ELIMINAMOS la lógica que creaba el Encuentro automáticamente.
-    
-    -- 2. Insertar el Parto (usando el @IdEncuentro manual)
     INSERT INTO Parto (
-        IdEmbarazo, 
-        IdEncuentro, -- 👈 Usamos el ID que viene del formulario
-        IdProfesional, 
-        Fecha, 
-        HoraIngreso, 
+        IdEmbarazo,
+        IdEncuentro,
+        IdProfesional,
+        Fecha,
+        HoraIngreso,
         HoraInicioTrabajo,
-        Membranas, 
-        IdLiquido, 
-        Analgesia, 
-        IdViaParto, 
+        HoraExpulsion,
+        TipoParto,
+        Membranas,
+        TiempoRoturaMembranasHoras,
+        IdLiquido,
+        AspectoLiquido,
+        Analgesia,
+        PosicionMadre,
+        Acompanante,
+        IdViaParto,
         IndicacionCesarea,
-        PerdidasML, 
-        Desgarro, 
-        Complicaciones, 
+        LugarNacimiento,
+        DuracionSegundaEtapaMinutos,
+        PerdidasML,
+        Desgarro,
+        Episiotomia,
+        Complicaciones,
+        ComplicacionesMaternas,
+        Derivacion,
+        SeguroTipo,
+        NumeroHijosPrevios,
+        NumeroCesareasPrevias,
+        EmbarazoMultiple,
+        NumeroGemelos,
+        Observaciones,
         Estado
     )
     VALUES (
-        @IdEmbarazo, 
-        @IdEncuentro, -- 👈 VALOR ASIGNADO
-        @IdProfesional, 
-        @Fecha, 
-        @HoraIngreso, 
+        @IdEmbarazo,
+        @IdEncuentro,
+        @IdProfesional,
+        @Fecha,
+        @HoraIngreso,
         @HoraInicioTrabajo,
-        @Membranas, 
-        @IdLiquido, 
-        @Analgesia, 
-        @IdViaParto, 
+        @HoraExpulsion,
+        @TipoParto,
+        @Membranas,
+        @TiempoRoturaMembranasHoras,
+        @IdLiquido,
+        @AspectoLiquido,
+        @Analgesia,
+        @PosicionMadre,
+        @Acompanante,
+        @IdViaParto,
         @IndicacionCesarea,
-        @PerdidasML, 
-        @Desgarro, 
-        @Complicaciones, 
+        @LugarNacimiento,
+        @DuracionSegundaEtapaMinutos,
+        @PerdidasML,
+        @Desgarro,
+        @Episiotomia,
+        @Complicaciones,
+        @ComplicacionesMaternas,
+        @Derivacion,
+        @SeguroTipo,
+        @NumeroHijosPrevios,
+        @NumeroCesareasPrevias,
+        @EmbarazoMultiple,
+        @NumeroGemelos,
+        @Observaciones,
         @Estado
     );
-    
-    -- 3. Devolvemos el ID del Parto
-    SELECT SCOPE_IDENTITY(); 
+
+    SELECT SCOPE_IDENTITY();
 END
 GO
 
@@ -287,6 +334,82 @@ BEGIN
     WHERE 
         IdParto = @IdParto;
 
+END
+GO
+
+CREATE PROCEDURE sp_EditarParto
+    @IdParto INT,
+    @IdEmbarazo INT,
+    @IdEncuentro INT = NULL,
+    @IdProfesional INT = NULL,
+    @Fecha DATE,
+    @HoraIngreso DATETIME2 = NULL,
+    @HoraInicioTrabajo DATETIME2 = NULL,
+    @HoraExpulsion DATETIME2 = NULL,
+    @TipoParto NVARCHAR(50) = NULL,
+    @Membranas NVARCHAR(10) = NULL,
+    @TiempoRoturaMembranasHoras INT = NULL,
+    @IdLiquido SMALLINT = NULL,
+    @AspectoLiquido NVARCHAR(50) = NULL,
+    @Analgesia NVARCHAR(50) = NULL,
+    @PosicionMadre NVARCHAR(50) = NULL,
+    @Acompanante BIT = NULL,
+    @IdViaParto SMALLINT = NULL,
+    @IndicacionCesarea NVARCHAR(150) = NULL,
+    @LugarNacimiento NVARCHAR(100) = NULL,
+    @DuracionSegundaEtapaMinutos INT = NULL,
+    @PerdidasML INT = NULL,
+    @Desgarro NVARCHAR(10) = NULL,
+    @Episiotomia BIT = NULL,
+    @Complicaciones NVARCHAR(300) = NULL,
+    @ComplicacionesMaternas NVARCHAR(300) = NULL,
+    @Derivacion BIT = NULL,
+    @SeguroTipo NVARCHAR(50) = NULL,
+    @NumeroHijosPrevios INT = NULL,
+    @NumeroCesareasPrevias INT = NULL,
+    @EmbarazoMultiple BIT = NULL,
+    @NumeroGemelos INT = NULL,
+    @Observaciones NVARCHAR(500) = NULL,
+    @Estado BIT = 1
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Parto
+    SET
+        IdEmbarazo = @IdEmbarazo,
+        IdEncuentro = @IdEncuentro,
+        IdProfesional = @IdProfesional,
+        Fecha = @Fecha,
+        HoraIngreso = @HoraIngreso,
+        HoraInicioTrabajo = @HoraInicioTrabajo,
+        HoraExpulsion = @HoraExpulsion,
+        TipoParto = @TipoParto,
+        Membranas = @Membranas,
+        TiempoRoturaMembranasHoras = @TiempoRoturaMembranasHoras,
+        IdLiquido = @IdLiquido,
+        AspectoLiquido = @AspectoLiquido,
+        Analgesia = @Analgesia,
+        PosicionMadre = @PosicionMadre,
+        Acompanante = @Acompanante,
+        IdViaParto = @IdViaParto,
+        IndicacionCesarea = @IndicacionCesarea,
+        LugarNacimiento = @LugarNacimiento,
+        DuracionSegundaEtapaMinutos = @DuracionSegundaEtapaMinutos,
+        PerdidasML = @PerdidasML,
+        Desgarro = @Desgarro,
+        Episiotomia = @Episiotomia,
+        Complicaciones = @Complicaciones,
+        ComplicacionesMaternas = @ComplicacionesMaternas,
+        Derivacion = @Derivacion,
+        SeguroTipo = @SeguroTipo,
+        NumeroHijosPrevios = @NumeroHijosPrevios,
+        NumeroCesareasPrevias = @NumeroCesareasPrevias,
+        EmbarazoMultiple = @EmbarazoMultiple,
+        NumeroGemelos = @NumeroGemelos,
+        Observaciones = @Observaciones,
+        Estado = @Estado
+    WHERE IdParto = @IdParto;
 END
 GO
 
@@ -872,25 +995,30 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        IdControl,
-        IdEmbarazo,
-        IdEncuentro,
-        IdProfesional,
-        Fecha,
-        PesoKg,
-        TallaM,
-        PA_Sistolica,
-        PA_Diastolica,
-        AlturaUterina_cm,
-        FCF_bpm,
-        Presentacion,
-        Proteinuria,
-        MovFetales,
-        Consejerias,
-        Observaciones,
-        Estado
-    FROM ControlPrenatal
-    ORDER BY Fecha DESC, IdControl DESC;
+        cp.IdControl,
+        cp.IdEmbarazo,
+        cp.IdEncuentro,
+        cp.IdProfesional,
+        cp.Fecha,
+        cp.PesoKg,
+        cp.TallaM,
+        cp.PA_Sistolica,
+        cp.PA_Diastolica,
+        cp.AlturaUterina_cm,
+        cp.FCF_bpm,
+        cp.Presentacion,
+        cp.Proteinuria,
+        cp.MovFetales,
+        cp.Consejerias,
+        cp.Observaciones,
+        cp.Estado,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        ISNULL(ps.Nombres + ' ' + ps.Apellidos, 'No Asignado') AS NombreProfesional
+    FROM ControlPrenatal cp
+    JOIN Embarazo e ON cp.IdEmbarazo = e.IdEmbarazo
+    JOIN Paciente p ON e.IdPaciente = p.IdPaciente
+    LEFT JOIN ProfesionalSalud ps ON cp.IdProfesional = ps.IdProfesional
+    ORDER BY cp.Fecha DESC, cp.IdControl DESC;
 END;
 GO
 
@@ -961,25 +1089,30 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        IdControl,
-        IdEmbarazo,
-        IdEncuentro,
-        IdProfesional,
-        Fecha,
-        PesoKg,
-        TallaM,
-        PA_Sistolica,
-        PA_Diastolica,
-        AlturaUterina_cm,
-        FCF_bpm,
-        Presentacion,
-        Proteinuria,
-        MovFetales,
-        Consejerias,
-        Observaciones,
-        Estado
-    FROM ControlPrenatal
-    WHERE IdControl = @IdControl;
+        cp.IdControl,
+        cp.IdEmbarazo,
+        cp.IdEncuentro,
+        cp.IdProfesional,
+        cp.Fecha,
+        cp.PesoKg,
+        cp.TallaM,
+        cp.PA_Sistolica,
+        cp.PA_Diastolica,
+        cp.AlturaUterina_cm,
+        cp.FCF_bpm,
+        cp.Presentacion,
+        cp.Proteinuria,
+        cp.MovFetales,
+        cp.Consejerias,
+        cp.Observaciones,
+        cp.Estado,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        ISNULL(ps.Nombres + ' ' + ps.Apellidos, 'No Asignado') AS NombreProfesional
+    FROM ControlPrenatal cp
+    JOIN Embarazo e ON cp.IdEmbarazo = e.IdEmbarazo
+    JOIN Paciente p ON e.IdPaciente = p.IdPaciente
+    LEFT JOIN ProfesionalSalud ps ON cp.IdProfesional = ps.IdProfesional
+    WHERE cp.IdControl = @IdControl;
 END;
 GO
 
@@ -991,6 +1124,50 @@ BEGIN
 
     UPDATE ControlPrenatal
     SET Estado = 0
+    WHERE IdControl = @IdControl;
+END;
+GO
+
+CREATE PROCEDURE sp_EditarControlPrenatal
+    @IdControl INT,
+    @IdEmbarazo INT,
+    @IdEncuentro INT = NULL,
+    @IdProfesional INT = NULL,
+    @Fecha DATETIME,
+    @PesoKg DECIMAL(5,2) = NULL,
+    @TallaM DECIMAL(5,2) = NULL,
+    @PA_Sistolica TINYINT = NULL,
+    @PA_Diastolica TINYINT = NULL,
+    @AlturaUterina_cm DECIMAL(5,2) = NULL,
+    @FCF_bpm TINYINT = NULL,
+    @Presentacion NVARCHAR(100) = NULL,
+    @Proteinuria NVARCHAR(100) = NULL,
+    @MovFetales BIT = NULL,
+    @Consejerias NVARCHAR(500) = NULL,
+    @Observaciones NVARCHAR(500) = NULL,
+    @Estado BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE ControlPrenatal
+    SET
+        IdEmbarazo = @IdEmbarazo,
+        IdEncuentro = @IdEncuentro,
+        IdProfesional = @IdProfesional,
+        Fecha = @Fecha,
+        PesoKg = @PesoKg,
+        TallaM = @TallaM,
+        PA_Sistolica = @PA_Sistolica,
+        PA_Diastolica = @PA_Diastolica,
+        AlturaUterina_cm = @AlturaUterina_cm,
+        FCF_bpm = @FCF_bpm,
+        Presentacion = @Presentacion,
+        Proteinuria = @Proteinuria,
+        MovFetales = @MovFetales,
+        Consejerias = @Consejerias,
+        Observaciones = @Observaciones,
+        Estado = @Estado
     WHERE IdControl = @IdControl;
 END;
 GO

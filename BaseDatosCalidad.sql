@@ -27,7 +27,20 @@ CREATE TABLE Usuario(
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
-select * from paciente
+
+/* DECLARE @IdUsuario INT;
+
+INSERT INTO Usuario (NombreUsuario, ClaveHash, email, Estado) VALUES ('ADMIN_anderson', '3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7', 'admin123@gmail.com', 1);
+
+SET @IdUsuario = SCOPE_IDENTITY();
+
+INSERT INTO UsuarioRol (IdUsuario, IdRol) VALUES (@IdUsuario, 1);
+
+GO
+
+select * from Usuario;
+
+ */
 
 
 CREATE TABLE UsuarioRol(
@@ -43,17 +56,34 @@ INSERT INTO Rol (NombreRol, Descripcion) VALUES
 ('ADMIN', 'Administrador del sistema'),
 ('PERSONAL_SALUD', 'Médicos y obstetras'),
 ('SECRETARIA', 'Recepción y citas'),
-('PACIENTE', 'Portal de pacientes');
+('PACIENTE', 'Portal de pacientes'),
+('LABORATORIO', 'Encargado de laboratorio');  
 GO
+
+--DBCC CHECKIDENT ('Rol', RESEED, 4);
+
+--ALTER TABLE ROL 
+--DROP COLUMN LABORATORIO
+--SELECT NOMBREROL FROM Rol WHERE idrol=5
+--DELETE FROM Rol
+--WHERE IdRol = 6;
+
 
 -- Usuario 1: admin →ADMIN_anderson
 
 --contraseña: anderson
 
 
-INSERT INTO UsuarioRol (IdUsuario, IdRol)
-VALUES (1, (SELECT IdRol FROM Rol WHERE NombreRol='ADMIN'));
-GO
+--INSERT INTO UsuarioRol (IdUsuario, IdRol)
+--VALUES (1, (SELECT IdRol FROM Rol WHERE NombreRol='ADMIN'));
+--GO
+--UPDATE Usuario
+--SET ClaveHash = 'c1d35cc3471fe509203d65b3e7a53fc82337ac9ae2c797b836621f706fe37df8'
+--WHERE NombreUsuario = 'ADMIN_anderson';
+
+
+--select * from usuario
+
 
 CREATE TABLE Auditoria(
   IdAuditoria INT IDENTITY(1,1) PRIMARY KEY,
@@ -115,6 +145,10 @@ VALUES (N'ANC',N'Atenci�n prenatal'),
        (N'INTRAPARTO',N'Trabajo de parto/Parto'),
        (N'PNC',N'Atenci�n posnatal/Puerperio');
 GO
+
+
+
+
 
 INSERT INTO EstadoCita (Codigo,Descripcion)
 VALUES (N'Programada',N'Cita programada'),
@@ -273,50 +307,108 @@ CREATE TABLE PacienteFactorRiesgo(
 );
 GO
 
-/* ==================  CONTROL PRENATAL (ANC)  ================== */
-CREATE TABLE ControlPrenatal(
+CREATE TABLE ControlPrenatal (
   IdControl INT IDENTITY(1,1) PRIMARY KEY,
   IdEmbarazo INT NOT NULL FOREIGN KEY REFERENCES Embarazo(IdEmbarazo),
   IdEncuentro INT NULL FOREIGN KEY REFERENCES Encuentro(IdEncuentro),
   IdProfesional INT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
   Fecha DATE NOT NULL,
+  NumeroControl INT NULL,
+  EdadGestSemanas INT NULL,
+  EdadGestDias INT NULL,
+  MetodoEdadGest VARCHAR(50) NULL,
   PesoKg DECIMAL(5,2) NULL CHECK (PesoKg >= 25 AND PesoKg <= 250),
+  PesoPreGestacionalKg DECIMAL(5,2) NULL,
   TallaM DECIMAL(3,2) NULL CHECK (TallaM BETWEEN 1.20 AND 2.20),
+  IMCPreGestacional DECIMAL(5,2) NULL,
   PA_Sistolica TINYINT NULL CHECK (PA_Sistolica BETWEEN 50 AND 250),
   PA_Diastolica TINYINT NULL CHECK (PA_Diastolica BETWEEN 30 AND 180),
-  AlturaUterina_cm DECIMAL(4,1) NULL,
-  FCF_bpm TINYINT NULL CHECK (FCF_bpm BETWEEN 60 AND 220),
+  Pulso SMALLINT NULL,
+  FrecuenciaRespiratoria SMALLINT NULL,
+  Temperatura DECIMAL(4,1) NULL,
+  AlturaUterina_cm DECIMAL(5,1) NULL,
+  DinamicaUterina VARCHAR(10) NULL,
   Presentacion NVARCHAR(50) NULL,
-  Proteinuria NVARCHAR(10) NULL,
-  MovFetales BIT NULL,
+  TipoEmbarazo VARCHAR(20) NULL,
+  FCF_bpm TINYINT NULL CHECK (FCF_bpm BETWEEN 60 AND 220),
+  LiquidoAmniotico VARCHAR(20) NULL,
+  IndiceLiquidoAmniotico DECIMAL(4,1) NULL,
+  PerfilBiofisico VARCHAR(10) NULL,
+  Proteinuria VARCHAR(10) NULL,
+  Edemas VARCHAR(10) NULL,
+  Reflejos VARCHAR(10) NULL,
+  Hemoglobina DECIMAL(4,1) NULL,
+  ResultadoVIH VARCHAR(20) NULL,
+  ResultadoSifilis VARCHAR(20) NULL,
+  GrupoSanguineoRh VARCHAR(5) NULL,
+  EcografiaRealizada BIT NULL,
+  FechaEcografia DATE NULL,
+  LugarEcografia NVARCHAR(100) NULL,
+  PlanPartoEntregado BIT NULL,
+  MicronutrientesEntregados NVARCHAR(100) NULL,
+  ViajoUltSemanas BIT NULL,
+  ReferenciaObstetrica BIT NULL,
   Consejerias NVARCHAR(200) NULL,
   Observaciones NVARCHAR(300) NULL,
+  ProximaCitaFecha DATE NULL,
+  EstablecimientoAtencion NVARCHAR(100) NULL,
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
+
+ 
+
+
+
 CREATE INDEX IX_ControlPrenatal_EmbarazoFecha ON ControlPrenatal(IdEmbarazo, Fecha);
 GO
 
 /* ==================  INTRAPARTO / PARTO  ================== */
-CREATE TABLE Parto(
+CREATE TABLE Parto (
   IdParto INT IDENTITY(1,1) PRIMARY KEY,
+
   IdEmbarazo INT NOT NULL FOREIGN KEY REFERENCES Embarazo(IdEmbarazo),
   IdEncuentro INT NULL FOREIGN KEY REFERENCES Encuentro(IdEncuentro),
   IdProfesional INT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
-  Fecha DATE NOT NULL,
-  HoraIngreso DATETIME2 NULL,
-  HoraInicioTrabajo DATETIME2 NULL,
-  Membranas NVARCHAR(10) NULL,  
-  IdLiquido SMALLINT NULL FOREIGN KEY REFERENCES LiquidoAmniotico(IdLiquido),
-  Analgesia NVARCHAR(50) NULL,
+
+  Fecha DATE NOT NULL,                             -- fecha del parto
+  HoraIngreso DATETIME2 NULL,                       -- hora de ingreso al establecimiento
+  HoraInicioTrabajo DATETIME2 NULL,                 -- hora de inicio del trabajo de parto
+  HoraExpulsion DATETIME2 NULL,                     -- hora de expulsión del feto
+  TipoParto NVARCHAR(50) NULL,                      -- “vaginal”, “cesárea”, “instrumental”
   IdViaParto SMALLINT NULL FOREIGN KEY REFERENCES ViaParto(IdViaParto),
-  IndicacionCesarea NVARCHAR(150) NULL,
-  PerdidasML INT NULL CHECK (PerdidasML IS NULL OR PerdidasML >= 0),
-  Desgarro NVARCHAR(10) NULL,   
-  Complicaciones NVARCHAR(200) NULL,
+  IndicacionCesarea NVARCHAR(150) NULL,             -- motivo de la cesárea
+
+  Membranas NVARCHAR(10) NULL,                      -- estado de membranas al ingreso
+  TiempoRoturaMembranasHoras INT NULL,              -- horas desde rotura de membranas
+  IdLiquido SMALLINT NULL FOREIGN KEY REFERENCES LiquidoAmniotico(IdLiquido),
+  AspectoLiquido NVARCHAR(50) NULL,                 -- descriptor adicional del líquido amniótico
+
+  Analgesia NVARCHAR(50) NULL,                      -- tipo de analgesia
+  PosicionMadre NVARCHAR(50) NULL,                  -- posición de la madre durante trabajo de parto
+  Acompanante BIT NULL,                             -- si hubo acompañante (1=Sí,0=No)
+  LugarNacimiento NVARCHAR(100) NULL,               -- establecimiento o domicilio
+
+  DuracionSegundaEtapaMinutos INT NULL,             -- duración en minutos de la segunda etapa (empuje)
+  PerdidasML INT NULL CHECK (PerdidasML IS NULL OR PerdidasML >= 0),  -- pérdidas de sangre estimadas
+  Desgarro NVARCHAR(10) NULL,                        -- grado de desgarro (I, II, III, IV)
+  Episiotomia BIT NULL,                             -- si se realizó episiotomía
+
+  ComplicacionesMaternas NVARCHAR(300) NULL,        -- complicaciones registradas
+  Derivacion BIT NULL,                              -- si hubo derivación a otro nivel
+  SeguroTipo NVARCHAR(50) NULL,                     -- tipo de seguro (SIS, ESSALUD, privado, etc)
+
+  NumeroHijosPrevios INT NULL,                      -- número de hijos vivos previos
+  NumeroCesareasPrevias INT NULL,                    -- número de cesáreas previas
+  EmbarazoMultiple BIT NULL,                         -- embarazo múltiple (1=Sí,0=No)
+  NumeroGemelos INT NULL,                            -- número de gemelos/trillizos si aplica
+
+  Observaciones NVARCHAR(500) NULL,                 -- observaciones adicionales
+
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
+
 CREATE INDEX IX_Parto_EmbarazoFecha ON Parto(IdEmbarazo, Fecha);
 GO
 
@@ -328,48 +420,69 @@ CREATE TABLE PartoIntervencion(
 );
 GO
 
-CREATE TABLE Bebe(
+CREATE TABLE Bebe (
   IdBebe INT IDENTITY(1,1) PRIMARY KEY,
   IdParto INT NOT NULL FOREIGN KEY REFERENCES Parto(IdParto),
-  EstadoBebe NVARCHAR(50) NOT NULL,  
+  NumeroBebe INT NOT NULL DEFAULT 1,                 -- 1,2 para gemelos, etc.
   Sexo CHAR(1) NULL CHECK (Sexo IN ('F','M')),
-	  Apgar1 TINYINT NULL CHECK (Apgar1 BETWEEN 0 AND 10),
+  FechaHoraNacimiento DATETIME2 NULL,
+  Apgar1 TINYINT NULL CHECK (Apgar1 BETWEEN 0 AND 10),
   Apgar5 TINYINT NULL CHECK (Apgar5 BETWEEN 0 AND 10),
-  PesoGr INT NULL CHECK (PesoGr IS NULL OR PesoGr BETWEEN 300 AND 7000),
+  PesoGr INT NULL CHECK (PesoGr IS NULL OR (PesoGr BETWEEN 300 AND 7000)),
   TallaCm DECIMAL(4,1) NULL,
   PerimetroCefalico DECIMAL(4,1) NULL,
-  EG_Semanas DECIMAL(4,1) NULL,
-  Reanimacion BIT NULL,
+  EG_Semanas DECIMAL(4,1) NULL,                      -- edad gestacional en semanas
+  Reanimacion BIT NULL,                              -- si requirió reanimación
   Observaciones NVARCHAR(200) NULL,
   Estado BIT NOT NULL DEFAULT 1
 );
 GO
 
 /* ==================  PUERPERIO (PNC)  ================== */
-CREATE TABLE SeguimientoPuerperio(
+CREATE TABLE SeguimientoPuerperio (
   IdPuerperio INT IDENTITY(1,1) PRIMARY KEY,
+
   IdEmbarazo INT NOT NULL FOREIGN KEY REFERENCES Embarazo(IdEmbarazo),
   IdEncuentro INT NULL FOREIGN KEY REFERENCES Encuentro(IdEncuentro),
   IdProfesional INT NULL FOREIGN KEY REFERENCES ProfesionalSalud(IdProfesional),
-  Fecha DATE NOT NULL,
+
+  Fecha DATE NOT NULL,                              -- fecha del seguimiento posparto
+  DiasPosparto INT NULL,                            -- número de días desde el parto
   PA_Sistolica TINYINT NULL CHECK (PA_Sistolica BETWEEN 50 AND 250),
   PA_Diastolica TINYINT NULL CHECK (PA_Diastolica BETWEEN 30 AND 180),
-  Temp_C DECIMAL(4,1) NULL,
-  AlturaUterinaPP_cm DECIMAL(4,1) NULL,
-  Loquios NVARCHAR(20) NULL,
-  Lactancia NVARCHAR(20) NULL,
-  SignosInfeccion BIT NULL,
-  TamizajeDepresion NVARCHAR(20) NULL,
-  IdMetodoPF SMALLINT NULL FOREIGN KEY REFERENCES MetodoPF(IdMetodoPF),
-  Observaciones NVARCHAR(300) NULL,
-  Estado BIT NOT NULL DEFAULT 1
+  Temp_C DECIMAL(4,1) NULL,                          -- temperatura corporal en grados C
+
+  AlturaUterinaPP_cm DECIMAL(5,1) NULL,            -- altura uterina en cm en pos-parto
+  InvolucionUterina VARCHAR(50) NULL,               -- descriptor de la involución uterina (“normal”, “retardada”, etc)
+  Loquios NVARCHAR(20) NULL,                        -- descripción de los loquios
+  HemorragiaResidual BIT NULL,                -- si hay sangrado o loquios excesivos, se puede usar BIT o descriptor
+  Lactancia NVARCHAR(20) NULL,                       -- tipo de lactancia (“exclusiva”, “mixta”, “ninguna”)
+  ApoyoLactancia BIT NULL,                           -- si se brindó consejería de lactancia (1=Sí,0=No)
+  SignosInfeccion BIT NULL,                         -- si se detectaron signos de infección materna (1=Sí,0=No)
+  TamizajeDepresion NVARCHAR(20) NULL,               -- resultado del tamizaje de depresión posparto
+
+  IdMetodoPF SMALLINT NULL FOREIGN KEY REFERENCES MetodoPF(IdMetodoPF),  -- método de planificación familiar elegido
+  ConsejoPlanificacion BIT NULL,                 -- si se brindó consejería de planificación familiar (1=Sí,0=No)
+  VisitaDomiciliariaFecha DATE NULL,                 -- fecha de la visita domiciliaria (si aplica)
+  SeguroTipo NVARCHAR(50) NULL,                      -- tipo de seguro o financiamiento (“SIS”, “EsSalud”, “Privado”, etc)
+
+  ComplicacionesMaternas NVARCHAR(300) NULL,        -- complicaciones observadas durante el puerperio (mastitis, trombosis, etc)
+  Derivacion BIT NULL,                               -- si la puérpera fue derivada a otro nivel de atención (1=Sí,0=No)
+  EstablecimientoAtencion NVARCHAR(100) NULL,        -- establecimiento de salud donde se realiza el seguimiento
+
+  Observaciones NVARCHAR(500) NULL,                 -- observaciones adicionales
+
+  Estado BIT NOT NULL DEFAULT 1                      -- activo / inactivo
 );
 GO
-CREATE INDEX IX_Puerperio_EmbarazoFecha ON SeguimientoPuerperio(IdEmbarazo, Fecha);
-GO
 
+
+
+CREATE INDEX IX_Puerperio_EmbarazoFecha
+  ON SeguimientoPuerperio(IdEmbarazo, Fecha);
+GO
 /* ============  AYUDAS DIAGN�STICAS (ORDEN + RESULTADO)  ============ */
-CREATE TABLE AyudaDiagnosticaOrden(
+CREATE TABLE AyudaDiagnosticaOrden (
   IdAyuda INT IDENTITY(1,1) PRIMARY KEY,
   IdPaciente INT NOT NULL FOREIGN KEY REFERENCES Paciente(IdPaciente),
   IdEmbarazo INT NULL FOREIGN KEY REFERENCES Embarazo(IdEmbarazo),
@@ -378,11 +491,10 @@ CREATE TABLE AyudaDiagnosticaOrden(
   Descripcion NVARCHAR(200) NULL,
   Urgente BIT NOT NULL DEFAULT 0,
   FechaOrden DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-  Estado NVARCHAR(20) NOT NULL DEFAULT N'Solicitada' 
+  Estado NVARCHAR(20) NOT NULL DEFAULT N'Solicitada'
 );
 GO
-
-CREATE TABLE ResultadoDiagnostico(
+CREATE TABLE ResultadoDiagnostico (
   IdResultado INT IDENTITY(1,1) PRIMARY KEY,
   IdAyuda INT NOT NULL FOREIGN KEY REFERENCES AyudaDiagnosticaOrden(IdAyuda),
   FechaResultado DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
@@ -392,14 +504,24 @@ CREATE TABLE ResultadoDiagnostico(
 );
 GO
 
-CREATE TABLE ResultadoItem(
+CREATE TABLE ResultadoItem (
   IdResultadoItem INT IDENTITY(1,1) PRIMARY KEY,
   IdResultado INT NOT NULL FOREIGN KEY REFERENCES ResultadoDiagnostico(IdResultado),
-  Parametro NVARCHAR(100) NOT NULL,    
+  Parametro NVARCHAR(100) NOT NULL,
   ValorNumerico DECIMAL(12,4) NULL,
   ValorTexto NVARCHAR(200) NULL,
   Unidad NVARCHAR(40) NULL,
   RangoRef NVARCHAR(60) NULL
+);
+GO
+
+CREATE TABLE ControlPrenatal_AyudaDiagnostica (
+  IdCP_AD INT IDENTITY(1,1) PRIMARY KEY,
+  IdControl INT NOT NULL FOREIGN KEY REFERENCES ControlPrenatal(IdControl),
+  IdAyuda INT NOT NULL FOREIGN KEY REFERENCES AyudaDiagnosticaOrden(IdAyuda),
+  FechaOrden DATETIME2 NULL,
+  Comentario NVARCHAR(200) NULL,
+  Estado BIT NOT NULL DEFAULT 1
 );
 GO
 
@@ -475,20 +597,20 @@ GO
 PRINT 'Esquema creado correctamente (Paciente relacionado con Usuario).';
 GO
 
-USE ProyectoCalidad;
-GO
+--USE ProyectoCalidad;
+--GO
 
-DELETE FROM Paciente;
-DELETE FROM PacienteEmail;
-DELETE FROM PacienteTelefono;
+--DELETE FROM Paciente;
+--DELETE FROM PacienteEmail;
+--DELETE FROM PacienteTelefono;
 
-DELETE FROM ProfesionalSalud;
-DELETE FROM ProfesionalEmail;
-DELETE FROM ProfesionalTelefono;
+--DELETE FROM ProfesionalSalud;
+--DELETE FROM ProfesionalEmail;
+--DELETE FROM ProfesionalTelefono;
 
 
-DBCC CHECKIDENT ('Paciente', RESEED, 0);
-DBCC CHECKIDENT ('ProfesionalSalud', RESEED, 0);
+--DBCC CHECKIDENT ('Paciente', RESEED, 0);
+--DBCC CHECKIDENT ('ProfesionalSalud', RESEED, 0);
 
 
 

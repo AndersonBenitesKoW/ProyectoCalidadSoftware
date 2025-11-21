@@ -58,6 +58,9 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@IdEmbarazo", entidad.IdEmbarazo);
                 cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@IdTipoEncuentro", entidad.IdTipoEncuentro);
+                cmd.Parameters.AddWithValue("@FechaHoraInicio", entidad.FechaHoraInicio);
+                cmd.Parameters.AddWithValue("@FechaHoraFin", (object)entidad.FechaHoraFin ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
                 cmd.Parameters.AddWithValue("@Notas", (object)entidad.Notas ?? DBNull.Value);
 
                 cn.Open();

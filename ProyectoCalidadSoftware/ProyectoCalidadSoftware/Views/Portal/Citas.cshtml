@@ -30,14 +30,6 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">DNI</label>
-                                <input type="text" class="form-control" id="dni" maxlength="8" placeholder="Ej: 76543210" required />
-                                <div class="invalid-feedback">
-                                    El DNI debe tener exactamente 8 dígitos.
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
                                 <label class="form-label">Correo electrónico</label>
                                 <input type="email" class="form-control" id="email" placeholder="Ej: maria@gmail.com" required />
                                 <div class="invalid-feedback">
@@ -100,7 +92,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('citaForm');
         const nombreInput = document.getElementById('nombreCompleto');
-        const dniInput = document.getElementById('dni');
         const emailInput = document.getElementById('email');
         const telefonoInput = document.getElementById('telefono');
         const especialidadSelect = document.getElementById('especialidad');
@@ -118,13 +109,6 @@
             }
         });
 
-        // Validación de DNI
-        dniInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, ''); // Solo números
-            if (this.value.length > 8) {
-                this.value = this.value.substring(0, 8);
-            }
-        });
 
         // Validación de teléfono
         telefonoInput.addEventListener('input', function() {
@@ -168,14 +152,6 @@
                 nombreInput.classList.remove('is-invalid');
             }
 
-            // Validar DNI
-            if (!dniInput.value || dniInput.value.length !== 8) {
-                dniInput.classList.add('is-invalid');
-                errors.push('El DNI debe tener exactamente 8 dígitos');
-                isValid = false;
-            } else {
-                dniInput.classList.remove('is-invalid');
-            }
 
             // Validar email
             const emailRegex = new RegExp('^[^\s@@]+\@@[^\s@@]+\.[^\s@@]+$');

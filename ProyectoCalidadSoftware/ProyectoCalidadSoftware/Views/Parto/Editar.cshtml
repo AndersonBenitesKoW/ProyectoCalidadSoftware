@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating mb-3">
-                                <input asp-for="Membranas" class="form-control" />
+                                <input asp-for="Membranas" class="form-control" maxlength="10" />
                                 <label asp-for="Membranas">Membranas</label>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input asp-for="AspectoLiquido" class="form-control" />
+                                <input asp-for="AspectoLiquido" class="form-control" maxlength="50" />
                                 <label asp-for="AspectoLiquido">Aspecto Líquido</label>
                             </div>
                         </div>
@@ -121,13 +121,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
-                                <input asp-for="TipoParto" class="form-control" />
+                                <input asp-for="TipoParto" class="form-control" maxlength="50" />
                                 <label asp-for="TipoParto">Tipo de Parto</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
-                                <input asp-for="Analgesia" class="form-control" />
+                                <input asp-for="Analgesia" class="form-control" maxlength="50" />
                                 <label asp-for="Analgesia">Analgesia</label>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
-                                <input asp-for="PosicionMadre" class="form-control" />
+                                <input asp-for="PosicionMadre" class="form-control" maxlength="50" />
                                 <label asp-for="PosicionMadre">Posición Madre</label>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
-                                <input asp-for="LugarNacimiento" class="form-control" />
+                                <input asp-for="LugarNacimiento" class="form-control" maxlength="100" />
                                 <label asp-for="LugarNacimiento">Lugar Nacimiento</label>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
-                                <input asp-for="PerdidasML" class="form-control" type="number" />
+                                <input asp-for="PerdidasML" class="form-control" type="number" min="0" />
                                 <label asp-for="PerdidasML">Pérdidas (ml)</label>
                             </div>
                         </div>
@@ -175,7 +175,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating mb-3">
-                                <input asp-for="IndicacionCesarea" class="form-control" />
+                                <input asp-for="IndicacionCesarea" class="form-control" maxlength="150" />
                                 <label asp-for="IndicacionCesarea">Indicación Cesárea (si aplica)</label>
                                 <span asp-validation-for="IndicacionCesarea" class="text-danger small"></span>
                             </div>
@@ -185,29 +185,23 @@
                     <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
                     <hr class="mt-0" />
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-floating mb-3">
-                                <input asp-for="Desgarro" class="form-control" />
+                                <input asp-for="Desgarro" class="form-control" maxlength="10" />
                                 <label asp-for="Desgarro">Desgarro (Grado)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-floating mb-3">
-                                <textarea asp-for="Complicaciones" class="form-control" style="height: 100px"></textarea>
-                                <label asp-for="Complicaciones">Otras Complicaciones</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <textarea asp-for="ComplicacionesMaternas" class="form-control" style="height: 80px"></textarea>
+                                <textarea asp-for="ComplicacionesMaternas" class="form-control" style="height: 80px" maxlength="300"></textarea>
                                 <label asp-for="ComplicacionesMaternas">Complicaciones Maternas</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input asp-for="SeguroTipo" class="form-control" />
+                                <input asp-for="SeguroTipo" class="form-control" maxlength="50" />
                                 <label asp-for="SeguroTipo">Tipo de Seguro</label>
                             </div>
                         </div>
@@ -247,7 +241,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <textarea asp-for="Observaciones" class="form-control" style="height: 80px"></textarea>
+                                <textarea asp-for="Observaciones" class="form-control" style="height: 80px" maxlength="500"></textarea>
                                 <label asp-for="Observaciones">Observaciones</label>
                             </div>
                         </div>

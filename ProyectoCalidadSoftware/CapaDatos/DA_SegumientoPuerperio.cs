@@ -19,11 +19,13 @@ namespace CapaAccesoDatos
         public List<entSeguimientoPuerperio> Listar(bool estado)
         {
             List<entSeguimientoPuerperio> lista = new List<entSeguimientoPuerperio>();
+
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             using (SqlCommand cmd = new SqlCommand("sp_ListarSeguimientoPuerperio", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Estado", estado);
+
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
@@ -35,27 +37,47 @@ namespace CapaAccesoDatos
                             IdEmbarazo = Convert.ToInt32(dr["IdEmbarazo"]),
                             IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,
                             IdMetodoPF = dr["IdMetodoPF"] != DBNull.Value ? (short?)Convert.ToInt16(dr["IdMetodoPF"]) : null,
+
                             Fecha = Convert.ToDateTime(dr["Fecha"]),
                             DiasPosparto = dr["DiasPosparto"] != DBNull.Value ? (int?)Convert.ToInt32(dr["DiasPosparto"]) : null,
                             PA_Sistolica = dr["PA_Sistolica"] != DBNull.Value ? (byte?)Convert.ToByte(dr["PA_Sistolica"]) : null,
                             PA_Diastolica = dr["PA_Diastolica"] != DBNull.Value ? (byte?)Convert.ToByte(dr["PA_Diastolica"]) : null,
                             Temp_C = dr["Temp_C"] != DBNull.Value ? Convert.ToDecimal(dr["Temp_C"]) : null,
+
                             AlturaUterinaPP_cm = dr["AlturaUterinaPP_cm"] != DBNull.Value ? Convert.ToDecimal(dr["AlturaUterinaPP_cm"]) : null,
-                            InvolucionUterina = dr["InvolucionUterina"].ToString(),
-                            Loquios = dr["Loquios"].ToString(),
-                            HemorragiaResidual = dr["HemorragiaResidual"].ToString(),
-                            Lactancia = dr["Lactancia"].ToString(),
+                            InvolucionUterina = dr["InvolucionUterina"]?.ToString(),
+                            Loquios = dr["Loquios"]?.ToString(),
+
+                            HemorragiaResidual = dr["HemorragiaResidual"] != DBNull.Value
+                                                ? (bool?)Convert.ToBoolean(dr["HemorragiaResidual"])
+                                                : null,
+
+                            Lactancia = dr["Lactancia"]?.ToString(),
                             ApoyoLactancia = dr["ApoyoLactancia"] != DBNull.Value ? Convert.ToBoolean(dr["ApoyoLactancia"]) : false,
                             SignosInfeccion = dr["SignosInfeccion"] != DBNull.Value ? Convert.ToBoolean(dr["SignosInfeccion"]) : false,
-                            TamizajeDepresion = dr["TamizajeDepresion"].ToString(),
-                            ConsejoPlanificacion = dr["ConsejoPlanificacion"] != DBNull.Value ? Convert.ToBoolean(dr["ConsejoPlanificacion"]) : false,
-                            VisitaDomiciliariaFecha = dr["VisitaDomiciliariaFecha"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["VisitaDomiciliariaFecha"]) : null,
-                            SeguroTipo = dr["SeguroTipo"] != DBNull.Value ? dr["SeguroTipo"].ToString() : null,
-                            ComplicacionesMaternas = dr["ComplicacionesMaternas"] != DBNull.Value ? dr["ComplicacionesMaternas"].ToString() : null,
+
+                            TamizajeDepresion = dr["TamizajeDepresion"]?.ToString(),
+
+                            ConsejoPlanificacion = dr["ConsejoPlanificacion"] != DBNull.Value
+                                                   ? Convert.ToBoolean(dr["ConsejoPlanificacion"])
+                                                   : false,
+
+                            VisitaDomiciliariaFecha = dr["VisitaDomiciliariaFecha"] != DBNull.Value
+                                                      ? (DateTime?)Convert.ToDateTime(dr["VisitaDomiciliariaFecha"])
+                                                      : null,
+
+                            SeguroTipo = dr["SeguroTipo"]?.ToString(),
+                            ComplicacionesMaternas = dr["ComplicacionesMaternas"]?.ToString(),
+
                             Derivacion = dr["Derivacion"] != DBNull.Value ? Convert.ToBoolean(dr["Derivacion"]) : false,
-                            EstablecimientoAtencion = dr["EstablecimientoAtencion"] != DBNull.Value ? dr["EstablecimientoAtencion"].ToString() : null,
-                            Observaciones = dr["Observaciones"] != DBNull.Value ? dr["Observaciones"].ToString() : null,
+
+                            EstablecimientoAtencion = dr["EstablecimientoAtencion"] != DBNull.Value
+                                                      ? dr["EstablecimientoAtencion"].ToString()
+                                                      : null,
+
+                            Observaciones = dr["Observaciones"]?.ToString(),
                             Estado = Convert.ToBoolean(dr["Estado"]),
+
                             NombrePaciente = dr["NombrePaciente"].ToString(),
                             NombreProfesional = dr["NombreProfesional"].ToString(),
                             NombreMetodoPF = dr["NombreMetodoPF"].ToString()
@@ -65,6 +87,7 @@ namespace CapaAccesoDatos
             }
             return lista;
         }
+
 
         private void AddParameters(SqlCommand cmd, entSeguimientoPuerperio entidad)
         {
@@ -79,7 +102,7 @@ namespace CapaAccesoDatos
             cmd.Parameters.AddWithValue("@AlturaUterinaPP_cm", (object)entidad.AlturaUterinaPP_cm ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@InvolucionUterina", (object)entidad.InvolucionUterina ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Loquios", (object)entidad.Loquios ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@HemorragiaResidual", (object)entidad.HemorragiaResidual ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@HemorragiaResidual", entidad.HemorragiaResidual);
             cmd.Parameters.AddWithValue("@Lactancia", (object)entidad.Lactancia ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@ApoyoLactancia", entidad.ApoyoLactancia);
             cmd.Parameters.AddWithValue("@SignosInfeccion", entidad.SignosInfeccion);
@@ -164,7 +187,7 @@ namespace CapaAccesoDatos
                                 AlturaUterinaPP_cm = dr["AlturaUterinaPP_cm"] != DBNull.Value ? Convert.ToDecimal(dr["AlturaUterinaPP_cm"]) : null,
                                 InvolucionUterina = dr["InvolucionUterina"].ToString(),
                                 Loquios = dr["Loquios"].ToString(),
-                                HemorragiaResidual = dr["HemorragiaResidual"].ToString(),
+                                HemorragiaResidual = dr["HemorragiaResidual"] != DBNull.Value ? Convert.ToBoolean(dr["HemorragiaResidual"]) : false,
                                 Lactancia = dr["Lactancia"].ToString(),
                                 ApoyoLactancia = dr["ApoyoLactancia"] != DBNull.Value ? Convert.ToBoolean(dr["ApoyoLactancia"]) : false,
                                 SignosInfeccion = dr["SignosInfeccion"] != DBNull.Value ? Convert.ToBoolean(dr["SignosInfeccion"]) : false,

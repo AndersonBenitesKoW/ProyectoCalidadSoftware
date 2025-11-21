@@ -69,7 +69,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 Console.WriteLine("LOG: ModelState válido, procediendo a registrar");
 
                 // Obtener idProfesional del usuario logueado (asumiendo que está en sesión o claims)
-                int idProfesional = 1; // TODO: Obtener del contexto de usuario logueado
+                int idProfesional = control.IdProfesional ?? 1; // Usar el seleccionado o 1 por defecto
                 Console.WriteLine($"LOG: Usando idProfesional={idProfesional}");
                 int idControl = logControlPrenatal.Instancia.RegistrarControlPrenatalConEncuentro(control, idProfesional);
                 Console.WriteLine($"LOG: idControl retornado={idControl}");

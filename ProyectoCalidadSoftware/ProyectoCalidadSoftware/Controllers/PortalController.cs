@@ -27,6 +27,51 @@ namespace ProyectoCalidadSoftware.Controllers
 
         public IActionResult Citas() => View();
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Citas(string nombreCompleto, string email, string telefono, string especialidad, DateTime fechaCita, string comentarios)
+        {
+            try
+            {
+                // Buscar paciente por email
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.EmailPrincipal == email);
+                if (paciente == null)
+                {
+                    // Crear paciente
+                    paciente = new entPaciente
+                    {
+                        Nombres = nombreCompleto.Split(' ')[0],
+                        Apellidos = string.Join(" ", nombreCompleto.Split(' ').Skip(1)),
+                        EmailPrincipal = email,
+                        TelefonoPrincipal = telefono,
+                        Estado = true
+                    };
+                    logPaciente.Instancia.InsertarPaciente(paciente);
+                    // Asumir que InsertarPaciente asigna IdPaciente
+                }
+
+                // Crear cita
+                var cita = new entCita
+                {
+                    IdPaciente = paciente.IdPaciente,
+                    FechaCita = fechaCita,
+                    Observacion = comentarios,
+                    IdEstadoCita = 1, // Pendiente
+                    // IdProfesional = null, IdRecepcionista = null
+                };
+
+                logCita.Instancia.InsertarCita(cita);
+
+                TempData["Success"] = "Cita agendada exitosamente.";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al agendar cita: " + ex.Message;
+                return View();
+            }
+        }
+
         public IActionResult Contacto() => View();
 
         [HttpGet]

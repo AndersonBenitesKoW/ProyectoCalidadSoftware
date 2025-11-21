@@ -51,6 +51,7 @@
                             <th>PA (sis/dia)</th>
                             <th>Temp (°C)</th>
                             <th>Lactancia</th>
+                            <th>Hemorragia Residual</th>
                             <th>Signos Infección</th>
                             <th>Método PF</th>
                             <th class="text-center">Estado</th>
@@ -68,6 +69,7 @@
                                 <td>@(item.PA_Sistolica.HasValue && item.PA_Diastolica.HasValue ? $"{item.PA_Sistolica}/{item.PA_Diastolica}" : "-")</td>
                                 <td>@item.Temp_C</td>
                                 <td>@item.Lactancia</td>
+                                <td>@(item.HemorragiaResidual == true ? "Sí" : "No")</td>
                                 <td>@(item.SignosInfeccion ? "Sí" : "No")</td>
                                 <td>@item.NombreMetodoPF</td>
                                 <td class="text-center">
