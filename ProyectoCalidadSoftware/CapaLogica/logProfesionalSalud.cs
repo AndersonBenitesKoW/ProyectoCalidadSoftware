@@ -77,5 +77,18 @@ namespace CapaLogica
                 throw new Exception("Error al inhabilitar el profesional: " + ex.Message);
             }
         }
+
+        public entProfesionalSalud BuscarProfesionalPorCMP(string cmp)
+        {
+            try
+            {
+                return DA_ProfesionalSalud.Instancia.BuscarPorCMP(cmp);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el profesional por CMP: " + ex.Message);
+            }
+        }
+
     }
 }

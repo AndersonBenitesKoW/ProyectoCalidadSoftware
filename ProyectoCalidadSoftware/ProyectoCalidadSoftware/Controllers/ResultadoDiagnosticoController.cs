@@ -1,5 +1,6 @@
 ﻿using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
@@ -17,6 +18,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /core/ayudas/resultados/registrar
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Registrar(int? idAyuda)
         {
             var modelo = new entResultadoDiagnostico
@@ -32,6 +34,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /core/ayudas/resultados/registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Registrar(entResultadoDiagnostico entidad)
         {
             try

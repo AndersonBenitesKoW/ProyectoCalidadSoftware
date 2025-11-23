@@ -19,6 +19,15 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.MostrandoActivos = mostrarActivos;
                 var lista = logSeguimientoPuerperio.Instancia.ListarSeguimiento(mostrarActivos);
+                // Para PERSONAL_SALUD, setear IdProfesionalActual para restringir eliminación
+                if (User.IsInRole("PERSONAL_SALUD"))
+                {
+                    var idProfesional = GetIdProfesional();
+                    if (idProfesional.HasValue)
+                    {
+                        ViewBag.IdProfesionalActual = idProfesional.Value;
+                    }
+                }
                 return View(lista); // Views/SeguimientoPuerperio/Listar.cshtml
             }
             catch (Exception ex)
@@ -209,6 +218,20 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
+        }
+
+        private int? GetIdProfesional()
+        {
+            if (User.IsInRole("PERSONAL_SALUD"))
+            {
+                var idUsuarioClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(idUsuarioClaim, out int idUsuario))
+                {
+                    var profesional = logProfesionalSalud.Instancia.ListarProfesionalSalud(true).FirstOrDefault(p => p.IdUsuario == idUsuario);
+                    return profesional?.IdProfesional;
+                }
+            }
+            return null;
         }
     }
 }

@@ -144,6 +144,39 @@ namespace CapaAccesoDatos
             }
         }
 
+        public entProfesionalSalud BuscarPorCMP(string cmp)
+        {
+            entProfesionalSalud profesional = null;
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_BuscarProfesionalPorCMP", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CMP", cmp);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        profesional = new entProfesionalSalud
+                        {
+                            IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Especialidad = dr["Especialidad"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            CMP = dr["CMP"].ToString(),
+                            EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                            TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                        };
+                    }
+                }
+            }
+            return profesional;
+        }
+
+
         #endregion
     }
 }

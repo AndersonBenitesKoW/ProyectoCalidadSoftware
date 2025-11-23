@@ -100,3 +100,12 @@ BEGIN
 END
 GO
 
+
+
+
+SELECT *  FROM USUARIO
+
+
+
+
+select * from rol 

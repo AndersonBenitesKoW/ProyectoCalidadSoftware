@@ -1,0 +1,99 @@
+@model CapaEntidad.entPaciente
+
+@{
+    ViewData["Title"] = "Registrar Datos de Paciente";
+    Layout = "~/Views/Shared/_LayoutPublic.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0"><i class="bi bi-person-plus"></i> Registrar Datos de Paciente</h1>
+                    <p class="mb-0">Complete sus datos personales para continuar</p>
+                </div>
+
+                <div class="card-body">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>¡Error!</strong> @ViewBag.Error
+                        </div>
+                    }
+
+                    <form asp-action="RegistrarPaciente" method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombres" class="form-label">
+                                    <i class="bi bi-person"></i> Nombres *
+                                </label>
+                                <input asp-for="Nombres" class="form-control" placeholder="Ingrese sus nombres" required />
+                                <span asp-validation-for="Nombres" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellidos" class="form-label">
+                                    <i class="bi bi-person-fill"></i> Apellidos *
+                                </label>
+                                <input asp-for="Apellidos" class="form-control" placeholder="Ingrese sus apellidos" required />
+                                <span asp-validation-for="Apellidos" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DNI" class="form-label">
+                                    <i class="bi bi-card-text"></i> DNI *
+                                </label>
+                                <input asp-for="DNI" class="form-control" placeholder="Ingrese su DNI" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required />
+                                <span asp-validation-for="DNI" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FechaNacimiento" class="form-label">
+                                    <i class="bi bi-calendar-event"></i> Fecha de Nacimiento *
+                                </label>
+                                <input asp-for="FechaNacimiento" class="form-control" type="date" required />
+                                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EmailPrincipal" class="form-label">
+                                    <i class="bi bi-envelope-at"></i> Email Principal *
+                                </label>
+                                <input asp-for="EmailPrincipal" class="form-control" placeholder="ejemplo@correo.com" type="email" required />
+                                <span asp-validation-for="EmailPrincipal" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TelefonoPrincipal" class="form-label">
+                                    <i class="bi bi-phone"></i> Teléfono Principal *
+                                </label>
+                                <input asp-for="TelefonoPrincipal" class="form-control" placeholder="987654321" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required />
+                                <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" asp-controller="Portal" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Volver al Inicio
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Registrar Datos
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

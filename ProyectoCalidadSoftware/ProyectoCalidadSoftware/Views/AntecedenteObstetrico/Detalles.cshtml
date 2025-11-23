@@ -1,0 +1,66 @@
+@model CapaEntidad.entAntecedenteObstetrico
+
+@{
+    ViewData["Title"] = "Detalles del Antecedente Obstétrico";
+    string clase = Model.Estado ? "text-success" : "text-danger";
+    string texto = Model.Estado ? "Activo" : "Inactivo";
+}
+
+<style>
+    .details-list dt {
+        font-weight: 600;
+    }
+
+    .details-list dd {
+        color: #333;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="display-6"><i class="bi bi-file-earmark-medical text-primary"></i> @ViewData["Title"]</h1>
+        <hr />
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Antecedente #@Model.IdAntecedente</h5>
+                <span class="badge bg-@clase fs-6">@texto</span>
+            </div>
+            <div class="card-body">
+
+                <h5 class="mt-2"><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Paciente</dt>
+                    <dd class="col-sm-9">@ViewBag.NombrePaciente</dd>
+
+                    <dt class="col-sm-3">Menarquía</dt>
+                    <dd class="col-sm-3">@Model.Menarquia</dd>
+
+                    <dt class="col-sm-3">Ciclo (Días)</dt>
+                    <dd class="col-sm-3">@Model.CicloDias</dd>
+
+                    <dt class="col-sm-3">Gestas</dt>
+                    <dd class="col-sm-3">@Model.Gestas</dd>
+
+                    <dt class="col-sm-3">Partos</dt>
+                    <dd class="col-sm-3">@Model.Partos</dd>
+
+                    <dt class="col-sm-3">Abortos</dt>
+                    <dd class="col-sm-3">@Model.Abortos</dd>
+
+                    <dt class="col-sm-3">Observación</dt>
+                    <dd class="col-sm-9">@Model.Observacion</dd>
+                </dl>
+
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver a la Lista
+                </a>
+                <a asp-action="Actualizar" asp-route-id="@Model.IdAntecedente" class="btn btn-warning">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    //[Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "ADMIN")]
     public class UsuarioController : Controller
     {
         private readonly logUsuario _logUsuario = logUsuario.Instancia;

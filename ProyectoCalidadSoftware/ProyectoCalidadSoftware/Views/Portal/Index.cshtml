@@ -7,12 +7,123 @@
     <div class="container py-5">
         <h1 class="display-5 fw-bold">Te cuidamos, te acompañamos</h1>
         <p class="lead mb-4">Clínica Obstétrica – atención integral en embarazo, parto y puerperio.</p>
-        <a href="/Portal/Citas" class="btn btn-light btn-lg text-primary fw-semibold shadow-sm">
-            <i class="bi bi-calendar-check"></i> Reservar cita
-        </a>
+        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("PACIENTE") && ViewData["PacienteRegistrado"] as bool? == true)
+        {
+            @Html.Raw($"<!-- Usuario: {User.Identity?.Name}, Autenticado: {User.Identity?.IsAuthenticated}, Rol PACIENTE: {User.IsInRole("PACIENTE")}, Registrado: {ViewData["PacienteRegistrado"]} -->")
+            <a href="/Cita/RegistrarCitaPublica" class="btn btn-light btn-lg text-primary fw-semibold shadow-sm">
+                <i class="bi bi-calendar-check"></i> Reservar cita
+            </a>
+        }
+        else
+        {
+            <a href="/Portal/Citas" class="btn btn-light btn-lg text-primary fw-semibold shadow-sm">
+                <i class="bi bi-calendar-check"></i> Reservar cita
+            </a>
+        }
         <a href="/Portal/Servicios" class="btn btn-outline-light btn-lg ms-2 fw-semibold">
             <i class="bi bi-heart-pulse"></i> Conoce nuestros servicios
         </a>
+    </div>
+</section>
+
+<!-- Galería de Fotos de Bebés -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold text-primary">Momentos de Alegría</h2>
+        <p class="text-center mb-5 text-muted">Descubre los momentos mágicos de nuestros pequeños pacientes en su camino hacia el mundo.</p>
+
+        <div id="babyCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#babyCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#babyCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#babyCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card shadow-sm border-0">
+                                <img src="~/imagenes/imagenbebe1.jpg" class="card-img-top" alt="Bebé sonriente" style="height: 250px; object-fit: cover;">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">Primeras Sonrisas</h6>
+                                    <p class="card-text small text-muted">La alegría de un nuevo comienzo.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm border-0">
+                                <img src="~/imagenes/imagenbebe2.jpg" class="card-img-top" alt="Bebé durmiendo" style="height: 250px; object-fit: cover;">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">Sueños Dulces</h6>
+                                    <p class="card-text small text-muted">Momentos de paz y tranquilidad.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm border-0">
+                                <img src="~/imagenes/imagenbebe3.jpg" class="card-img-top" alt="Bebé jugando" style="height: 250px; object-fit: cover;">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">Descubrimientos</h6>
+                                    <p class="card-text small text-muted">Explorando el mundo con curiosidad.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm border-0">
+                                <video class="card-img-top" controls style="height: 300px; object-fit: cover;">
+                                    <source src="~/videos/videobebe1.mp4" type="video/mp4">
+                                    Tu navegador no soporta el elemento de video.
+                                </video>
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">Momentos de Juego</h6>
+                                    <p class="card-text small text-muted">La inocencia y la diversión en movimiento.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm border-0">
+                                <video class="card-img-top" controls style="height: 300px; object-fit: cover;">
+                                    <source src="~/videos/videobebe2.mp4" type="video/mp4">
+                                    Tu navegador no soporta el elemento de video.
+                                </video>
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">Primeros Pasos</h6>
+                                    <p class="card-text small text-muted">Celebrando los logros diarios.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <div class="card shadow-sm border-0 text-center">
+                                <video class="card-img-top" controls style="height: 400px; object-fit: cover;">
+                                    <source src="~/videos/embarazada.mp4" type="video/mp4">
+                                    Tu navegador no soporta el elemento de video.
+                                </video>
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">El Viaje de la Vida</h6>
+                                    <p class="card-text text-muted">Desde la gestación hasta el nacimiento, acompañamos cada etapa con amor y profesionalismo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#babyCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#babyCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
     </div>
 </section>
 

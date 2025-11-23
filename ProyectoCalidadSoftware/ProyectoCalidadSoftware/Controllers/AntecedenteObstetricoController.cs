@@ -8,9 +8,16 @@ namespace ProyectoCalidadSoftware.Controllers
     {
 
         // GET: /AntecedenteObstetrico/Listar
-        public IActionResult Listar()
+        public IActionResult Listar(string dni = null)
         {
             var lista = logAntecedenteObstetrico.Instancia.ListarAntecedenteObstetrico();
+            if (!string.IsNullOrEmpty(dni))
+            {
+                // Filtrar por DNI del paciente
+                var pacientesFiltrados = logPaciente.Instancia.ListarPacientesActivos().Where(p => p.DNI == dni).Select(p => p.IdPaciente).ToList();
+                lista = lista.Where(a => pacientesFiltrados.Contains(a.IdPaciente)).ToList();
+                ViewBag.DNIFiltro = dni;
+            }
             return View(lista);
         }
 
@@ -23,6 +30,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 IdPaciente = idPaciente ?? 0,
                 Estado = true
             };
+            CargarViewBags(modelo);
             return View(modelo);
         }
 
@@ -50,6 +58,28 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.Error = "Error al registrar: " + ex.Message;
                 return View(entidad);
+            }
+        }
+
+        // GET: /AntecedenteObstetrico/Detalles/5
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            try
+            {
+                var entidad = logAntecedenteObstetrico.Instancia.BuscarAntecedenteObstetrico(id);
+                if (entidad == null) return NotFound();
+
+                // Obtener nombre del paciente
+                var paciente = logPaciente.Instancia.BuscarPaciente(entidad.IdPaciente);
+                ViewBag.NombrePaciente = paciente != null ? $"{paciente.Nombres} {paciente.Apellidos}" : "Paciente no encontrado";
+
+                return View(entidad);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar detalles: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
             }
         }
 
@@ -140,7 +170,19 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-
+        private void CargarViewBags(entAntecedenteObstetrico? entidad)
+        {
+            try
+            {
+                // PACIENTES ACTIVOS
+                var pacientes = logPaciente.Instancia.ListarPacientesActivos();
+                ViewBag.PacientesModal = pacientes;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
+            }
+        }
 
     }
 }

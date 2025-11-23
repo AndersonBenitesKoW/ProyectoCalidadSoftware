@@ -85,10 +85,7 @@
                                         <a asp-action="Detalles" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-info" title="Detalles">
                                             <i class="bi bi-search"></i>
                                         </a>
-                                        <a asp-action="Editar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </a>
-                                        @if (item.Estado)
+                                        @if (item.Estado && (ViewBag.IdProfesionalActual == null || item.IdProfesional == ViewBag.IdProfesionalActual))
                                         {
                                             <a asp-action="Inhabilitar" asp-route-id="@item.IdControlPrenatal" class="btn btn-sm btn-outline-danger" title="Inhabilitar">
                                                 <i class="bi bi-trash-fill"></i>

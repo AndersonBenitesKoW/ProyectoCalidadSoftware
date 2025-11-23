@@ -19,16 +19,47 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 // El usuario puede navegar entre layouts sin cerrar sesión
                 ViewData["IsAuthenticated"] = true;
+                if (User.IsInRole("PACIENTE"))
+                {
+                    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                    {
+                        var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.IdUsuario == userId);
+                        System.Diagnostics.Debug.WriteLine($"Index: userId={userId}, paciente encontrado: {paciente != null}, DNI: '{paciente?.DNI}', Estado: {paciente?.Estado}");
+                        ViewData["PacienteRegistrado"] = paciente != null && !string.IsNullOrWhiteSpace(paciente.DNI);
+                    }
+                }
             }
             return View();
         }
 
         public IActionResult Servicios() => View();
 
-        public IActionResult Citas() => View();
+        public IActionResult Citas()
+        {
+            // Solo pacientes logueados pueden acceder al formulario de citas
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("PACIENTE"))
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.IdUsuario == userId);
+                    System.Diagnostics.Debug.WriteLine($"Citas: userId={userId}, paciente encontrado: {paciente != null}, DNI: '{paciente?.DNI}', Estado: {paciente?.Estado}");
+                    if (paciente == null || string.IsNullOrWhiteSpace(paciente.DNI))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Citas: Redirigiendo a RegistrarPaciente");
+                        return RedirectToAction("RegistrarPaciente");
+                    }
+                }
+                System.Diagnostics.Debug.WriteLine("Citas: Redirigiendo a RegistrarCitaPublica");
+                return RedirectToAction("RegistrarCitaPublica", "Cita");
+            }
+            return RedirectToAction("Login");
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PACIENTE")]
         public IActionResult Citas(string nombreCompleto, string email, string telefono, string especialidad, DateTime fechaCita, string comentarios)
         {
             try
@@ -131,14 +162,31 @@ namespace ProyectoCalidadSoftware.Controllers
         private IActionResult RedirigirPorRol(string? nombreRol)
         {
             var rol = nombreRol?.ToUpper() ?? "";
-            return rol switch
+            switch (rol)
             {
-                "ADMIN" => RedirectToAction("Index", "Home"),
-                "PERSONAL_SALUD" => RedirectToAction("Index", "Home"),
-                "SECRETARIA" => RedirectToAction("Insertar", "Cita"),
-                "PACIENTE" => RedirectToAction("Index", "Portal"),
-                _ => RedirectToAction("Index", "Portal")
-            };
+                case "ADMIN":
+                case "PERSONAL_SALUD":
+                    return RedirectToAction("Index", "Home");
+                case "SECRETARIA":
+                    return RedirectToAction("Insertar", "Cita");
+                case "PACIENTE":
+                    // Verificar si tiene paciente registrado con datos completos
+                    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                    {
+                        var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.IdUsuario == userId);
+                        System.Diagnostics.Debug.WriteLine($"RedirigirPorRol: userId={userId}, paciente encontrado: {paciente != null}, DNI: '{paciente?.DNI}', Estado: {paciente?.Estado}");
+                        if (paciente == null || string.IsNullOrWhiteSpace(paciente.DNI))
+                        {
+                            System.Diagnostics.Debug.WriteLine("RedirigirPorRol: Redirigiendo a RegistrarPaciente");
+                            return RedirectToAction("RegistrarPaciente");
+                        }
+                    }
+                    System.Diagnostics.Debug.WriteLine("RedirigirPorRol: Redirigiendo a Index");
+                    return RedirectToAction("Index", "Portal");
+                default:
+                    return RedirectToAction("Index", "Portal");
+            }
         }
 
         // ===== Registro de PACIENTE =====
@@ -193,6 +241,73 @@ namespace ProyectoCalidadSoftware.Controllers
                 ModelState.AddModelError("", "Error al crear la cuenta: " + ex.Message);
                 return View(model);
             }
+        }
+
+        // ===== Registro de datos de PACIENTE =====
+        [HttpGet]
+        public IActionResult RegistrarPaciente()
+        {
+            if (!User.Identity?.IsAuthenticated == true || !User.IsInRole("PACIENTE"))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.IdUsuario == userId);
+                System.Diagnostics.Debug.WriteLine($"RegistrarPaciente GET: userId={userId}, paciente encontrado: {paciente != null}, DNI: '{paciente?.DNI}', Estado: {paciente?.Estado}");
+                if (paciente != null && !string.IsNullOrWhiteSpace(paciente.DNI))
+                {
+                    System.Diagnostics.Debug.WriteLine("RegistrarPaciente GET: Ya registrado, redirigiendo a Index");
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(new entPaciente());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RegistrarPaciente(entPaciente entidad)
+        {
+            if (!User.Identity?.IsAuthenticated == true || !User.IsInRole("PACIENTE"))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                entidad.IdUsuario = userId;
+            }
+
+            // --- Validaciones ---
+            if (string.IsNullOrWhiteSpace(entidad.Nombres))
+                ModelState.AddModelError(nameof(entidad.Nombres), "Los nombres son obligatorios.");
+            if (string.IsNullOrWhiteSpace(entidad.Apellidos))
+                ModelState.AddModelError(nameof(entidad.Apellidos), "Los apellidos son obligatorios.");
+            if (string.IsNullOrWhiteSpace(entidad.DNI))
+                ModelState.AddModelError(nameof(entidad.DNI), "El DNI es obligatorio.");
+            if (string.IsNullOrWhiteSpace(entidad.EmailPrincipal))
+                ModelState.AddModelError(nameof(entidad.EmailPrincipal), "El Email es obligatorio.");
+            if (string.IsNullOrWhiteSpace(entidad.TelefonoPrincipal))
+                ModelState.AddModelError(nameof(entidad.TelefonoPrincipal), "El Teléfono es obligatorio.");
+
+            if (!ModelState.IsValid) return View(entidad);
+
+            entidad.Estado = true;
+
+            bool ok = logPaciente.Instancia.InsertarPaciente(entidad);
+            System.Diagnostics.Debug.WriteLine($"RegistrarPaciente POST: insert ok={ok}, userId={entidad.IdUsuario}, DNI='{entidad.DNI}', Nombres='{entidad.Nombres}'");
+            if (ok)
+            {
+                TempData["Success"] = "Datos de paciente registrados exitosamente.";
+                return RedirectToAction("RegistrarCitaPublica", "Cita");
+            }
+
+            ViewBag.Error = "No se pudo registrar los datos del paciente. Verifique los datos.";
+            return View(entidad);
         }
         // En PortalController.cs - AGREGA ESTE MÉTODO:
         [HttpPost]

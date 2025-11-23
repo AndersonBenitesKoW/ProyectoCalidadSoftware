@@ -87,8 +87,12 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@EmailPrincipal", entidad.EmailPrincipal);
                 cmd.Parameters.AddWithValue("@TelefonoPrincipal", entidad.TelefonoPrincipal);
 
+                // Parámetro opcional para IdUsuario
+                cmd.Parameters.AddWithValue("@IdUsuario",
+                    entidad.IdUsuario.HasValue ? (object)entidad.IdUsuario.Value : (object)DBNull.Value);
+
                 // (Opcional: puedes agregar TipoTelefono si lo pides en la vista)
-                // cmd.Parameters.AddWithValue("@TipoTelefono", "Celular"); 
+                // cmd.Parameters.AddWithValue("@TipoTelefono", "Celular");
 
                 cn.Open();
 
@@ -153,6 +157,43 @@ namespace CapaAccesoDatos
                 SqlCommand cmd = new SqlCommand("sp_BuscarPaciente", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read()) // Si encontró al paciente
+                    {
+                        paciente = new entPaciente
+                        {
+                            IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                            IdUsuario = dr["IdUsuario"] != DBNull.Value ? Convert.ToInt32(dr["IdUsuario"]) : (int?)null,
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            DNI = dr["DNI"].ToString(),
+                            FechaNacimiento = dr["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(dr["FechaNacimiento"]) : (DateTime?)null,
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+
+                            // Nuevos campos que trae el SP
+                            EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                            TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                        };
+                    }
+                }
+            }
+            return paciente; // Devuelve el objeto (o null si no lo encontró)
+        }
+
+        // Buscar por DNI
+        public entPaciente? BuscarPorDNI(string dni)
+        {
+            entPaciente? paciente = null;
+
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_BuscarPacientePorDNI", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DNI", dni);
+                cmd.Parameters.AddWithValue("@IdUsuario", DBNull.Value);
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())

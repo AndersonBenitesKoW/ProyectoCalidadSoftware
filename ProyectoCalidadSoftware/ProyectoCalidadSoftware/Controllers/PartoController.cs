@@ -1,5 +1,6 @@
 ﻿using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    // [Authorize(Roles = "PERSONAL_SALUD,ADMIN")]
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     public class PartoController : Controller
     {
         // GET: /Parto/Index
@@ -19,6 +20,15 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.MostrandoActivos = mostrarActivos;
                 var lista = logParto.Instancia.ListarPartos(mostrarActivos);
+                // Para PERSONAL_SALUD, setear IdProfesionalActual para restringir eliminación
+                if (User.IsInRole("PERSONAL_SALUD"))
+                {
+                    var idProfesional = GetIdProfesional();
+                    if (idProfesional.HasValue)
+                    {
+                        ViewBag.IdProfesionalActual = idProfesional.Value;
+                    }
+                }
                 return View(lista); // Views/Parto/Index.cshtml
             }
             catch (Exception ex)
@@ -246,6 +256,20 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
+        }
+
+        private int? GetIdProfesional()
+        {
+            if (User.IsInRole("PERSONAL_SALUD"))
+            {
+                var idUsuarioClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(idUsuarioClaim, out int idUsuario))
+                {
+                    var profesional = logProfesionalSalud.Instancia.ListarProfesionalSalud(true).FirstOrDefault(p => p.IdUsuario == idUsuario);
+                    return profesional?.IdProfesional;
+                }
+            }
+            return null;
         }
     }
 }

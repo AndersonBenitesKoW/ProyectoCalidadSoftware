@@ -15,6 +15,31 @@
         </a>
     </div>
 
+    <!-- Formulario de búsqueda por DNI -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Listar" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="dni" class="form-label">Buscar por DNI del Paciente</label>
+                    <input type="text" id="dni" name="dni" class="form-control" value="@ViewBag.DNIFiltro" placeholder="Ingrese DNI" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+                @if (!string.IsNullOrEmpty(ViewBag.DNIFiltro))
+                {
+                    <div class="col-md-2">
+                        <a asp-action="Listar" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Limpiar
+                        </a>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
@@ -57,6 +82,9 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
+                                <a asp-action="Detalles" asp-route-id="@item.IdAntecedente" class="btn btn-sm btn-outline-info" title="Detalles">
+                                    <i class="bi bi-search"></i>
+                                </a>
                                 <a asp-action="Actualizar" asp-route-id="@item.IdAntecedente" class="btn btn-sm btn-outline-primary" title="Actualizar">
                                     <i class="bi bi-pencil"></i>
                                 </a>

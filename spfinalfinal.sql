@@ -105,12 +105,13 @@ CREATE OR ALTER PROCEDURE sp_InsertarPaciente (
     @Apellidos NVARCHAR(50),
     @DNI NVARCHAR(15), -- DNI ahora es obligatorio
     @FechaNacimiento DATE = NULL,
-    
+
     -- Datos de Contacto Principal
     @EmailPrincipal NVARCHAR(100),
     @TelefonoPrincipal NVARCHAR(20),
-    
-    @TipoTelefono NVARCHAR(20) = 'Celular' 
+
+    @TipoTelefono NVARCHAR(20) = 'Celular',
+    @IdUsuario INT = NULL -- Nuevo parámetro opcional para usar usuario existente
 )
 AS
 BEGIN
@@ -152,22 +153,30 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- 1. Encriptar la clave (usamos el DNI como clave)
-        --    Convertimos el hash binario (HASHBYTES) a un string hexadecimal
-        --    para que coincida con tu C# (NVARCHAR(500))
-        SET @ClaveHash = (SELECT LOWER(CONVERT(NVARCHAR(64), HASHBYTES('SHA2_256', @DNI), 2)));
+        -- Determinar IdUsuario
+        IF @IdUsuario IS NOT NULL
+        BEGIN
+            SET @NewIdUsuario = @IdUsuario;
+        END
+        ELSE
+        BEGIN
+            -- 1. Encriptar la clave (usamos el DNI como clave)
+            --    Convertimos el hash binario (HASHBYTES) a un string hexadecimal
+            --    para que coincida con tu C# (NVARCHAR(500))
+            SET @ClaveHash = (SELECT LOWER(CONVERT(NVARCHAR(64), HASHBYTES('SHA2_256', @DNI), 2)));
 
-        -- 2. Insertar el Usuario
-        --    Usamos DNI como NombreUsuario y EmailPrincipal como email
-        INSERT INTO Usuario (NombreUsuario, ClaveHash, email, Estado)
-        VALUES (@DNI, @ClaveHash, @EmailPrincipal, 1);
+            -- 2. Insertar el Usuario
+            --    Usamos DNI como NombreUsuario y EmailPrincipal como email
+            INSERT INTO Usuario (NombreUsuario, ClaveHash, email, Estado)
+            VALUES (@DNI, @ClaveHash, @EmailPrincipal, 1);
 
-        -- 3. Obtener el ID del Usuario recién creado
-        SET @NewIdUsuario = SCOPE_IDENTITY();
+            -- 3. Obtener el ID del Usuario recién creado
+            SET @NewIdUsuario = SCOPE_IDENTITY();
 
-        -- 4. Asignar el Rol "PACIENTE" al nuevo Usuario
-        INSERT INTO UsuarioRol (IdUsuario, IdRol)
-        VALUES (@NewIdUsuario, @IdRolPaciente);
+            -- 4. Asignar el Rol "PACIENTE" al nuevo Usuario
+            INSERT INTO UsuarioRol (IdUsuario, IdRol)
+            VALUES (@NewIdUsuario, @IdRolPaciente);
+        END
 
         -- 5. Insertar el Paciente, vinculándolo al Usuario
         INSERT INTO Paciente (IdUsuario, Nombres, Apellidos, DNI, FechaNacimiento, Estado)
@@ -279,7 +288,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT 
+    SELECT
         p.IdPaciente,
         p.IdUsuario,
         p.Nombres,
@@ -287,20 +296,84 @@ BEGIN
         p.DNI,
         p.FechaNacimiento,
         p.Estado,
-        
+
         -- Usamos ISNULL para evitar errores en C#
         ISNULL(pe.Email, '') AS EmailPrincipal,
         ISNULL(pt.Telefono, '') AS TelefonoPrincipal
-    FROM 
+    FROM
         Paciente p
     -- Unir con email principal
-    LEFT JOIN 
+    LEFT JOIN
         PacienteEmail pe ON p.IdPaciente = pe.IdPaciente AND pe.EsPrincipal = 1
     -- Unir con teléfono principal
-    LEFT JOIN 
+    LEFT JOIN
         PacienteTelefono pt ON p.IdPaciente = pt.IdPaciente AND pt.EsPrincipal = 1
-    WHERE 
+    WHERE
         p.IdPaciente = @IdPaciente;
+END
+GO
+CREATE OR ALTER PROCEDURE sp_BuscarPacientePorDNI (
+    @DNI NVARCHAR(15),
+    @IdUsuario INT = NULL
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.IdPaciente,
+        p.IdUsuario,
+        p.Nombres,
+        p.Apellidos,
+        p.DNI,
+        p.FechaNacimiento,
+        p.Estado,
+
+        -- Usamos ISNULL para evitar errores en C#
+        ISNULL(pe.Email, '') AS EmailPrincipal,
+        ISNULL(pt.Telefono, '') AS TelefonoPrincipal
+    FROM
+        Paciente p
+    -- Unir con email principal
+    LEFT JOIN
+        PacienteEmail pe ON p.IdPaciente = pe.IdPaciente AND pe.EsPrincipal = 1
+    -- Unir con teléfono principal
+    LEFT JOIN
+        PacienteTelefono pt ON p.IdPaciente = pt.IdPaciente AND pt.EsPrincipal = 1
+    WHERE
+        p.DNI = @DNI
+        AND (@IdUsuario IS NULL OR p.IdUsuario = @IdUsuario);
+END
+GO
+CREATE OR ALTER PROCEDURE sp_BuscarProfesionalPorCMP (
+    @CMP NVARCHAR(20)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.IdProfesional,
+        p.IdUsuario,
+        p.Nombres,
+        p.Apellidos,
+        p.CMP,
+        p.Especialidad,
+        p.Estado,
+
+        -- Usamos ISNULL para evitar errores en C#
+        ISNULL(pe.Email, '') AS EmailPrincipal,
+        ISNULL(pt.Telefono, '') AS TelefonoPrincipal
+    FROM
+        ProfesionalSalud p
+    -- Unir con email principal
+    LEFT JOIN
+        ProfesionalEmail pe ON p.IdProfesional = pe.IdProfesional AND pe.EsPrincipal = 1
+    -- Unir con teléfono principal
+    LEFT JOIN
+        ProfesionalTelefono pt ON p.IdProfesional = pt.IdProfesional AND pt.EsPrincipal = 1
+    WHERE
+        p.CMP = @CMP;
 END
 GO
 CREATE OR ALTER PROCEDURE sp_EditarPaciente (
@@ -2634,5 +2707,144 @@ BEGIN
     UPDATE ResultadoDiagnostico
     SET Estado = 'INACTIVO'
     WHERE IdResultado = @IdResultado;
+END
+GO
+
+-- Antecedentes Obstétricos --
+
+CREATE OR ALTER PROCEDURE sp_ListarAntecedenteObstetrico
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        ao.IdAntecedente,
+        ao.IdPaciente,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        ao.Menarquia,
+        ao.CicloDias,
+        ao.Gestas,
+        ao.Partos,
+        ao.Abortos,
+        ao.Observacion,
+        ao.Estado
+    FROM AntecedenteObstetrico ao
+    INNER JOIN Paciente p ON ao.IdPaciente = p.IdPaciente
+    ORDER BY ao.IdAntecedente DESC;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_BuscarAntecedenteObstetrico
+(
+    @IdAntecedente INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        ao.IdAntecedente,
+        ao.IdPaciente,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        ao.Menarquia,
+        ao.CicloDias,
+        ao.Gestas,
+        ao.Partos,
+        ao.Abortos,
+        ao.Observacion,
+        ao.Estado
+    FROM AntecedenteObstetrico ao
+    INNER JOIN Paciente p ON ao.IdPaciente = p.IdPaciente
+    WHERE ao.IdAntecedente = @IdAntecedente;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertarAntecedenteObstetrico
+(
+    @IdPaciente INT,
+    @Menarquia SMALLINT = NULL,
+    @CicloDias SMALLINT = NULL,
+    @Gestas SMALLINT = NULL,
+    @Partos SMALLINT = NULL,
+    @Abortos SMALLINT = NULL,
+    @Observacion NVARCHAR(300) = NULL,
+    @Estado BIT = 1
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO AntecedenteObstetrico (
+        IdPaciente,
+        Menarquia,
+        CicloDias,
+        Gestas,
+        Partos,
+        Abortos,
+        Observacion,
+        Estado
+    )
+    VALUES (
+        @IdPaciente,
+        @Menarquia,
+        @CicloDias,
+        @Gestas,
+        @Partos,
+        @Abortos,
+        @Observacion,
+        @Estado
+    );
+    SELECT SCOPE_IDENTITY() AS IdAntecedente;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_ActualizarAntecedenteObstetrico
+(
+    @IdAntecedente INT,
+    @IdPaciente INT,
+    @Menarquia SMALLINT = NULL,
+    @CicloDias SMALLINT = NULL,
+    @Gestas SMALLINT = NULL,
+    @Partos SMALLINT = NULL,
+    @Abortos SMALLINT = NULL,
+    @Observacion NVARCHAR(300) = NULL,
+    @Estado BIT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE AntecedenteObstetrico
+    SET
+        IdPaciente = @IdPaciente,
+        Menarquia = @Menarquia,
+        CicloDias = @CicloDias,
+        Gestas = @Gestas,
+        Partos = @Partos,
+        Abortos = @Abortos,
+        Observacion = @Observacion,
+        Estado = @Estado
+    WHERE IdAntecedente = @IdAntecedente;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_AnularAntecedenteObstetrico
+(
+    @IdAntecedente INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE AntecedenteObstetrico
+    SET Estado = 0
+    WHERE IdAntecedente = @IdAntecedente;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EliminarAntecedenteObstetrico
+(
+    @IdAntecedente INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM AntecedenteObstetrico
+    WHERE IdAntecedente = @IdAntecedente;
 END
 GO

@@ -146,7 +146,7 @@ VALUES (N'ANC',N'Atenci�n prenatal'),
        (N'PNC',N'Atenci�n posnatal/Puerperio');
 GO
 
-
+select * from Paciente
 
 
 
@@ -156,6 +156,10 @@ VALUES (N'Programada',N'Cita programada'),
        (N'NoAsistio',N'Paciente no asisti�'),
        (N'Anulada',N'Cita anulada');
 GO
+select * from Usuario
+select * from Paciente
+select * from cita 
+
 
 INSERT INTO ViaParto (Codigo,Descripcion)
 VALUES (N'EUTOCICO',N'Vaginal eut�cico'),

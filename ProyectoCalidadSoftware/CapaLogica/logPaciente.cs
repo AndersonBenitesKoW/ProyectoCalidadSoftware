@@ -79,6 +79,20 @@ namespace CapaLogica
             }
         }
 
+        // BUSCAR POR DNI
+        public entPaciente? BuscarPacientePorDNI(string dni)
+        {
+            try
+            {
+                return DA_Paciente.Instancia.BuscarPorDNI(dni);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en logPaciente.BuscarPorDNI: {ex.Message}");
+                return null;
+            }
+        }
+
         // INHABILITAR
         public bool InhabilitarPaciente(int id)
         {
