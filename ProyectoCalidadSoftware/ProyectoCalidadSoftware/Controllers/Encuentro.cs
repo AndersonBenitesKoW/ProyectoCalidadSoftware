@@ -91,6 +91,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Encuentro/Anular/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN")] // 👈 solo ADMIN ve esta pantalla
         public IActionResult Anular(int id)
         {
             var encuentro = logEncuentro.Instancia.BuscarEncuentro(id);
@@ -106,6 +107,7 @@ namespace ProyectoCalidadSoftware.Controllers
         [HttpPost]
         [ActionName("Anular")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")] // 👈 solo ADMIN confirma la anulación
         public IActionResult AnularConfirmado(entEncuentro entidad)
         {
             try
@@ -131,7 +133,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 // Para modales (lista cruda)
                 ViewBag.EmbarazosModal = embarazos;
 
-                // (Opcional: si alguna otra vista usa DropDownList)
                 ViewBag.ListaEmbarazos = new SelectList(
                     embarazos.Select(e => new
                     {
@@ -159,12 +160,12 @@ namespace ProyectoCalidadSoftware.Controllers
                     entidad?.IdProfesional
                 );
 
-                // 3) Tipos de encuentro (este sí seguirá siendo combo)
+                // 3) Tipos de encuentro
                 var tipos = logTipoEncuentro.Instancia.ListarTiposEncuentro();
                 ViewBag.ListaTiposEncuentro = new SelectList(
                     tipos,
-                    "IdTipoEncuentro", // value
-                    "Descripcion",     // text
+                    "IdTipoEncuentro",
+                    "Descripcion",
                     entidad?.IdTipoEncuentro
                 );
             }

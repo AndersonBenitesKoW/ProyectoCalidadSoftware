@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoCalidadSoftware.Models;
 using System.Diagnostics;
 
+
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD,SECRETARIA")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,8 +17,6 @@ namespace ProyectoCalidadSoftware.Controllers
             _logger = logger;
         }
 
-
-        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Index()
         {
             int embarazosActivos = 0;
@@ -42,19 +42,14 @@ namespace ProyectoCalidadSoftware.Controllers
                     .Where(p => p.Fecha.Month == DateTime.Now.Month && p.Fecha.Year == DateTime.Now.Year)
                     .Count();
 
-                // 4. Puerperios activos (TU lógica 👇)
+                // 4. Puerperios activos (últimos 6 meses)
                 var listaPuerperios = logSeguimientoPuerperio.Instancia.ListarSeguimiento(true);
-
-                // opción A: solo los que están en Estado = 1
-                // puerperiosActivos = listaPuerperios.Where(p => p.Estado).Count();
-
-                // opción B: activos y dentro de los últimos 6 meses
                 var seisMesesAtras = DateTime.Now.AddMonths(-6);
                 puerperiosActivos = listaPuerperios
                     .Where(p => p.Estado && p.Fecha >= seisMesesAtras)
                     .Count();
 
-                // Datos para gráficos
+                // Datos para gráficos (primer cálculo)
                 var controlesPorMes = new List<int>();
                 var partosPorMes = new List<int>();
                 for (int i = 5; i >= 0; i--)
@@ -69,7 +64,6 @@ namespace ProyectoCalidadSoftware.Controllers
                     controlesPorMes.Add(controlesCount);
                     partosPorMes.Add(partosCount);
                 }
-
             }
             catch (Exception ex)
             {
@@ -86,7 +80,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 EstaLogueado = HttpContext.User?.Identity?.IsAuthenticated ?? false
             };
 
-            // Datos para gráficos (fuera del try para evitar errores)
+            // Datos para gráficos (segunda pasada, como ya lo tienes)
             try
             {
                 var listaControles = logControlPrenatal.Instancia.ListarControlPrenatal();
@@ -108,11 +102,18 @@ namespace ProyectoCalidadSoftware.Controllers
                     partosPorMes.Add(partosCount);
                 }
 
-                // Distribución por trimestres
                 var distribucionEstados = new List<int>();
-                var primerTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 12).Count();
-                var segundoTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 12 && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 26).Count();
-                var tercerTrimestre = listaEmbarazos.Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 26).Count();
+                var primerTrimestre = listaEmbarazos
+                    .Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 12)
+                    .Count();
+                var segundoTrimestre = listaEmbarazos
+                    .Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 12
+                                && (DateTime.Now - e.FUR.Value).TotalDays / 7 <= 26)
+                    .Count();
+                var tercerTrimestre = listaEmbarazos
+                    .Where(e => e.FUR.HasValue && (DateTime.Now - e.FUR.Value).TotalDays / 7 > 26)
+                    .Count();
+
                 distribucionEstados.Add(primerTrimestre);
                 distribucionEstados.Add(segundoTrimestre);
                 distribucionEstados.Add(tercerTrimestre);
@@ -128,23 +129,23 @@ namespace ProyectoCalidadSoftware.Controllers
 
             return View(vm);
         }
-        // =============== LOGIN ===============
-        
 
-        // =============== PRIVACIDAD (la dejo) ===============
+        // =============== PRIVACIDAD ===============
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
         }
 
         // =============== ERROR ===============
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
-
-
-
     }
 }

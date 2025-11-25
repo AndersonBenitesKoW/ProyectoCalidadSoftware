@@ -1,27 +1,35 @@
 ﻿using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD,SECRETARIA")]
     public class AntecedenteObstetricoController : Controller
     {
 
-        // GET: /AntecedenteObstetrico/Listar
-        public IActionResult Listar(string dni = null)
+        public IActionResult Listar(string? dni = null)
         {
             var lista = logAntecedenteObstetrico.Instancia.ListarAntecedenteObstetrico();
+
             if (!string.IsNullOrEmpty(dni))
             {
-                // Filtrar por DNI del paciente
-                var pacientesFiltrados = logPaciente.Instancia.ListarPacientesActivos().Where(p => p.DNI == dni).Select(p => p.IdPaciente).ToList();
+                var pacientesFiltrados = logPaciente.Instancia
+                    .ListarPacientesActivos()
+                    .Where(p => p.DNI == dni)
+                    .Select(p => p.IdPaciente)
+                    .ToList();
+
                 lista = lista.Where(a => pacientesFiltrados.Contains(a.IdPaciente)).ToList();
                 ViewBag.DNIFiltro = dni;
             }
+
             return View(lista);
         }
 
-        // GET: /AntecedenteObstetrico/Registrar
+        // GET: Registrar
         [HttpGet]
         public IActionResult Registrar(int? idPaciente)
         {
@@ -34,7 +42,7 @@ namespace ProyectoCalidadSoftware.Controllers
             return View(modelo);
         }
 
-        // POST: /AntecedenteObstetrico/Registrar
+        // POST: Registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(entAntecedenteObstetrico entidad)
@@ -61,7 +69,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /AntecedenteObstetrico/Detalles/5
+        // GET: Detalles
         [HttpGet]
         public IActionResult Detalles(int id)
         {
@@ -70,7 +78,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 var entidad = logAntecedenteObstetrico.Instancia.BuscarAntecedenteObstetrico(id);
                 if (entidad == null) return NotFound();
 
-                // Obtener nombre del paciente
                 var paciente = logPaciente.Instancia.BuscarPaciente(entidad.IdPaciente);
                 ViewBag.NombrePaciente = paciente != null ? $"{paciente.Nombres} {paciente.Apellidos}" : "Paciente no encontrado";
 
@@ -83,8 +90,9 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /AntecedenteObstetrico/Modificar/5
+        // GET: Modificar
         [HttpGet]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Modificar(int id)
         {
             try
@@ -101,9 +109,10 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // POST: /AntecedenteObstetrico/Modificar
+        // POST: Modificar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Modificar(entAntecedenteObstetrico entidad)
         {
             try
@@ -128,13 +137,14 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // Alias: /AntecedenteObstetrico/Actualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Actualizar(entAntecedenteObstetrico entidad) => Modificar(entidad);
 
-        // POST: /AntecedenteObstetrico/Anular/5
+        // POST: Anular — SOLO ADMIN
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Anular(int id)
         {
             try
@@ -152,14 +162,16 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // (Opcional) POST: /AntecedenteObstetrico/Eliminar/5 — si quieres borrado físico
+        // POST: Eliminar — SOLO ADMIN
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Eliminar(int id)
         {
             try
             {
                 bool ok = logAntecedenteObstetrico.Instancia.EliminarAntecedenteObstetrico(id);
                 if (ok) return RedirectToAction(nameof(Listar));
+
                 TempData["Error"] = "No se pudo eliminar el antecedente.";
                 return RedirectToAction(nameof(Listar));
             }
@@ -174,7 +186,6 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             try
             {
-                // PACIENTES ACTIVOS
                 var pacientes = logPaciente.Instancia.ListarPacientesActivos();
                 ViewBag.PacientesModal = pacientes;
             }
@@ -183,6 +194,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
             }
         }
-
     }
 }
+

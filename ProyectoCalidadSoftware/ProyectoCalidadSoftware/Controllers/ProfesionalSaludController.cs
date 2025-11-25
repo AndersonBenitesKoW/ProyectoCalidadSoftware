@@ -3,9 +3,11 @@ using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class ProfesionalSaludController : Controller
     {
         // GET: /ProfesionalSalud/Index

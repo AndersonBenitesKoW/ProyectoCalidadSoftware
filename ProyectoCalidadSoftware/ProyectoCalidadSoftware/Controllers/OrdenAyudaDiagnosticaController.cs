@@ -2,10 +2,13 @@ using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    //[Route("core/ayudas")]
+
+    // [Route("core/ayudas")]
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     public class OrdenAyudaDiagnosticaController : Controller
     {
         // GET: /core/ayudas
@@ -51,7 +54,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 entidad.Estado = "Activo";
 
-                bool ok =Convert.ToBoolean(logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad));
+                bool ok = Convert.ToBoolean(logAyudaDiagnosticaOrden.Instancia.InsertarAyudaDiagnosticaOrden(entidad));
                 if (ok) return RedirectToAction(nameof(Listar));
 
                 ViewBag.Error = "No se pudo insertar la orden de ayuda diagnóstica.";
@@ -63,6 +66,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 return View(entidad);
             }
         }
+
         // --- Listas para combos y modals ---
         private void CargarViewBags(entAyudaDiagnosticaOrden? orden)
         {
@@ -114,13 +118,13 @@ namespace ProyectoCalidadSoftware.Controllers
                 );
 
                 // TIPOS DE AYUDA
-                var tipos = logTipoAyudaDiagnostica.Instancia.ListarTiposAyuda(); // ajusta al nombre real
+                var tipos = logTipoAyudaDiagnostica.Instancia.ListarTiposAyuda();
                 ViewBag.TiposAyudaModal = tipos;
 
                 ViewBag.ListaTiposAyuda = new SelectList(
                     tipos,
-                    "IdTipoAyuda",    // nombre de la columna en tu entidad de tipo
-                    "Descripcion",    // texto a mostrar
+                    "IdTipoAyuda",
+                    "Descripcion",
                     orden?.IdTipoAyuda
                 );
             }

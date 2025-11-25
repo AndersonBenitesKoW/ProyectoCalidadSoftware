@@ -51,7 +51,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
             CargarViewBags(modelo);
             return View(modelo); // Views/Parto/RegistrarParto.cshtml
-        }   
+        }
 
         // POST: /Parto/RegistrarParto
         [HttpPost]
@@ -154,6 +154,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Parto/Anular/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN")] // 🔐 SOLO ADMIN VE LA CONFIRMACIÓN DE ANULAR
         public IActionResult Anular(int id)
         {
             var parto = logParto.Instancia.BuscarParto(id);
@@ -167,6 +168,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // POST: /Parto/Anular
         [HttpPost]
+        [Authorize(Roles = "ADMIN")] // 🔐 SOLO ADMIN EJECUTA LA ANULACIÓN
         [ValidateAntiForgeryToken]
         public IActionResult Anular(entParto parto)
         {
@@ -183,6 +185,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public IActionResult GetEncuentrosPorEmbarazo(int idEmbarazo)
         {
@@ -197,8 +200,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // --- Método privado para cargar DropDownLists ---
-        // --- Método privado para cargar listas / datos de modals ---
+        // --- Método privado para cargar DropDownLists / modals ---
         private void CargarViewBags(entParto? parto)
         {
             try
@@ -206,7 +208,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 // ====== EMBARAZOS ======
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
 
-                // Para vistas antiguas con <select>
                 ViewBag.ListaEmbarazos = new SelectList(
                     embarazos.Select(e => new { e.IdEmbarazo, Nombre = $"ID: {e.IdEmbarazo} - {e.NombrePaciente}" }),
                     "IdEmbarazo",
@@ -214,7 +215,6 @@ namespace ProyectoCalidadSoftware.Controllers
                     parto?.IdEmbarazo
                 );
 
-                // Para los MODALS (lista cruda)
                 ViewBag.EmbarazosModal = embarazos;
 
                 // ====== PROFESIONALES ======
@@ -230,8 +230,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 ViewBag.ProfesionalesModal = profesionales;
 
                 // ====== ENCUENTROS ======
-                // Si quieres precargar todos los encuentros (y filtrar en el front por IdEmbarazo):
-                var encuentros = logEncuentro.Instancia.ListarEncuentros(); // o tu método existente
+                var encuentros = logEncuentro.Instancia.ListarEncuentros();
                 ViewBag.EncuentrosModal = encuentros;
 
                 // ====== VÍAS DE PARTO ======
@@ -265,7 +264,9 @@ namespace ProyectoCalidadSoftware.Controllers
                 var idUsuarioClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (int.TryParse(idUsuarioClaim, out int idUsuario))
                 {
-                    var profesional = logProfesionalSalud.Instancia.ListarProfesionalSalud(true).FirstOrDefault(p => p.IdUsuario == idUsuario);
+                    var profesional = logProfesionalSalud.Instancia
+                        .ListarProfesionalSalud(true)
+                        .FirstOrDefault(p => p.IdUsuario == idUsuario);
                     return profesional?.IdProfesional;
                 }
             }
