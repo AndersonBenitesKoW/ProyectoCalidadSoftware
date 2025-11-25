@@ -26,9 +26,18 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="IdAyuda" class="control-label">
-                        <i class="bi bi-clipboard-data"></i> ID Ayuda Diagnóstica
+                        <i class="bi bi-clipboard-data"></i> Ayuda Diagnóstica
                     </label>
-                    <input asp-for="IdAyuda" class="form-control" />
+                    <div class="input-group">
+                        <input type="text" id="ayudaSeleccionada" class="form-control" readonly placeholder="Seleccione una ayuda diagnóstica" />
+                        <button type="button"
+                                class="btn btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalAyuda">
+                            Buscar
+                        </button>
+                    </div>
+                    <input asp-for="IdAyuda" type="hidden" />
                     <span asp-validation-for="IdAyuda" class="text-danger"></span>
                 </div>
             </div>
@@ -80,6 +89,128 @@
     </form>
 </div>
 
+<!-- ============ MODAL AYUDA DIAGNÓSTICA ============ -->
+<div class="modal fade" id="modalAyuda" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Ayuda Diagnóstica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button"
+                            id="btnBuscarAyuda"
+                            class="btn btn-primary btn-sm me-2">
+                        Buscar
+                    </button>
+                    <div style="max-width:150px;">
+                        <input type="text"
+                               id="buscarAyudaDNI"
+                               class="form-control form-control-sm text-end"
+                               placeholder="DNI Paciente" />
+                    </div>
+                </div>
+
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Descripción</th>
+                            <th>Tipo</th>
+                            <th>Fecha Orden</th>
+                            <th>Urgente</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAyudas">
+                        <!-- Las ayudas se cargarán dinámicamente con AJAX -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Buscar Ayuda por DNI del Paciente
+            const btnAyuda = document.getElementById("btnBuscarAyuda");
+            const txtDNI = document.getElementById("buscarAyudaDNI");
+            if (btnAyuda && txtDNI) {
+                btnAyuda.addEventListener("click", function () {
+                    const dni = txtDNI.value.trim();
+                    if (!dni) {
+                        alert("Ingrese un DNI para buscar.");
+                        return;
+                    }
+
+                    fetch(`/ResultadoDiagnostico/BuscarAyudaPorPacienteDNI?dni=${encodeURIComponent(dni)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const tbody = document.getElementById("tbodyAyudas");
+                            tbody.innerHTML = ""; // Limpiar tabla
+
+                            if (data.success) {
+                                data.ayudas.forEach(ayuda => {
+                                    const tr = document.createElement("tr");
+                                    tr.innerHTML = `
+                                        <td>${ayuda.id}</td>
+                                        <td>${ayuda.descripcion}</td>
+                                        <td>${ayuda.tipoAyuda}</td>
+                                        <td>${ayuda.fechaOrden}</td>
+                                        <td>${ayuda.urgente ? '<span class="badge bg-danger">Urgente</span>' : '<span class="badge bg-success">Normal</span>'}</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary btnSeleccionarAyuda"
+                                                    data-id="${ayuda.id}"
+                                                    data-descripcion="${ayuda.descripcion} (${ayuda.tipoAyuda})">
+                                                Seleccionar
+                                            </button>
+                                        </td>
+                                    `;
+                                    tbody.appendChild(tr);
+                                });
+                            } else {
+                                const tr = document.createElement("tr");
+                                tr.innerHTML = `<td colspan="6" class="text-danger text-center">${data.message}</td>`;
+                                tbody.appendChild(tr);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            const tbody = document.getElementById("tbodyAyudas");
+                            tbody.innerHTML = '<tr><td colspan="6" class="text-danger text-center">Error al buscar ayudas.</td></tr>';
+                        });
+                });
+            }
+
+            // Selección desde el modal
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnSeleccionarAyuda')) {
+                    const id = e.target.getAttribute('data-id');
+                    const descripcion = e.target.getAttribute('data-descripcion');
+                    document.getElementById('IdAyuda').value = id;
+                    document.getElementById('ayudaSeleccionada').value = descripcion;
+
+                    const modalEl = document.getElementById('modalAyuda');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            });
+
+        });
+    </script>
 }

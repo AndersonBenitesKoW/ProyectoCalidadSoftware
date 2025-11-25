@@ -10,9 +10,14 @@
             <h1 class="mb-0"><i class="bi bi-file-earmark-medical-fill"></i> Resultados Diagnósticos</h1>
             <p class="text-muted mb-0">Gestión de resultados de exámenes diagnósticos</p>
         </div>
-        <a asp-action="Registrar" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nuevo Resultado
-        </a>
+        <div>
+            <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#modalBuscar">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            <a asp-action="Registrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nuevo Resultado
+            </a>
+        </div>
     </div>
 
     @* Mensajes de acción *@
@@ -124,6 +129,30 @@
                     <div class="alert alert-success">
                         <i class="bi bi-check-circle"></i>
                         <strong>Total de Resultados:</strong> @Model.Count() registros
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============ MODAL BUSCAR ============ -->
+            <div class="modal fade" id="modalBuscar" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Buscar Resultados por Paciente</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formBuscar" method="get" asp-action="Listar">
+                                <div class="mb-3">
+                                    <label for="dni" class="form-label">DNI del Paciente</label>
+                                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese DNI" />
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

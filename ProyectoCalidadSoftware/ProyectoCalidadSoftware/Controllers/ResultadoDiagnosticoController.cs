@@ -10,9 +10,22 @@ namespace ProyectoCalidadSoftware.Controllers
     {
         // GET: /core/ayudas/resultados
         [HttpGet]
-        public IActionResult Listar()
+        public IActionResult Listar(string? dni)
         {
             var lista = logResultadoDiagnostico.Instancia.ListarResultadoDiagnostico();
+
+            if (!string.IsNullOrWhiteSpace(dni))
+            {
+                // Filtrar por DNI del paciente asociado a la ayuda
+                var ayudasPaciente = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden()
+                    .Where(a => logPaciente.Instancia.ListarPacientesActivos()
+                        .Any(p => p.IdPaciente == a.IdPaciente && p.DNI == dni.Trim()))
+                    .Select(a => a.IdAyuda)
+                    .ToHashSet();
+
+                lista = lista.Where(r => ayudasPaciente.Contains(r.IdAyuda)).ToList();
+            }
+
             return View(lista);
         }
 
@@ -149,6 +162,52 @@ namespace ProyectoCalidadSoftware.Controllers
             {
                 TempData["Error"] = "Error al anular: " + ex.Message;
                 return RedirectToAction(nameof(Listar));
+            }
+        }
+
+        // GET: /ResultadoDiagnostico/BuscarAyudaPorPacienteDNI
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult BuscarAyudaPorPacienteDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+            {
+                return Json(new { success = false, message = "DNI requerido." });
+            }
+
+            try
+            {
+                // Buscar paciente por DNI
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.DNI == dni.Trim());
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado con ese DNI." });
+                }
+
+                // Buscar ayudas diagnósticas para ese paciente
+                var ayudas = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden()
+                    .Where(a => a.IdPaciente == paciente.IdPaciente && a.Estado == "ACTIVO")
+                    .ToList();
+
+                if (!ayudas.Any())
+                {
+                    return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
+                }
+
+                var ayudasData = ayudas.Select(a => new
+                {
+                    id = a.IdAyuda,
+                    descripcion = a.Descripcion ?? "Sin descripción",
+                    tipoAyuda = a.NombreTipoAyuda,
+                    fechaOrden = a.FechaOrden.ToString("dd/MM/yyyy"),
+                    urgente = a.Urgente
+                }).ToList();
+
+                return Json(new { success = true, ayudas = ayudasData });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al buscar ayudas: " + ex.Message });
             }
         }
     }
