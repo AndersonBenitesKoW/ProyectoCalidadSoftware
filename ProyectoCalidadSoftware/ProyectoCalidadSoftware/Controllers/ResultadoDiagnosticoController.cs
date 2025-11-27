@@ -194,14 +194,22 @@ namespace ProyectoCalidadSoftware.Controllers
                     return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
                 }
 
+                // Crear la lista de ayudas con información básica por ahora
+                // La información completa del control prenatal se cargará desde la vista de listado
                 var ayudasData = ayudas.Select(a => new
                 {
                     id = a.IdAyuda,
                     descripcion = a.Descripcion ?? "Sin descripción",
                     tipoAyuda = a.NombreTipoAyuda,
                     fechaOrden = a.FechaOrden.ToString("dd/MM/yyyy"),
-                    urgente = a.Urgente
+                    urgente = a.Urgente,
+                    nombrePaciente = paciente.Nombres + " " + paciente.Apellidos
                 }).ToList();
+
+                if (!ayudasData.Any())
+                {
+                    return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
+                }
 
                 return Json(new { success = true, ayudas = ayudasData });
             }

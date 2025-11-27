@@ -21,25 +21,59 @@ namespace CapaAccesoDatos
             List<entResultadoDiagnostico> lista = new List<entResultadoDiagnostico>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarResultadoDiagnostico", cn))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        var resultado = new entResultadoDiagnostico
-                        {
-                            IdResultado = Convert.ToInt32(dr["IdResultado"]),
-                            IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
-                            FechaResultado = Convert.ToDateTime(dr["FechaResultado"]),
-                            Resumen = dr["Resumen"].ToString(),
-                            Critico = Convert.ToBoolean(dr["Critico"]),
-                            Estado = dr["Estado"].ToString()
-                        };
+                // Query actualizado para incluir información del control prenatal
+                string query = @"
+                    SELECT
+                        rd.IdResultado,
+                        rd.IdAyuda,
+                        rd.FechaResultado,
+                        rd.Resumen,
+                        rd.Critico,
+                        rd.Estado,
+                        cp_ad.IdControl AS IdControlPrenatal,
+                        cp.Fecha AS FechaControlPrenatal,
+                        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+                        prof.Nombres + ' ' + prof.Apellidos AS NombreProfesional,
+                        ado.Descripcion AS DescripcionAyuda,
+                        tad.Nombre AS TipoAyuda,
+                        ado.Urgente
+                    FROM ResultadoDiagnostico rd
+                    INNER JOIN AyudaDiagnosticaOrden ado ON rd.IdAyuda = ado.IdAyuda
+                    LEFT JOIN ControlPrenatal_AyudaDiagnostica cp_ad ON ado.IdAyuda = cp_ad.IdAyuda
+                    LEFT JOIN ControlPrenatal cp ON cp_ad.IdControl = cp.IdControlPrenatal
+                    LEFT JOIN Paciente p ON ado.IdPaciente = p.IdPaciente
+                    LEFT JOIN ProfesionalSalud prof ON cp.IdProfesional = prof.IdProfesional
+                    LEFT JOIN TipoAyudaDiagnostica tad ON ado.IdTipoAyuda = tad.IdTipoAyuda
+                    WHERE rd.Estado = 'ACTIVO'
+                    ORDER BY rd.FechaResultado DESC";
 
-                        lista.Add(resultado);
+                using (SqlCommand cmd = new SqlCommand(query, cn))
+                {
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            var resultado = new entResultadoDiagnostico
+                            {
+                                IdResultado = Convert.ToInt32(dr["IdResultado"]),
+                                IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
+                                FechaResultado = Convert.ToDateTime(dr["FechaResultado"]),
+                                Resumen = dr["Resumen"] != DBNull.Value ? dr["Resumen"].ToString() : null,
+                                Critico = Convert.ToBoolean(dr["Critico"]),
+                                Estado = dr["Estado"].ToString(),
+                                IdControlPrenatal = dr["IdControlPrenatal"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdControlPrenatal"]) : null,
+                                FechaControlPrenatal = dr["FechaControlPrenatal"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaControlPrenatal"]) : null,
+                                NombrePaciente = dr["NombrePaciente"] != DBNull.Value ? dr["NombrePaciente"].ToString() : null,
+                                NombreProfesional = dr["NombreProfesional"] != DBNull.Value ? dr["NombreProfesional"].ToString() : null,
+                                DescripcionAyuda = dr["DescripcionAyuda"] != DBNull.Value ? dr["DescripcionAyuda"].ToString() : null,
+                                TipoAyuda = dr["TipoAyuda"] != DBNull.Value ? dr["TipoAyuda"].ToString() : null,
+                                Urgente = dr["Urgente"] != DBNull.Value ? (bool?)Convert.ToBoolean(dr["Urgente"]) : null
+                            };
+
+                            lista.Add(resultado);
+                        }
                     }
                 }
             }
@@ -93,16 +127,57 @@ namespace CapaAccesoDatos
             entResultadoDiagnostico entidad = null;
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_BuscarResultadoDiagnostico", cn))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdResultado", idResultado);
+                string query = @"
+                    SELECT
+                        rd.IdResultado,
+                        rd.IdAyuda,
+                        rd.FechaResultado,
+                        rd.Resumen,
+                        rd.Critico,
+                        rd.Estado,
+                        cp_ad.IdControl AS IdControlPrenatal,
+                        cp.Fecha AS FechaControlPrenatal,
+                        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+                        prof.Nombres + ' ' + prof.Apellidos AS NombreProfesional,
+                        ado.Descripcion AS DescripcionAyuda,
+                        tad.Nombre AS TipoAyuda,
+                        ado.Urgente
+                    FROM ResultadoDiagnostico rd
+                    INNER JOIN AyudaDiagnosticaOrden ado ON rd.IdAyuda = ado.IdAyuda
+                    LEFT JOIN ControlPrenatal_AyudaDiagnostica cp_ad ON ado.IdAyuda = cp_ad.IdAyuda
+                    LEFT JOIN ControlPrenatal cp ON cp_ad.IdControl = cp.IdControlPrenatal
+                    LEFT JOIN Paciente p ON ado.IdPaciente = p.IdPaciente
+                    LEFT JOIN ProfesionalSalud prof ON cp.IdProfesional = prof.IdProfesional
+                    LEFT JOIN TipoAyudaDiagnostica tad ON ado.IdTipoAyuda = tad.IdTipoAyuda
+                    WHERE rd.IdResultado = @IdResultado";
 
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query, cn))
                 {
-                    if (dr.Read())
-                        entidad = Map(dr);
+                    cmd.Parameters.AddWithValue("@IdResultado", idResultado);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            entidad = new entResultadoDiagnostico
+                            {
+                                IdResultado = Convert.ToInt32(dr["IdResultado"]),
+                                IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
+                                FechaResultado = Convert.ToDateTime(dr["FechaResultado"]),
+                                Resumen = dr["Resumen"] != DBNull.Value ? dr["Resumen"].ToString() : null,
+                                Critico = Convert.ToBoolean(dr["Critico"]),
+                                Estado = dr["Estado"].ToString(),
+                                IdControlPrenatal = dr["IdControlPrenatal"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdControlPrenatal"]) : null,
+                                FechaControlPrenatal = dr["FechaControlPrenatal"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["FechaControlPrenatal"]) : null,
+                                NombrePaciente = dr["NombrePaciente"] != DBNull.Value ? dr["NombrePaciente"].ToString() : null,
+                                NombreProfesional = dr["NombreProfesional"] != DBNull.Value ? dr["NombreProfesional"].ToString() : null,
+                                DescripcionAyuda = dr["DescripcionAyuda"] != DBNull.Value ? dr["DescripcionAyuda"].ToString() : null,
+                                TipoAyuda = dr["TipoAyuda"] != DBNull.Value ? dr["TipoAyuda"].ToString() : null,
+                                Urgente = dr["Urgente"] != DBNull.Value ? (bool?)Convert.ToBoolean(dr["Urgente"]) : null
+                            };
+                        }
+                    }
                 }
             }
             return entidad;
