@@ -1,26 +1,24 @@
 ﻿using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     public class bebeController : Controller
     {
         public IActionResult listar()
         {
-
             var listaBebes = logBebe.Instancia.ListarBebe();
             ViewBag.Lista = listaBebes;
             return View(listaBebes);
-
-
         }
 
         // GET: /bebe/Registrar
         [HttpGet]
         public IActionResult Registrar(int? idParto)
         {
-            // Si vienes desde la pantalla de Parto puedes precargar el IdParto
             var modelo = new entBebe
             {
                 IdParto = idParto ?? 0,
@@ -36,7 +34,6 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             try
             {
-                // Validaciones mínimas (ajusta a tu gusto o usa DataAnnotations)
                 if (string.IsNullOrWhiteSpace(bebe.EstadoBebe))
                     ModelState.AddModelError(nameof(bebe.EstadoBebe), "El estado del bebé es obligatorio.");
 
@@ -46,11 +43,9 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (bebe.Apgar5 is < 0 or > 10)
                     ModelState.AddModelError(nameof(bebe.Apgar5), "Apgar5 debe estar entre 0 y 10.");
 
-                // Si hay errores de validación, vuelve al formulario
                 if (!ModelState.IsValid)
                     return View(bebe);
 
-                // Estado activo por defecto al registrar
                 bebe.Estado = true;
 
                 bool registrado = logBebe.Instancia.InsertarBebe(bebe);
@@ -70,7 +65,7 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /bebe/ConsultarEstado/5  (opcional, similar a tu ejemplo)
+        // GET: /bebe/ConsultarEstado/5
         [HttpGet]
         public IActionResult ConsultarEstado(int id)
         {
@@ -89,13 +84,5 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(listar));
             }
         }
-
-
-
-
-
-
-
-
     }
 }

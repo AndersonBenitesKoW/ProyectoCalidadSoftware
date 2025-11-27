@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
-    // [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD,SECRETARIA")]
     public class SeguimientoPuerperioController : Controller
     {
         // GET: /SeguimientoPuerperio/Listar
@@ -39,6 +40,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /SeguimientoPuerperio/Registrar
         [HttpGet]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Registrar(int? idEmbarazo)
         {
             var modelo = new entSeguimientoPuerperio
@@ -55,6 +57,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /SeguimientoPuerperio/Registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Registrar(entSeguimientoPuerperio control)
         {
             try
@@ -93,6 +96,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /SeguimientoPuerperio/Editar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Editar(int id)
         {
             var control = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
@@ -109,6 +113,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /SeguimientoPuerperio/Editar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Editar(entSeguimientoPuerperio control)
         {
             try
@@ -153,6 +158,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /SeguimientoPuerperio/Inhabilitar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Inhabilitar(int id)
         {
             var control = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
@@ -167,6 +173,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /SeguimientoPuerperio/Inhabilitar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
         public IActionResult Inhabilitar(entSeguimientoPuerperio control)
         {
             try
@@ -204,13 +211,13 @@ namespace ProyectoCalidadSoftware.Controllers
                 );
                 ViewBag.ProfesionalesModal = profesionales;
 
-                // MÉTODOS PF  ✅ AQUÍ EL CAMBIO
+                // MÉTODOS PF
                 var metodos = logMetodoPF.Instancia.ListarMetodosPF() ?? new List<entMetodoPF>();
 
                 ViewBag.ListaMetodosPF = new SelectList(
                     metodos,          // lista de entMetodoPF
                     "IdMetodoPF",     // value
-                    "Nombre",         // text (antes pusiste "Descripcion")
+                    "Nombre",         // text
                     entidad?.IdMetodoPF
                 );
             }
@@ -227,7 +234,8 @@ namespace ProyectoCalidadSoftware.Controllers
                 var idUsuarioClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (int.TryParse(idUsuarioClaim, out int idUsuario))
                 {
-                    var profesional = logProfesionalSalud.Instancia.ListarProfesionalSalud(true).FirstOrDefault(p => p.IdUsuario == idUsuario);
+                    var profesional = logProfesionalSalud.Instancia.ListarProfesionalSalud(true)
+                        .FirstOrDefault(p => p.IdUsuario == idUsuario);
                     return profesional?.IdProfesional;
                 }
             }

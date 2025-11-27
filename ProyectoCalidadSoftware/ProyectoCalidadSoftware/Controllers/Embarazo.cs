@@ -2,9 +2,11 @@
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     public class EmbarazoController : Controller
     {
         /// <summary>
@@ -46,7 +48,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction("Index");
             }
         }
-
 
         /// <summary>
         /// GET: /Embarazo/RegistrarEmbarazo
@@ -121,9 +122,8 @@ namespace ProyectoCalidadSoftware.Controllers
             CargarViewBags(embarazo);
             return View(embarazo);
         }
-        // ==== PASO 1: AÑADIR ESTE MÉTODO (GET) ====
+
         // GET: /Embarazo/CerrarEmbarazo/5
-        // (Esto muestra la página de confirmación)
         [HttpGet]
         public IActionResult CerrarEmbarazo(int id)
         {
@@ -136,7 +136,6 @@ namespace ProyectoCalidadSoftware.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Devuelve la vista de confirmación que vamos a crear
                 return View("CerrarEmbarazo", embarazo);
             }
             catch (Exception ex)
@@ -146,16 +145,13 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-
-        // ==== PASO 2: MODIFICAR ESTE MÉTODO (POST) ====
-        // (Lo cambiamos para que reciba 'entEmbarazo' en lugar de 'int id')
+        // POST: /Embarazo/CerrarEmbarazo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CerrarEmbarazo(entEmbarazo embarazo) // Recibe la entidad
+        public IActionResult CerrarEmbarazo(entEmbarazo embarazo)
         {
             try
             {
-                // Usamos el ID de la entidad que viene del formulario
                 bool exito = logEmbarazo.Instancia.CerrarEmbarazo(embarazo.IdEmbarazo);
 
                 if (exito)
@@ -175,10 +171,6 @@ namespace ProyectoCalidadSoftware.Controllers
             return RedirectToAction("Index");
         }
 
-
-        /// <summary>
-        /// MÉTODO PRIVADO para cargar todos los ViewBags necesarios (actualmente solo Pacientes).
-        /// </summary>
         private void CargarViewBags(entEmbarazo? embarazo)
         {
             try
@@ -191,9 +183,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 });
                 ViewBag.ListaPacientes = new SelectList(listaPacientesFormateada, "Value", "Text", embarazo?.IdPaciente);
 
-                // Para modal
                 ViewBag.PacientesModal = pacientes;
-
             }
             catch (Exception ex)
             {

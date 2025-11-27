@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ProyectoCalidadSoftware.Models;
 
+
 namespace ProyectoCalidadSoftware.Controllers
 {
-    public class PortalController: Controller
+    public class PortalController : Controller
     {
         // Página principal pública
+        [AllowAnonymous]
         public IActionResult Index()
         {
             // Si el usuario está autenticado, mantener la sesión activa
@@ -33,8 +35,11 @@ namespace ProyectoCalidadSoftware.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Servicios() => View();
 
+        // 🔐 Solo PACIENTE puede usar esta ruta de "Citas" del portal
+        [Authorize(Roles = "PACIENTE")]
         public IActionResult Citas()
         {
             // Solo pacientes logueados pueden acceder al formulario de citas
@@ -88,7 +93,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     FechaCita = fechaCita,
                     Observacion = comentarios,
                     IdEstadoCita = 1, // Pendiente
-                    // IdProfesional = null, IdRecepcionista = null
+                                      // IdProfesional = null, IdRecepcionista = null
                 };
 
                 logCita.Instancia.InsertarCita(cita);
@@ -103,13 +108,16 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
+        [AllowAnonymous]
         public IActionResult Contacto() => View();
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login() => View();
 
         // Login (form normal, no AJAX)
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string nombreUsuario, string clave)
         {
             var usuario = logUsuario.Instancia.ValidarUsuario(nombreUsuario, clave);
@@ -125,6 +133,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // Login AJAX (fetch)
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginAjax(string NombreUsuario, string Clave)
         {
             try
@@ -145,10 +154,10 @@ namespace ProyectoCalidadSoftware.Controllers
         private async Task IniciarSesion(entUsuario usuario)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, usuario.NombreUsuario),
-                new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString())
-            };
+        {
+            new Claim(ClaimTypes.Name, usuario.NombreUsuario),
+            new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString())
+        };
 
             if (!string.IsNullOrWhiteSpace(usuario.NombreRol))
                 claims.Add(new Claim(ClaimTypes.Role, usuario.NombreRol));
@@ -189,8 +198,9 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // ===== Registro de PACIENTE =====
+        // ===== Registro de USUARIO-PACIENTE (cuenta) =====
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             // Enviamos un modelo vacío a la vista
@@ -198,18 +208,15 @@ namespace ProyectoCalidadSoftware.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] // <-- Buena práctica (requiere @Html.AntiForgeryToken() en la vista)
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            // 1. La validación (campos vacíos, email, contraseñas coinciden)
-            //    se hace automáticamente gracias al ViewModel.
             if (!ModelState.IsValid)
             {
-                // Si algo falla, regresa a la vista y muestra los errores
                 return View(model);
             }
 
-            // 2. Si la validación pasa, creamos el usuario
             var usuario = new entUsuario
             {
                 NombreUsuario = model.Username,
@@ -220,7 +227,6 @@ namespace ProyectoCalidadSoftware.Controllers
 
             try
             {
-                // 3. Llamamos a tu lógica de negocio
                 var exito = logUsuario.Instancia.RegistrarPaciente(usuario);
 
                 if (exito)
@@ -230,21 +236,20 @@ namespace ProyectoCalidadSoftware.Controllers
                 }
                 else
                 {
-                    // Error de la base de datos (ej. usuario ya existe)
                     ModelState.AddModelError("", "No se pudo crear la cuenta. Es posible que el usuario o email ya existan.");
                     return View(model);
                 }
             }
             catch (Exception ex)
             {
-                // Error inesperado
                 ModelState.AddModelError("", "Error al crear la cuenta: " + ex.Message);
                 return View(model);
             }
         }
 
-        // ===== Registro de datos de PACIENTE =====
+        // ===== Registro de datos de PACIENTE (ficha clínica básica) =====
         [HttpGet]
+        [Authorize(Roles = "PACIENTE")]
         public IActionResult RegistrarPaciente()
         {
             if (!User.Identity?.IsAuthenticated == true || !User.IsInRole("PACIENTE"))
@@ -269,6 +274,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PACIENTE")]
         public IActionResult RegistrarPaciente(entPaciente entidad)
         {
             if (!User.Identity?.IsAuthenticated == true || !User.IsInRole("PACIENTE"))
@@ -309,14 +315,14 @@ namespace ProyectoCalidadSoftware.Controllers
             ViewBag.Error = "No se pudo registrar los datos del paciente. Verifique los datos.";
             return View(entidad);
         }
-        // En PortalController.cs - AGREGA ESTE MÉTODO:
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize] // 🔐 Cualquier usuario autenticado puede cerrar sesión
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Portal");
         }
-
     }
 }

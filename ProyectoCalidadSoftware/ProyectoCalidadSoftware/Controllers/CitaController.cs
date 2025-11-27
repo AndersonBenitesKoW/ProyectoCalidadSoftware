@@ -8,6 +8,7 @@ using System.Collections.Generic; // Para List<>
 using System.Linq; // Para .Select()
 using System.Security.Claims; // Para obtener el ID del usuario
 
+
 namespace ProyectoCalidadSoftware.Controllers
 {
     public class CitaController : Controller
@@ -18,6 +19,7 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             _logger = logger;
         }
+
         // GET: /Cita/Listar (o /Cita/Index)
         [HttpGet]
         [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
@@ -47,7 +49,6 @@ namespace ProyectoCalidadSoftware.Controllers
 
             var modelo = new entCita
             {
-                // Fecha por defecto: ahora mismo
                 FechaCita = DateTime.Now
             };
 
@@ -65,45 +66,43 @@ namespace ProyectoCalidadSoftware.Controllers
                 }
             }
 
-            CargarViewBags(modelo); // pásale el modelo para que marque selecciones si hiciera falta
+            CargarViewBags(modelo);
             return View(modelo);
         }
 
         // POST: /Cita/Insertar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN,PACIENTE")] // 🔐 agregado
         public IActionResult Insertar(entCita entidad)
         {
             try
             {
-                // --- Validaciones del Controlador ---
                 if (entidad.IdPaciente <= 0)
                     ModelState.AddModelError(nameof(entidad.IdPaciente), "Seleccione un paciente válido.");
-                if (entidad.FechaCita < DateTime.Now.AddMinutes(-5)) // 5 min de tolerancia
+
+                if (entidad.FechaCita < DateTime.Now.AddMinutes(-5))
                     ModelState.AddModelError(nameof(entidad.FechaCita), "La fecha de la cita no puede ser en el pasado.");
 
-                // --- LÓGICA DE NEGOCIO ---
-                // 1. Asignar el estado "Pendiente" (Asumo ID 1 = Pendiente)
+                // Estado "Pendiente"
                 entidad.IdEstadoCita = 1;
 
-                // 2. Asignar la recepcionista (el usuario logueado)
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier); // Busca el ID del usuario
+                // Asignar recepcionista (usuario logueado)
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int recepcionistaId))
                 {
                     entidad.IdRecepcionista = recepcionistaId;
                 }
                 else
                 {
-                    // Si no se encuentra el ID del usuario, es un error grave de sesión
                     ModelState.AddModelError("", "No se pudo identificar al usuario. Por favor, inicie sesión de nuevo.");
                 }
 
                 if (!ModelState.IsValid)
                 {
-                    CargarViewBags(entidad); // Recarga los dropdowns
+                    CargarViewBags(entidad);
                     return View(entidad);
                 }
-                // --- FIN LÓGICA DE NEGOCIO ---
 
                 bool ok = logCita.Instancia.InsertarCita(entidad);
                 if (ok)
@@ -136,11 +135,9 @@ namespace ProyectoCalidadSoftware.Controllers
 
             var modelo = new entCita
             {
-                // Fecha por defecto: ahora mismo
                 FechaCita = DateTime.Now
             };
 
-            // Pre-llenar el IdPaciente para el paciente logueado
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
@@ -153,7 +150,6 @@ namespace ProyectoCalidadSoftware.Controllers
             }
 
             CargarViewBags(modelo);
-            // No cargar pacientes para el modal, se buscará por DNI
             ViewBag.PacientesModal = null;
             return View(modelo);
         }
@@ -161,33 +157,30 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /Cita/RegistrarCitaPublica
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "PACIENTE")] // 🔐 agregado
         public IActionResult RegistrarCitaPublica(entCita entidad)
         {
             try
             {
-                // --- Validaciones del Controlador ---
                 if (entidad.IdPaciente <= 0)
                     ModelState.AddModelError(nameof(entidad.IdPaciente), "Seleccione un paciente válido.");
                 if (entidad.IdProfesional <= 0)
                     ModelState.AddModelError(nameof(entidad.IdProfesional), "Seleccione un profesional de salud válido.");
-                if (entidad.FechaCita < DateTime.Now.AddMinutes(-5)) // 5 min de tolerancia
+                if (entidad.FechaCita < DateTime.Now.AddMinutes(-5))
                     ModelState.AddModelError(nameof(entidad.FechaCita), "La fecha de la cita no puede ser en el pasado.");
 
-                // Validar que el slot no esté ocupado por el profesional
-                var citaProfesionalExistente = logCita.Instancia.ListarCita().Any(c => c.IdProfesional == entidad.IdProfesional && c.FechaCita == entidad.FechaCita);
+                var citaProfesionalExistente = logCita.Instancia.ListarCita()
+                    .Any(c => c.IdProfesional == entidad.IdProfesional && c.FechaCita == entidad.FechaCita);
                 if (citaProfesionalExistente)
                     ModelState.AddModelError(nameof(entidad.FechaCita), "Este horario ya está ocupado por este profesional.");
 
-                // Validar que el paciente no tenga cita en el mismo horario con otro profesional
-                var citaPacienteMismoHorario = logCita.Instancia.ListarCita().Any(c => c.IdPaciente == entidad.IdPaciente && c.FechaCita == entidad.FechaCita);
+                var citaPacienteMismoHorario = logCita.Instancia.ListarCita()
+                    .Any(c => c.IdPaciente == entidad.IdPaciente && c.FechaCita == entidad.FechaCita);
                 if (citaPacienteMismoHorario)
                     ModelState.AddModelError(nameof(entidad.FechaCita), "Ya tienes una cita programada en este horario con otro profesional.");
 
-                // --- LÓGICA DE NEGOCIO ---
-                // 1. Asignar el estado "Pendiente" (Asumo ID 1 = Pendiente)
                 entidad.IdEstadoCita = 1;
 
-                // 2. Asignar la recepcionista (el usuario logueado, si aplica)
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int recepcionistaId))
                 {
@@ -208,7 +201,7 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (ok)
                 {
                     TempData["Ok"] = "Cita registrada correctamente.";
-                    return RedirectToAction("Index", "Portal"); // Redirigir al portal
+                    return RedirectToAction("Index", "Portal");
                 }
 
                 ViewBag.Error = "No se pudo insertar la cita. Revise los datos.";
@@ -234,31 +227,26 @@ namespace ProyectoCalidadSoftware.Controllers
                 TempData["Error"] = "Cita no encontrada.";
                 return RedirectToAction(nameof(Listar));
             }
-            // Asegúrate de tener una vista Views/Cita/Anular.cshtml
             return View(cita);
         }
 
-        // POST: /Cita/AnularConfirmado/5
         // POST: /Cita/Anular
         [HttpPost]
-        [ActionName("Anular")] // Mantiene la URL "Anular"
+        [ActionName("Anular")]
         [ValidateAntiForgeryToken]
-        public IActionResult AnularConfirmado(entCita cita) // 1. Recibe la entidad 'cita' COMPLETA
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")] // 🔐 agregado
+        public IActionResult AnularConfirmado(entCita cita)
         {
             try
             {
-                // 2. Validamos que el motivo venga del formulario
                 if (string.IsNullOrWhiteSpace(cita.MotivoAnulacion))
                 {
                     ModelState.AddModelError(nameof(cita.MotivoAnulacion), "El motivo de anulación es obligatorio.");
 
-                    // Si falla, recargamos la página de confirmación con el error
-                    // (Necesitamos volver a buscar la cita para mostrar los nombres)
                     var citaActual = logCita.Instancia.BuscarCita(cita.IdCita);
-                    return View("Anular", citaActual); // Devuelve la vista Anular.cshtml
+                    return View("Anular", citaActual);
                 }
 
-                // 3. Pasamos AMBOS datos a la capa lógica
                 bool ok = logCita.Instancia.AnularCita(cita.IdCita, cita.MotivoAnulacion);
 
                 TempData[ok ? "Ok" : "Error"] = ok ? "Cita anulada." : "No se pudo anular la cita.";
@@ -269,20 +257,20 @@ namespace ProyectoCalidadSoftware.Controllers
             }
             return RedirectToAction(nameof(Listar));
         }
+
         [HttpGet]
         [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN")]
         public IActionResult DetallesCita(int id)
         {
             try
             {
-                // Usamos el método 'BuscarCita' que ya existe en tu lógica
                 var cita = logCita.Instancia.BuscarCita(id);
                 if (cita == null)
                 {
                     TempData["Error"] = "Cita no encontrada.";
                     return RedirectToAction(nameof(Listar));
                 }
-                return View(cita); // Devuelve Views/Cita/DetallesCita.cshtml
+                return View(cita);
             }
             catch (Exception ex)
             {
@@ -301,21 +289,29 @@ namespace ProyectoCalidadSoftware.Controllers
                 return Json(new { success = false, message = "DNI requerido." });
             }
 
-            // Obtener el ID del usuario logueado
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
                 return Json(new { success = false, message = "Usuario no identificado." });
             }
 
-            // Buscar paciente que pertenezca al usuario logueado y tenga el DNI especificado
-            var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.IdUsuario == userId && p.DNI == dni.Trim());
+            var paciente = logPaciente.Instancia.ListarPacientesActivos()
+                .FirstOrDefault(p => p.IdUsuario == userId && p.DNI == dni.Trim());
             if (paciente == null)
             {
                 return Json(new { success = false, message = "Paciente no encontrado con ese DNI o no pertenece a su cuenta." });
             }
 
-            return Json(new { success = true, paciente = new { id = paciente.IdPaciente, nombre = $"{paciente.Nombres} {paciente.Apellidos}", dni = paciente.DNI } });
+            return Json(new
+            {
+                success = true,
+                paciente = new
+                {
+                    id = paciente.IdPaciente,
+                    nombre = $"{paciente.Nombres} {paciente.Apellidos}",
+                    dni = paciente.DNI
+                }
+            });
         }
 
         // GET: /Cita/BuscarProfesionalPorCMP
@@ -334,7 +330,17 @@ namespace ProyectoCalidadSoftware.Controllers
                 return Json(new { success = false, message = "Profesional no encontrado con ese CMP." });
             }
 
-            return Json(new { success = true, profesional = new { id = profesional.IdProfesional, nombre = $"{profesional.Nombres} {profesional.Apellidos}", cmp = profesional.CMP, especialidad = profesional.Especialidad } });
+            return Json(new
+            {
+                success = true,
+                profesional = new
+                {
+                    id = profesional.IdProfesional,
+                    nombre = $"{profesional.Nombres} {profesional.Apellidos}",
+                    cmp = profesional.CMP,
+                    especialidad = profesional.Especialidad
+                }
+            });
         }
 
         // GET: /Cita/BuscarUltimoEmbarazoPorPacienteId
@@ -347,13 +353,25 @@ namespace ProyectoCalidadSoftware.Controllers
                 return Json(new { success = false, message = "ID de paciente inválido." });
             }
 
-            var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true).Where(e => e.IdPaciente == idPaciente).OrderByDescending(e => e.FUR).FirstOrDefault();
+            var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true)
+                .Where(e => e.IdPaciente == idPaciente)
+                .OrderByDescending(e => e.FUR)
+                .FirstOrDefault();
+
             if (embarazos == null)
             {
                 return Json(new { success = false, message = "No se encontró embarazo activo para este paciente." });
             }
 
-            return Json(new { success = true, embarazo = new { id = embarazos.IdEmbarazo, nombre = embarazos.NombrePaciente } });
+            return Json(new
+            {
+                success = true,
+                embarazo = new
+                {
+                    id = embarazos.IdEmbarazo,
+                    nombre = embarazos.NombrePaciente
+                }
+            });
         }
 
         // GET: /Cita/ObtenerSlotsDisponibles
@@ -371,7 +389,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 return Json(new { success = false, message = "Fecha inválida." });
             }
 
-            // Generar slots: 8:00, 8:30, ..., 11:30, 14:00, 14:30, ..., 17:30
             var slots = new List<string>();
             for (int hour = 8; hour <= 11; hour++)
             {
@@ -384,13 +401,11 @@ namespace ProyectoCalidadSoftware.Controllers
                 slots.Add($"{hour:00}:30");
             }
 
-            // Obtener citas existentes para ese profesional y fecha
             var citasProfesional = logCita.Instancia.ListarCita()
                 .Where(c => c.IdProfesional == idProfesional && c.FechaCita.Date == fechaSeleccionada.Date)
                 .Select(c => c.FechaCita.ToString("HH:mm"))
                 .ToHashSet();
 
-            // Obtener citas del paciente en esa fecha
             var citasPaciente = logCita.Instancia.ListarCita()
                 .Where(c => c.IdPaciente == idPaciente && c.FechaCita.Date == fechaSeleccionada.Date)
                 .Select(c => c.FechaCita.ToString("HH:mm"))
@@ -405,19 +420,14 @@ namespace ProyectoCalidadSoftware.Controllers
             return Json(new { success = true, slots = slotsDisponibles });
         }
 
-
         // --- Método privado para cargar DropDownLists ---
         private void CargarViewBags(entCita? cita)
         {
             try
             {
-                // ---------- PACIENTES ----------
                 var pacientes = logPaciente.Instancia.ListarPacientesActivos();
-
-                // Para MODAL (tabla)
                 ViewBag.PacientesModal = pacientes;
 
-                // (Opcional) Para combobox clásico, por si lo usas en otras vistas
                 ViewBag.ListaPacientes = new SelectList(
                     pacientes.Select(p => new
                     {
@@ -429,9 +439,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     cita?.IdPaciente
                 );
 
-                // ---------- PROFESIONALES ----------
                 var profesionales = logProfesionalSalud.Instancia.ListarProfesionalSalud(true);
-
                 ViewBag.ProfesionalesModal = profesionales;
 
                 ViewBag.ListaProfesionales = new SelectList(
@@ -445,9 +453,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     cita?.IdProfesional
                 );
 
-                // ---------- EMBARAZOS (Opcional) ----------
                 var embarazos = logEmbarazo.Instancia.ListarEmbarazosPorEstado(true);
-
                 ViewBag.EmbarazosModal = embarazos;
 
                 ViewBag.ListaEmbarazos = new SelectList(

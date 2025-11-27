@@ -1,12 +1,15 @@
 using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD,SECRETARIA")]
     public class PacienteController : Controller
     {
         // GET: /Paciente/Listar
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logPaciente.Instancia.ListarPaciente();
@@ -15,16 +18,16 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Paciente/Insertar
         [HttpGet]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 solo admin y secretaria pueden registrar
         public IActionResult Insertar()
         {
             return View(new entPaciente());
         }
 
         // POST: /Paciente/Insertar
-        // POST: /Paciente/Insertar
-        // POST: /Paciente/Insertar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 idem
         public IActionResult Insertar(entPaciente entidad)
         {
             try
@@ -35,17 +38,11 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (string.IsNullOrWhiteSpace(entidad.Apellidos))
                     ModelState.AddModelError(nameof(entidad.Apellidos), "Los apellidos son obligatorios.");
 
-                // ==== MODIFICACIÓN AQUÍ ====
-                // Ahora el DNI es obligatorio
+                // DNI obligatorio
                 if (string.IsNullOrWhiteSpace(entidad.DNI))
                     ModelState.AddModelError(nameof(entidad.DNI), "El DNI es obligatorio.");
-                // ===========================
 
-                // (Opcional: Fecha de Nacimiento sigue siendo opcional)
-                // if (entidad.FechaNacimiento == null)
-                //    ModelState.AddModelError(nameof(entidad.FechaNacimiento), "La fecha de nacimiento es obligatoria.");
-
-                // --- NUEVAS VALIDACIONES ---
+                // Email y teléfono obligatorios
                 if (string.IsNullOrWhiteSpace(entidad.EmailPrincipal))
                     ModelState.AddModelError(nameof(entidad.EmailPrincipal), "El Email es obligatorio.");
                 if (string.IsNullOrWhiteSpace(entidad.TelefonoPrincipal))
@@ -53,11 +50,6 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 if (!ModelState.IsValid) return View(entidad);
 
-                // El SP ya asigna 'Estado = 1' por defecto, no necesitamos esto.
-                // entidad.Estado = true; 
-
-                // Asumimos que logPaciente.InsertarPaciente(entidad)
-                // llama a DA_Paciente.Insertar(entidad)
                 bool ok = logPaciente.Instancia.InsertarPaciente(entidad);
 
                 if (ok) return RedirectToAction(nameof(Listar));
@@ -74,6 +66,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Paciente/Modificar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 solo admin y secretaria editan
         public IActionResult Modificar(int id)
         {
             try
@@ -93,6 +86,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /Paciente/Modificar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 idem
         public IActionResult Modificar(entPaciente entidad)
         {
             try
@@ -126,19 +120,19 @@ namespace ProyectoCalidadSoftware.Controllers
         // Alias: /Paciente/Actualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 sigue misma regla
         public IActionResult Actualizar(entPaciente entidad) => Modificar(entidad);
 
-        // POST: /Paciente/Inhabilitar/5
+        // GET: /Paciente/Inhabilitar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 solo ellos pueden inhabilitar
         public IActionResult Inhabilitar(int id)
         {
             try
             {
-                // Buscamos al paciente para mostrar sus detalles
                 var entidad = logPaciente.Instancia.BuscarPaciente(id);
                 if (entidad == null) return NotFound();
 
-                // Devolvemos la vista "Inhabilitar.cshtml" con los datos
                 return View("Inhabilitar", entidad);
             }
             catch (Exception ex)
@@ -147,17 +141,15 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(Listar));
             }
         }
-        // ==== FIN DEL CÓDIGO NUEVO ====
 
         // POST: /Paciente/Inhabilitar/5
-        // (Este método ya lo tenías, procesa el borrado)
         [HttpPost]
-        [ValidateAntiForgeryToken] // <-- ¡Importante! Asegúrate de que tu form lo tenga
-        public IActionResult Inhabilitar(entPaciente entidad) // Recibimos la entidad para obtener el ID
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN,SECRETARIA")] // 👈 idem
+        public IActionResult Inhabilitar(entPaciente entidad)
         {
             try
             {
-                // Usamos el IdPaciente que viene del <input type="hidden">
                 bool ok = logPaciente.Instancia.InhabilitarPaciente(entidad.IdPaciente);
                 if (ok)
                 {
