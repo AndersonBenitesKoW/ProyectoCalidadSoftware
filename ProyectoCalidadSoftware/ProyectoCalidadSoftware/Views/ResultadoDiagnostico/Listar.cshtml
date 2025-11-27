@@ -204,11 +204,16 @@
                             <form id="formBuscar" method="get" asp-action="Listar">
                                 <div class="mb-3">
                                     <label for="dni" class="form-label">DNI del Paciente</label>
-                                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese DNI" />
+                                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese DNI" maxlength="8" />
+                                    <div id="dni-feedback" class="invalid-feedback"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nombrePaciente" class="form-label">Nombre del Paciente</label>
+                                    <input type="text" class="form-control" id="nombrePaciente" readonly placeholder="Se cargará automáticamente al ingresar DNI" />
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                    <button type="submit" class="btn btn-primary" id="btnBuscar" disabled>Buscar</button>
                                 </div>
                             </form>
                         </div>
@@ -218,3 +223,64 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var dniTimeout;
+
+            $('#dni').on('input', function () {
+                var dni = $(this).val().trim();
+                var $nombrePaciente = $('#nombrePaciente');
+                var $dniFeedback = $('#dni-feedback');
+                var $btnBuscar = $('#btnBuscar');
+
+                // Clear previous timeout
+                clearTimeout(dniTimeout);
+
+                // Reset fields
+                $nombrePaciente.val('');
+                $dniFeedback.text('');
+                $(this).removeClass('is-invalid is-valid');
+                $btnBuscar.prop('disabled', true);
+
+                if (dni.length === 8 && /^\d+$/.test(dni)) {
+                    // Valid DNI format, search after a delay
+                    dniTimeout = setTimeout(function () {
+                        $.ajax({
+                            url: '@Url.Action("BuscarPacientePorDNI", "ResultadoDiagnostico")',
+                            type: 'GET',
+                            data: { dni: dni },
+                            success: function (response) {
+                                if (response.success) {
+                                    $nombrePaciente.val(response.paciente.nombre);
+                                    $('#dni').addClass('is-valid');
+                                    $btnBuscar.prop('disabled', false);
+                                } else {
+                                    $dniFeedback.text(response.message);
+                                    $('#dni').addClass('is-invalid');
+                                }
+                            },
+                            error: function () {
+                                $dniFeedback.text('Error al buscar paciente.');
+                                $('#dni').addClass('is-invalid');
+                            }
+                        });
+                    }, 500); // Delay to avoid too many requests
+                } else if (dni.length > 0) {
+                    // Invalid format
+                    $dniFeedback.text('El DNI debe tener 8 dígitos.');
+                    $(this).addClass('is-invalid');
+                }
+            });
+
+            // Reset modal when closed
+            $('#modalBuscar').on('hidden.bs.modal', function () {
+                $('#dni').val('').removeClass('is-invalid is-valid');
+                $('#nombrePaciente').val('');
+                $('#dni-feedback').text('');
+                $('#btnBuscar').prop('disabled', true);
+            });
+        });
+    </script>
+}
