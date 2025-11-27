@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     //[Route("core/ayudas/resultados")]
     public class ResultadoDiagnosticoController : Controller
     {
@@ -76,6 +77,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /core/ayudas/resultados/modificar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Modificar(int id)
         {
             try
@@ -98,6 +100,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // POST: /core/ayudas/resultados/modificar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Modificar(entResultadoDiagnostico entidad)
         {
             try
@@ -128,6 +131,7 @@ namespace ProyectoCalidadSoftware.Controllers
         // Alias opcional: /core/ayudas/resultados/actualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Actualizar(entResultadoDiagnostico entidad)
         {
             return Modificar(entidad);
@@ -135,6 +139,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Anular(int id)
         {
             var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
@@ -143,13 +148,13 @@ namespace ProyectoCalidadSoftware.Controllers
                 TempData["Error"] = "Resultado no encontrado.";
                 return RedirectToAction(nameof(Listar));
             }
-            return View(entidad); // Views/ResultadoDiagnostico/Anular.cshtml (modelo: entResultadoDiagnostico)
+            return View(entidad); // Views/ResultadoDiagnostico/Anular.cshtml
         }
 
         // POST: /core/ayudas/resultados/{id}/anular
         [HttpPost]
-         // permite usar asp-action="Anular" en el form
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult AnularConfirmado(int id)
         {
             try

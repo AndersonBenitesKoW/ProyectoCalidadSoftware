@@ -1,11 +1,15 @@
 ﻿using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
     public class PacienteFactorRiesgoController : Controller
-    {// GET: /PacienteFactorRiesgo/Listar
+    {
+        // GET: /PacienteFactorRiesgo/Listar
+        [HttpGet]
         public IActionResult Listar()
         {
             var lista = logPacienteFactorRiesgo.Instancia.ListarPacienteFactorRiesgo();
@@ -40,14 +44,12 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (entidad.IdFactorCat <= 0)
                     ModelState.AddModelError(nameof(entidad.IdFactorCat), "Seleccione una categoría de factor válida.");
 
-                // Fecha por defecto si no viene seteada
                 if (entidad.FechaRegistro == default)
                     entidad.FechaRegistro = DateTime.Now;
 
                 if (!ModelState.IsValid)
                     return View(entidad);
 
-                // Estado activo por defecto
                 entidad.Estado = true;
 
                 bool ok = logPacienteFactorRiesgo.Instancia.InsertarPacienteFactorRiesgo(entidad);
@@ -62,8 +64,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 return View(entidad);
             }
         }
-
-
 
         // GET: /PacienteFactorRiesgo/Editar/5
         [HttpGet]
@@ -97,7 +97,6 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (entidad.IdFactorCat <= 0)
                     ModelState.AddModelError(nameof(entidad.IdFactorCat), "Seleccione una categoría de factor válida.");
 
-                // Si no te interesa que editen la fecha, puedes mantener la anterior
                 if (entidad.FechaRegistro == default)
                     entidad.FechaRegistro = DateTime.Now;
 
@@ -118,6 +117,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // POST: /PacienteFactorRiesgo/Eliminar/5
         [HttpPost]
+        [Authorize(Roles = "ADMIN")] // 🔐 solo ADMIN puede eliminar registros
         public IActionResult Eliminar(int id)
         {
             try
@@ -135,9 +135,5 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
     }
-
-
-
-
 }
 
