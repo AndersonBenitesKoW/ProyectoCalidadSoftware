@@ -1,11 +1,12 @@
 ﻿using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProyectoCalidadSoftware.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
@@ -224,6 +225,29 @@ namespace ProyectoCalidadSoftware.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
+            }
+        }
+        [HttpGet]
+        public IActionResult DescargarPdf(int id)
+        {
+            try
+            {
+                var seguimiento = logSeguimientoPuerperio.Instancia.BuscarSeguimiento(id);
+                if (seguimiento == null)
+                {
+                    TempData["Error"] = "Seguimiento no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
+
+                var pdfService = HttpContext.RequestServices.GetService<IPdfService>();
+                var pdfBytes = pdfService.GenerateSeguimientoPuerperioPdf(seguimiento);
+
+                return File(pdfBytes, "application/pdf", $"Puerperio_{id}_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al generar PDF: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
             }
         }
 

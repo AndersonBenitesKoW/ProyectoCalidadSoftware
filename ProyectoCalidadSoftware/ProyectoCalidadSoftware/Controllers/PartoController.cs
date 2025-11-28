@@ -3,6 +3,7 @@ using CapaLogica;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProyectoCalidadSoftware.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -254,6 +255,29 @@ namespace ProyectoCalidadSoftware.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
+            }
+        }
+        [HttpGet]
+        public IActionResult DescargarPdf(int id)
+        {
+            try
+            {
+                var parto = logParto.Instancia.BuscarParto(id);
+                if (parto == null)
+                {
+                    TempData["Error"] = "Parto no encontrado.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var pdfService = HttpContext.RequestServices.GetService<IPdfService>();
+                var pdfBytes = pdfService.GeneratePartoPdf(parto);
+
+                return File(pdfBytes, "application/pdf", $"Parto_{id}_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al generar PDF: " + ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 

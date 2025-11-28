@@ -67,8 +67,14 @@
 //-------------------------
 
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ProyectoCalidadSoftware.Services;
+using QuestPDF;
+using QuestPDF.Infrastructure;
 
+
+Settings.License = LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
+
 
 // MVC
 builder.Services.AddControllersWithViews();
@@ -85,6 +91,9 @@ builder.Services
 
 // si quieres, puedes dejar autorización básica
 builder.Services.AddAuthorization();
+
+//PDF
+builder.Services.AddScoped<IPdfService, PdfService>();
 
 var app = builder.Build();
 
