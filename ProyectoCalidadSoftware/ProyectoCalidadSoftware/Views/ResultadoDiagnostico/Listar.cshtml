@@ -11,8 +11,8 @@
             <p class="text-muted mb-0">Gestión de resultados de exámenes diagnósticos relacionados con controles prenatales</p>
         </div>
         <div>
-            <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#modalBuscar">
-                <i class="bi bi-search"></i> Buscar
+            <button type="button" class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#modalBuscar">
+                <i class="bi bi-search"></i> Buscar por DNI
             </button>
             <a asp-action="Registrar" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Nuevo Resultado
@@ -147,9 +147,9 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a asp-action="Modificar" asp-route-id="@item.IdResultado"
-                                   class="btn btn-sm btn-outline-primary" title="Modificar">
-                                    <i class="bi bi-pencil"></i>
+                                <a asp-action="Detalles" asp-route-id="@item.IdResultado"
+                                   class="btn btn-sm btn-outline-info" title="Ver Detalles">
+                                    <i class="bi bi-eye"></i>
                                 </a>
                                 <a asp-action="Anular" asp-route-id="@item.IdResultado"
                                    class="btn btn-sm btn-outline-danger" title="Anular">

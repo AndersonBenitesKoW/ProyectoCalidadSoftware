@@ -25,5 +25,11 @@ namespace CapaLogica
             return DA_ResultadoItem.Instancia.Insertar(entidad);
         }
 
+        // ELIMINAR POR RESULTADO
+        public bool EliminarResultadoItemPorResultado(int idResultado)
+        {
+            return DA_ResultadoItem.Instancia.EliminarPorResultado(idResultado);
+        }
+
     }
 }

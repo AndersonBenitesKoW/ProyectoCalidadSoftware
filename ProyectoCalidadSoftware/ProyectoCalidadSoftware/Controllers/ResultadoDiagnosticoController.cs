@@ -62,8 +62,20 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 if (!ModelState.IsValid) return View(entidad);
 
-                bool ok = logResultadoDiagnostico.Instancia.InsertarResultadoDiagnostico(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                int idResultado = logResultadoDiagnostico.Instancia.InsertarResultadoDiagnostico(entidad);
+                if (idResultado > 0)
+                {
+                    // Insertar items si existen
+                    if (entidad.Items != null && entidad.Items.Any())
+                    {
+                        foreach (var item in entidad.Items)
+                        {
+                            item.IdResultado = idResultado;
+                            logResultadoItem.Instancia.InsertarResultadoItem(item);
+                        }
+                    }
+                    return RedirectToAction(nameof(Listar));
+                }
 
                 ViewBag.Error = "No se pudo registrar el resultado.";
                 return View(entidad);
@@ -88,6 +100,8 @@ namespace ProyectoCalidadSoftware.Controllers
                     TempData["Error"] = "Resultado no encontrado.";
                     return RedirectToAction(nameof(Listar));
                 }
+                // Cargar items
+                entidad.Items = logResultadoItem.Instancia.ListarResultadoItem().Where(i => i.IdResultado == id).ToList();
                 return View(entidad);
             }
             catch (Exception ex)
@@ -116,7 +130,20 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (!ModelState.IsValid) return View(entidad);
 
                 bool ok = logResultadoDiagnostico.Instancia.ActualizarResultadoDiagnostico(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (ok)
+                {
+                    // Manejar items: eliminar existentes e insertar nuevos
+                    logResultadoItem.Instancia.EliminarResultadoItemPorResultado(entidad.IdResultado);
+                    if (entidad.Items != null && entidad.Items.Any())
+                    {
+                        foreach (var item in entidad.Items)
+                        {
+                            item.IdResultado = entidad.IdResultado;
+                            logResultadoItem.Instancia.InsertarResultadoItem(item);
+                        }
+                    }
+                    return RedirectToAction(nameof(Listar));
+                }
 
                 ViewBag.Error = "No se pudo actualizar el resultado.";
                 return View(entidad);
@@ -136,6 +163,30 @@ namespace ProyectoCalidadSoftware.Controllers
         {
             return Modificar(entidad);
         }
+        // GET: /core/ayudas/resultados/{id}/detalles
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            try
+            {
+                var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
+                if (entidad == null)
+                {
+                    TempData["Error"] = "Resultado no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
+                // Cargar items del resultado
+                entidad.Items = logResultadoItem.Instancia.ListarResultadoItem().Where(i => i.IdResultado == id).ToList();
+                return View(entidad);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar detalles: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
+        }
+
+        // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
 
         // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
         [HttpGet]
@@ -226,7 +277,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 // Buscar ayudas diagnósticas para ese paciente
                 var ayudas = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden()
-                    .Where(a => a.IdPaciente == paciente.IdPaciente && a.Estado == "ACTIVO")
+                    .Where(a => a.IdPaciente == paciente.IdPaciente && a.Estado != "Anulada")
                     .ToList();
 
                 if (!ayudas.Any())

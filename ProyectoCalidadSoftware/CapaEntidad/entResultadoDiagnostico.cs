@@ -17,5 +17,8 @@
         public string? DescripcionAyuda { get; set; }
         public string? TipoAyuda { get; set; }
         public bool? Urgente { get; set; }
+
+        // Detalle de parámetros del examen
+        public List<entResultadoItem> Items { get; set; } = new();
     }
 }
