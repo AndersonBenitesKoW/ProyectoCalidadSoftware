@@ -1,4 +1,4 @@
-﻿@model CapaAccesoDatos.DA_ResultadoDiagnostico
+﻿@model CapaEntidad.entResultadoDiagnostico
 
 @{
     ViewData["Title"] = "Actualizar Resultado Diagnóstico";
@@ -7,15 +7,104 @@
 <div class="form-container">
     <div class="form-header">
         <h1><i class="bi bi-arrow-repeat"></i> Actualizar Resultado Diagnóstico</h1>
-        <h4>Actualizar información del resultado diagnóstico</h4>
+        <h4>Editar resultado de examen diagnóstico relacionado con control prenatal</h4>
     </div>
+
+    @* Información del Control Prenatal Relacionado *@
+    @if (Model.IdControlPrenatal.HasValue)
+    {
+        <div class="alert alert-info mb-4">
+            <h5><i class="bi bi-info-circle"></i> Información del Control Prenatal Relacionado</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>ID Control:</strong> @Model.IdControlPrenatal
+                </div>
+                <div class="col-md-3">
+                    <strong>Fecha:</strong> @(Model.FechaControlPrenatal?.ToString("dd/MM/yyyy") ?? "No disponible")
+                </div>
+                <div class="col-md-3">
+                    <strong>Paciente:</strong> @(Model.NombrePaciente ?? "No disponible")
+                </div>
+                <div class="col-md-3">
+                    <strong>Profesional:</strong> @(Model.NombreProfesional ?? "No disponible")
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.TipoAyuda))
+            {
+                <div class="mt-2">
+                    <strong>Tipo de Ayuda:</strong> @Model.TipoAyuda
+                    @if (!string.IsNullOrEmpty(Model.DescripcionAyuda))
+                    {
+                        <br /><strong>Descripción:</strong> @Model.DescripcionAyuda
+                    }
+                    @if (Model.Urgente.HasValue && Model.Urgente.Value)
+                    {
+                        <span class="badge bg-danger ms-2">Urgente</span>
+                    }
+                </div>
+            }
+        </div>
+    }
 
     <form asp-action="Actualizar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="alert alert-info" role="alert">
-            <i class="bi bi-info-circle"></i>
-            <strong>Información:</strong> Esta vista está en desarrollo. Los campos específicos del modelo DA_ResultadoDiagnostico serán agregados próximamente.
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdResultado" class="control-label">
+                        <i class="bi bi-hash"></i> ID Resultado
+                    </label>
+                    <input asp-for="IdResultado" class="form-control" readonly />
+                    <span asp-validation-for="IdResultado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="IdAyuda" class="control-label">
+                        <i class="bi bi-clipboard-data"></i> ID Ayuda Diagnóstica
+                    </label>
+                    <input asp-for="IdAyuda" class="form-control" />
+                    <span asp-validation-for="IdAyuda" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="FechaResultado" class="control-label">
+                        <i class="bi bi-calendar-date"></i> Fecha del Resultado
+                    </label>
+                    <input asp-for="FechaResultado" class="form-control" type="date" />
+                    <span asp-validation-for="FechaResultado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Estado" class="control-label">
+                        <i class="bi bi-check-circle"></i> Estado
+                    </label>
+                    <input asp-for="Estado" class="form-control" />
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Resumen" class="control-label">
+                <i class="bi bi-chat-text"></i> Resumen del Resultado
+            </label>
+            <textarea asp-for="Resumen" class="form-control" rows="4" placeholder="Describa los resultados del examen diagnóstico..."></textarea>
+            <span asp-validation-for="Resumen" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check mb-4">
+            <input class="form-check-input" asp-for="Critico" />
+            <label class="form-check-label" asp-for="Critico">
+                <i class="bi bi-exclamation-triangle"></i> Resultado Crítico
+            </label>
+            <small class="form-text text-muted">Marque si el resultado requiere atención médica inmediata</small>
         </div>
 
         <div class="d-flex justify-content-between">

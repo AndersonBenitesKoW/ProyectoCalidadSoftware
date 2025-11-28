@@ -7,7 +7,7 @@
 <div class="form-container">
     <div class="form-header">
         <h1><i class="bi bi-file-earmark-medical"></i> Registrar Resultado Diagnóstico</h1>
-        <h4>Ingreso de resultados de exámenes diagnósticos</h4>
+        <h4>Ingreso de resultados de exámenes diagnósticos relacionados con controles prenatales</h4>
     </div>
 
     <form asp-action="Registrar">
@@ -118,6 +118,9 @@
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>Paciente</th>
+                            <th>Profesional</th>
+                            <th>Control Prenatal</th>
                             <th>Descripción</th>
                             <th>Tipo</th>
                             <th>Fecha Orden</th>
@@ -168,6 +171,8 @@
                                     const tr = document.createElement("tr");
                                     tr.innerHTML = `
                                         <td>${ayuda.id}</td>
+                                        <td>${ayuda.nombrePaciente || 'No disponible'}</td>
+                                        <td colspan="2">Información del control prenatal se mostrará en la lista</td>
                                         <td>${ayuda.descripcion}</td>
                                         <td>${ayuda.tipoAyuda}</td>
                                         <td>${ayuda.fechaOrden}</td>

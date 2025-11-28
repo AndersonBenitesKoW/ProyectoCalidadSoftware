@@ -170,6 +170,41 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
+        // GET: /ResultadoDiagnostico/BuscarPacientePorDNI
+        [HttpGet]
+        public IActionResult BuscarPacientePorDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+            {
+                return Json(new { success = false, message = "DNI requerido." });
+            }
+
+            try
+            {
+                // Buscar paciente por DNI
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.DNI == dni.Trim());
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado con ese DNI." });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    paciente = new
+                    {
+                        id = paciente.IdPaciente,
+                        nombre = paciente.Nombres + " " + paciente.Apellidos,
+                        dni = paciente.DNI
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al buscar paciente: " + ex.Message });
+            }
+        }
+
         // GET: /ResultadoDiagnostico/BuscarAyudaPorPacienteDNI
         [HttpGet]
         [Authorize(Roles = "ADMIN")]
@@ -199,14 +234,22 @@ namespace ProyectoCalidadSoftware.Controllers
                     return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
                 }
 
+                // Crear la lista de ayudas con información básica por ahora
+                // La información completa del control prenatal se cargará desde la vista de listado
                 var ayudasData = ayudas.Select(a => new
                 {
                     id = a.IdAyuda,
                     descripcion = a.Descripcion ?? "Sin descripción",
                     tipoAyuda = a.NombreTipoAyuda,
                     fechaOrden = a.FechaOrden.ToString("dd/MM/yyyy"),
-                    urgente = a.Urgente
+                    urgente = a.Urgente,
+                    nombrePaciente = paciente.Nombres + " " + paciente.Apellidos
                 }).ToList();
+
+                if (!ayudasData.Any())
+                {
+                    return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
+                }
 
                 return Json(new { success = true, ayudas = ayudasData });
             }

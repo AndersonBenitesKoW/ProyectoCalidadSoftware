@@ -7,8 +7,44 @@
 <div class="form-container">
     <div class="form-header">
         <h1><i class="bi bi-pencil-square"></i> Modificar Resultado Diagnóstico</h1>
-        <h4>Editar resultado de examen diagnóstico</h4>
+        <h4>Editar resultado de examen diagnóstico relacionado con control prenatal</h4>
     </div>
+
+    @* Información del Control Prenatal Relacionado *@
+    @if (Model.IdControlPrenatal.HasValue)
+    {
+        <div class="alert alert-info mb-4">
+            <h5><i class="bi bi-info-circle"></i> Información del Control Prenatal Relacionado</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>ID Control:</strong> @Model.IdControlPrenatal
+                </div>
+                <div class="col-md-3">
+                    <strong>Fecha:</strong> @(Model.FechaControlPrenatal?.ToString("dd/MM/yyyy") ?? "No disponible")
+                </div>
+                <div class="col-md-3">
+                    <strong>Paciente:</strong> @(Model.NombrePaciente ?? "No disponible")
+                </div>
+                <div class="col-md-3">
+                    <strong>Profesional:</strong> @(Model.NombreProfesional ?? "No disponible")
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.TipoAyuda))
+            {
+                <div class="mt-2">
+                    <strong>Tipo de Ayuda:</strong> @Model.TipoAyuda
+                    @if (!string.IsNullOrEmpty(Model.DescripcionAyuda))
+                    {
+                        <br /><strong>Descripción:</strong> @Model.DescripcionAyuda
+                    }
+                    @if (Model.Urgente.HasValue && Model.Urgente.Value)
+                    {
+                        <span class="badge bg-danger ms-2">Urgente</span>
+                    }
+                </div>
+            }
+        </div>
+    }
 
     <form asp-action="Modificar">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
