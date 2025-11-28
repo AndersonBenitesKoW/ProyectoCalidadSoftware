@@ -3,6 +3,7 @@ using CapaLogica;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProyectoCalidadSoftware.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -320,8 +321,31 @@ public class ControlPrenatalController : Controller
             ViewBag.Error = "Error al cargar listas desplegables: " + ex.Message;
         }
     }
+        [HttpGet]
+        public IActionResult DescargarPdf(int id)
+        {
+            try
+            {
+                var control = logControlPrenatal.Instancia.BuscarControlPrenatal(id);
+                if (control == null)
+                {
+                    TempData["Error"] = "Control no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
 
-    private int? GetIdProfesional()
+                var pdfService = HttpContext.RequestServices.GetService<IPdfService>();
+                var pdfBytes = pdfService.GenerateControlPrenatalPdf(control);
+
+                return File(pdfBytes, "application/pdf", $"ControlPrenatal_{id}_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al generar PDF: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
+        }
+
+        private int? GetIdProfesional()
     {
         if (User.IsInRole("PERSONAL_SALUD"))
         {

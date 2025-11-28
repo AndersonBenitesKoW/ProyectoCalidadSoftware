@@ -67,10 +67,18 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Detalles" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-info" title="Detalles"><i class="bi bi-search"></i></a>
+                                        <a asp-action="DescargarPdf" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-success" title="Descargar PDF">
+                                            <i class="bi bi-file-pdf"></i> PDF
+                                        </a>
+
+                                        <a asp-action="Detalles" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-info" title="Detalles">
+                                            <i class="bi bi-search"></i>
+                                        </a>
                                         @if (item.Estado && (ViewBag.IdProfesionalActual == null || item.IdProfesional == ViewBag.IdProfesionalActual))
                                         {
-                                            <a asp-action="Anular" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-danger" title="Anular"><i class="bi bi-trash-fill"></i></a>
+                                            <a asp-action="Anular" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-danger" title="Anular">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
                                         }
                                     </div>
                                 </td>

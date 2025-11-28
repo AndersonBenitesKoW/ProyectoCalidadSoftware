@@ -3,6 +3,7 @@ using CapaLogica;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering; // Para SelectList
+using ProyectoCalidadSoftware.Services;
 using System;
 using System.Collections.Generic; // Para List<>
 using System.Linq; // Para .Select()
@@ -418,6 +419,29 @@ namespace ProyectoCalidadSoftware.Controllers
             }).ToList();
 
             return Json(new { success = true, slots = slotsDisponibles });
+        }
+        [HttpGet]
+        public IActionResult DescargarPdf(int id)
+        {
+            try
+            {
+                var cita = logCita.Instancia.BuscarCita(id);
+                if (cita == null)
+                {
+                    TempData["Error"] = "Cita no encontrada.";
+                    return RedirectToAction(nameof(Listar));
+                }
+
+                var pdfService = HttpContext.RequestServices.GetService<IPdfService>();
+                var pdfBytes = pdfService.GenerateCitaPdf(cita);
+
+                return File(pdfBytes, "application/pdf", $"Cita_{id}_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al generar PDF: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
         }
 
         // --- Método privado para cargar DropDownLists ---

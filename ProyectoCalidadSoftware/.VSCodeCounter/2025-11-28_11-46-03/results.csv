@@ -1,0 +1,333 @@
+"filename", "language", "XML", "C#", "ASP.NET Razor", "JavaScript", "JSON", "PostCSS", "Markdown", "Properties", "JSON with Comments", "comment", "blank", "total"
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\.vs\ProyectoCalidadSoftware\v17\DocumentLayout.backup.json", "JSON", 0, 0, 0, 0, 2363, 0, 0, 0, 0, 0, 0, 2363
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\.vs\ProyectoCalidadSoftware\v17\DocumentLayout.json", "JSON", 0, 0, 0, 0, 2333, 0, 0, 0, 0, 0, 0, 2333
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\.vs\ProyectoCalidadSoftware\v17\ResourceExplorer\settings.json", "JSON with Comments", 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\.vs\VSWorkspaceState.json", "JSON", 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\CapaAccesoDatos.csproj", "XML", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 18
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\Conexion.cs", "C#", 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 13, 35
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_AntecedenteObstetrico.cs", "C#", 0, 141, 0, 0, 0, 0, 0, 0, 0, 5, 21, 167
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Auditoria.cs", "C#", 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 19, 128
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_AyudaDiagnosticaOrden.cs", "C#", 0, 132, 0, 0, 0, 0, 0, 0, 0, 0, 6, 138
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Bebe.cs", "C#", 0, 163, 0, 0, 0, 0, 0, 0, 0, 2, 21, 186
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Cita.cs", "C#", 0, 138, 0, 0, 0, 0, 0, 0, 0, 3, 14, 155
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ControlPrenatal.cs", "C#", 0, 241, 0, 0, 0, 0, 0, 0, 0, 4, 14, 259
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ControlPrenatal_AyudaDiagnostica.cs", "C#", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 5, 98
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Embarazo.cs", "C#", 0, 146, 0, 0, 0, 0, 0, 0, 0, 6, 23, 175
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Encuentro.cs", "C#", 0, 155, 0, 0, 0, 0, 0, 0, 0, 2, 11, 168
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_EstadoCita.cs", "C#", 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 19, 111
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_FactorRiesgoCat.cs", "C#", 0, 98, 0, 0, 0, 0, 0, 0, 0, 3, 16, 117
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_LiquidoAmniotico.cs", "C#", 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 2, 38
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_MetodoPF.cs", "C#", 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 2, 44
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Paciente.cs", "C#", 0, 169, 0, 0, 0, 0, 0, 0, 0, 30, 43, 242
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_PacienteEmail.cs", "C#", 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 19, 114
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_PacienteFactorRiesgo.cs", "C#", 0, 114, 0, 0, 0, 0, 0, 0, 0, 7, 24, 145
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_PacienteTelefono.cs", "C#", 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 19, 115
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Parto.cs", "C#", 0, 264, 0, 0, 0, 0, 0, 0, 0, 9, 11, 284
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_PartoIntervencion.cs", "C#", 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 17, 113
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ProfesionalEmail.cs", "C#", 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 20, 115
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ProfesionalSalud.cs", "C#", 0, 154, 0, 0, 0, 0, 0, 0, 0, 6, 22, 182
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ProfesionalTelefono.cs", "C#", 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 20, 116
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ResultadoDiagnostico.cs", "C#", 0, 155, 0, 0, 0, 0, 0, 0, 0, 22, 42, 219
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ResultadoItem.cs", "C#", 0, 165, 0, 0, 0, 0, 0, 0, 0, 9, 37, 211
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Rol.cs", "C#", 0, 131, 0, 0, 0, 0, 0, 0, 0, 0, 24, 155
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_SegumientoPuerperio.cs", "C#", 0, 192, 0, 0, 0, 0, 0, 0, 0, 0, 22, 214
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_TipoAyudaDiagnostica.cs", "C#", 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 2, 44
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_TipoEncuentro.cs", "C#", 0, 56, 0, 0, 0, 0, 0, 0, 0, 1, 6, 63
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_Usuario.cs", "C#", 0, 244, 0, 0, 0, 0, 0, 0, 0, 15, 62, 321
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_UsuarioRol.cs", "C#", 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 19, 111
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\DA_ViaParto.cs", "C#", 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 2, 38
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\bin\Debug\net8.0\CapaAccesoDatos.deps.json", "JSON", 0, 0, 0, 0, 137, 0, 0, 0, 0, 0, 0, 137
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\CapaAccesoDatos.csproj.nuget.dgspec.json", "JSON", 0, 0, 0, 0, 154, 0, 0, 0, 0, 0, 0, 154
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\CapaAccesoDatos.csproj.nuget.g.props", "XML", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\CapaAccesoDatos.csproj.nuget.g.targets", "XML", 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Debug\net8.0\CapaAccesoDatos.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Debug\net8.0\CapaAccesoDatos.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Debug\net8.0\CapaAccesoDatos.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Debug\net8.0\CapaAccesoDatos.sourcelink.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Release\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Release\net8.0\CapaAccesoDatos.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Release\net8.0\CapaAccesoDatos.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\Release\net8.0\CapaAccesoDatos.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaDatos\obj\project.assets.json", "JSON", 0, 0, 0, 0, 272, 0, 0, 0, 0, 0, 0, 272
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\CapaEntidad.csproj", "XML", 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\bin\Debug\net8.0\CapaEntidad.deps.json", "JSON", 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 0, 120
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entAntecedenteObstetrico.cs", "C#", 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entAuditoria.cs", "C#", 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entAyudaDiagnosticaOrden.cs", "C#", 0, 23, 0, 0, 0, 0, 0, 0, 0, 1, 7, 31
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entBebe.cs", "C#", 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entCita.cs", "C#", 0, 20, 0, 0, 0, 0, 0, 0, 0, 1, 1, 22
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entControlPrenatal.cs", "C#", 0, 63, 0, 0, 0, 0, 0, 0, 0, 3, 19, 85
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entControlPrenatal_AyudaDiagnostica.cs", "C#", 0, 20, 0, 0, 0, 0, 0, 0, 0, 1, 5, 26
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entEmbarazo.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entEncuentro.cs", "C#", 0, 18, 0, 0, 0, 0, 0, 0, 0, 1, 2, 21
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entEstadoCita.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entFactorRiesgoCat.cs", "C#", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entLiquidoAmniotico.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entLogin.cs", "C#", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entMetodoPF.cs", "C#", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entPaciente.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entPacienteEmail.cs", "C#", 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entPacienteFactorRiesgo.cs", "C#", 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entPacienteTelefono.cs", "C#", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entParto.cs", "C#", 0, 54, 0, 0, 0, 0, 0, 0, 0, 3, 30, 87
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entPartoIntervencion.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entProfesionalEmail.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 6, 22
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entProfesionalSalud.cs", "C#", 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entProfesionalTelefono.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entResultadoDiagnostico.cs", "C#", 0, 20, 0, 0, 0, 0, 0, 0, 0, 2, 3, 25
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entResultadoItem.cs", "C#", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entRol.cs", "C#", 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entSeguimientoPuerperio.cs", "C#", 0, 45, 0, 0, 0, 0, 0, 0, 0, 1, 22, 68
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entTipoAyudaDiagnostica.cs", "C#", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entTipoEncuentro.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entUsuario.cs", "C#", 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 7, 25
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entUsuarioRol.cs", "C#", 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\entViaParto.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\loginStaf.cs", "C#", 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 5, 11
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\CapaEntidad.csproj.nuget.dgspec.json", "JSON", 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 0, 79
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\CapaEntidad.csproj.nuget.g.props", "XML", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\CapaEntidad.csproj.nuget.g.targets", "XML", 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Debug\net8.0\CapaEntidad.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Debug\net8.0\CapaEntidad.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Debug\net8.0\CapaEntidad.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Debug\net8.0\CapaEntidad.sourcelink.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Release\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Release\net8.0\CapaEntidad.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Release\net8.0\CapaEntidad.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\Release\net8.0\CapaEntidad.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaEntidad\obj\project.assets.json", "JSON", 0, 0, 0, 0, 249, 0, 0, 0, 0, 0, 0, 249
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\CapaLogica.csproj", "XML", 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\bin\Debug\net8.0\CapaLogica.deps.json", "JSON", 0, 0, 0, 0, 155, 0, 0, 0, 0, 0, 0, 155
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logAntecedenteObstetrico.cs", "C#", 0, 31, 0, 0, 0, 0, 0, 0, 0, 2, 14, 47
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logAuditoria.cs", "C#", 0, 23, 0, 0, 0, 0, 0, 0, 0, 2, 6, 31
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logAyudaDiagnosticaOrden.cs", "C#", 0, 77, 0, 0, 0, 0, 0, 0, 0, 5, 7, 89
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logBebe.cs", "C#", 0, 28, 0, 0, 0, 0, 0, 0, 0, 2, 7, 37
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logCita.cs", "C#", 0, 74, 0, 0, 0, 0, 0, 0, 0, 10, 6, 90
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logControlPrenatal.cs", "C#", 0, 131, 0, 0, 0, 0, 0, 0, 0, 7, 17, 155
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logControlPrenatal_AyudaDiagnostica.cs", "C#", 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 6, 72
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logEmbarazo.cs", "C#", 0, 48, 0, 0, 0, 0, 0, 0, 0, 3, 8, 59
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logEncuentro.cs", "C#", 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 7, 95
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logEstadoCita.cs", "C#", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 4, 30
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logFactorRiesgoCat.cs", "C#", 0, 29, 0, 0, 0, 0, 0, 0, 0, 2, 10, 41
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logLiquidoAmniotico.cs", "C#", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 2, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logMetodoPF.cs", "C#", 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 2, 30
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logPaciente.cs", "C#", 0, 87, 0, 0, 0, 0, 0, 0, 0, 16, 8, 111
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logPacienteEmail.cs", "C#", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 4, 30
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logPacienteFactorRiesgo.cs", "C#", 0, 32, 0, 0, 0, 0, 0, 0, 0, 4, 12, 48
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logPacienteTelefono.cs", "C#", 0, 26, 0, 0, 0, 0, 0, 0, 0, 2, 8, 36
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logParto.cs", "C#", 0, 122, 0, 0, 0, 0, 0, 0, 0, 6, 17, 145
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logPartoIntervencion.cs", "C#", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 5, 31
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logProfesionalEmail.cs", "C#", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 3, 29
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logProfesionalSalud.cs", "C#", 0, 83, 0, 0, 0, 0, 0, 0, 0, 2, 9, 94
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logProfesionalTelefono.cs", "C#", 0, 26, 0, 0, 0, 0, 0, 0, 0, 2, 7, 35
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logResultadoDiagnostico.cs", "C#", 0, 31, 0, 0, 0, 0, 0, 0, 0, 3, 14, 48
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logResultadoItem.cs", "C#", 0, 28, 0, 0, 0, 0, 0, 0, 0, 3, 5, 36
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logRol.cs", "C#", 0, 23, 0, 0, 0, 0, 0, 0, 0, 2, 4, 29
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logSeguimientoPuerperio.cs", "C#", 0, 96, 0, 0, 0, 0, 0, 0, 0, 2, 12, 110
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logTipoAyudaDiagnostica.cs", "C#", 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 2, 30
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logTipoEncuentro.cs", "C#", 0, 40, 0, 0, 0, 0, 0, 0, 0, 1, 3, 44
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logUsuario.cs", "C#", 0, 167, 0, 0, 0, 0, 0, 0, 0, 32, 51, 250
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logUsuarioRol.cs", "C#", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 5, 31
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\logViaParto.cs", "C#", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 2, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\CapaLogica.csproj.nuget.dgspec.json", "JSON", 0, 0, 0, 0, 232, 0, 0, 0, 0, 0, 0, 232
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\CapaLogica.csproj.nuget.g.props", "XML", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\CapaLogica.csproj.nuget.g.targets", "XML", 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Debug\net8.0\CapaLogica.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Debug\net8.0\CapaLogica.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Debug\net8.0\CapaLogica.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Debug\net8.0\CapaLogica.sourcelink.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Release\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Release\net8.0\CapaLogica.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Release\net8.0\CapaLogica.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 16
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\Release\net8.0\CapaLogica.GlobalUsings.g.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\CapaLogica\obj\project.assets.json", "JSON", 0, 0, 0, 0, 295, 0, 0, 0, 0, 0, 0, 295
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\AntecedenteObstetricoController.cs", "C#", 0, 164, 0, 0, 0, 0, 0, 0, 0, 7, 29, 200
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\AyudasDiagnosticasController.cs", "C#", 0, 166, 0, 0, 0, 0, 0, 0, 0, 14, 18, 198
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\CitaController.cs", "C#", 0, 426, 0, 0, 0, 0, 0, 0, 0, 15, 59, 500
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\ControlPrenatalController.cs", "C#", 0, 314, 0, 0, 0, 0, 0, 0, 0, 10, 41, 365
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\Embarazo.cs", "C#", 0, 164, 0, 0, 0, 0, 0, 0, 0, 14, 18, 196
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\Encuentro.cs", "C#", 0, 150, 0, 0, 0, 0, 0, 0, 0, 12, 16, 178
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\FactorRiesgoCatController.cs", "C#", 0, 89, 0, 0, 0, 0, 0, 0, 0, 6, 14, 109
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\HomeController.cs", "C#", 0, 125, 0, 0, 0, 0, 0, 0, 0, 8, 19, 152
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\LoginController.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 51, 1, 55
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\OrdenAyudaDiagnosticaController.cs", "C#", 0, 111, 0, 0, 0, 0, 0, 0, 0, 9, 18, 138
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\PacienteController.cs", "C#", 0, 139, 0, 0, 0, 0, 0, 0, 0, 11, 20, 170
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\PacienteFactorRiesgoController.cs", "C#", 0, 113, 0, 0, 0, 0, 0, 0, 0, 7, 20, 140
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\PartoController.cs", "C#", 0, 257, 0, 0, 0, 0, 0, 0, 0, 15, 28, 300
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\PortalController.cs", "C#", 0, 276, 0, 0, 0, 0, 0, 0, 0, 17, 36, 329
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\ProfesionalSaludController.cs", "C#", 0, 175, 0, 0, 0, 0, 0, 0, 0, 14, 11, 200
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\ResultadoDiagnosticoController.cs", "C#", 0, 261, 0, 0, 0, 0, 0, 0, 0, 23, 30, 314
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\SeguimientoPuerperioController.cs", "C#", 0, 232, 0, 0, 0, 0, 0, 0, 0, 13, 24, 269
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\StaffLoginController.cs", "C#", 0, 7, 0, 0, 0, 0, 0, 0, 0, 22, 2, 31
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\UserValidationController.cs", "C#", 0, 68, 0, 0, 0, 0, 0, 0, 0, 6, 16, 90
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\UsuarioController.cs", "C#", 0, 183, 0, 0, 0, 0, 0, 0, 0, 13, 30, 226
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Controllers\bebeController1.cs", "C#", 0, 74, 0, 0, 0, 0, 0, 0, 0, 3, 12, 89
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Models\ErrorViewModel.cs", "C#", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Models\HomeDashboardViewModel.cs", "C#", 0, 15, 0, 0, 0, 0, 0, 0, 0, 1, 3, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Models\RegisterViewModel.cs", "C#", 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 6, 32
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Program.cs", "C#", 0, 31, 0, 0, 0, 0, 0, 0, 0, 63, 28, 122
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Properties\launchSettings.json", "JSON", 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 1, 39
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware.csproj", "XML", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 21
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Services\PdfService.cs", "C#", 0, 273, 0, 0, 0, 0, 0, 0, 0, 28, 47, 348
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Actualizar.cshtml", "ASP.NET Razor", 0, 0, 189, 0, 0, 0, 0, 0, 0, 0, 19, 208
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Anular.cshtml", "ASP.NET Razor", 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 6, 87
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Detalles.cshtml", "ASP.NET Razor", 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 13, 66
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Listar.cshtml", "ASP.NET Razor", 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 6, 116
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Modificar.cshtml", "ASP.NET Razor", 0, 0, 104, 0, 0, 0, 0, 0, 0, 0, 11, 115
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AntecedenteObstetrico\Registrar.cshtml", "ASP.NET Razor", 0, 0, 189, 0, 0, 0, 0, 0, 0, 0, 19, 208
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AyudaDiagnostica\Anular.cshtml", "ASP.NET Razor", 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 5, 67
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AyudaDiagnostica\Detalles.cshtml", "ASP.NET Razor", 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 13, 63
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AyudaDiagnostica\Insertar.cshtml", "ASP.NET Razor", 0, 0, 483, 0, 0, 0, 0, 0, 0, 0, 44, 527
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\AyudaDiagnostica\Listar.cshtml", "ASP.NET Razor", 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 5, 94
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Cita\Anular.cshtml", "ASP.NET Razor", 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 17, 93
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Cita\DetallesCita.cshtml", "ASP.NET Razor", 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 14, 74
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Cita\Insertar.cshtml", "ASP.NET Razor", 0, 0, 388, 0, 0, 0, 0, 0, 0, 0, 45, 433
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Cita\Listar.cshtml", "ASP.NET Razor", 0, 0, 108, 0, 0, 0, 0, 0, 0, 0, 6, 114
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Cita\RegistrarCitaPublica.cshtml", "ASP.NET Razor", 0, 0, 369, 0, 0, 0, 0, 0, 0, 0, 45, 414
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ControlPrenatal\Detalles.cshtml", "ASP.NET Razor", 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 48, 180
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ControlPrenatal\Editar.cshtml", "ASP.NET Razor", 0, 0, 425, 0, 0, 0, 0, 0, 0, 0, 20, 445
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ControlPrenatal\Inhabilitar.cshtml", "ASP.NET Razor", 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 14, 78
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ControlPrenatal\Listar.cshtml", "ASP.NET Razor", 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 6, 107
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ControlPrenatal\Registrar.cshtml", "ASP.NET Razor", 0, 0, 599, 0, 0, 0, 0, 0, 0, 0, 44, 643
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Embarazo\CerrarEmbarazo.cshtml", "ASP.NET Razor", 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 15, 79
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Embarazo\DetallesEmbarazo.cshtml", "ASP.NET Razor", 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 14, 100
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Embarazo\Index.cshtml", "ASP.NET Razor", 0, 0, 84, 0, 0, 0, 0, 0, 0, 0, 9, 93
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Embarazo\RegistrarEmbarazo.cshtml", "ASP.NET Razor", 0, 0, 267, 0, 0, 0, 0, 0, 0, 1, 30, 298
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Encuentro\Anular.cshtml", "ASP.NET Razor", 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 15, 81
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Encuentro\Detalles.cshtml", "ASP.NET Razor", 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 6, 64
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Encuentro\Insertar.cshtml", "ASP.NET Razor", 0, 0, 294, 0, 0, 0, 0, 0, 0, 0, 44, 338
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Encuentro\Listar.cshtml", "ASP.NET Razor", 0, 0, 76, 0, 0, 0, 0, 0, 0, 9, 4, 89
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\FactorRiesgoCat\Actualizar.cshtml", "ASP.NET Razor", 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 7, 50
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\FactorRiesgoCat\Eliminar.cshtml", "ASP.NET Razor", 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 7, 50
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\FactorRiesgoCat\Insertar.cshtml", "ASP.NET Razor", 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 7, 50
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\FactorRiesgoCat\Listar.cshtml", "ASP.NET Razor", 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 5, 70
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Home\Index.cshtml", "ASP.NET Razor", 0, 0, 994, 0, 0, 0, 0, 0, 0, 0, 129, 1123
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Home\Privacy.cshtml", "ASP.NET Razor", 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\PacienteFactorRiesgo\Agregar.cshtml", "ASP.NET Razor", 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 10, 85
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\PacienteFactorRiesgo\Editar.cshtml", "ASP.NET Razor", 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 10, 85
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\PacienteFactorRiesgo\Eliminar.cshtml", "ASP.NET Razor", 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 6, 69
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\PacienteFactorRiesgo\Listar.cshtml", "ASP.NET Razor", 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 5, 79
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Paciente\Actualizar.cshtml", "ASP.NET Razor", 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 9, 101
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Paciente\Inhabilitar.cshtml", "ASP.NET Razor", 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 7, 96
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Paciente\Insertar.cshtml", "ASP.NET Razor", 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 9, 108
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Paciente\Listar.cshtml", "ASP.NET Razor", 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 11, 140
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Paciente\Modificar.cshtml", "ASP.NET Razor", 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 10, 134
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Parto\Anular.cshtml", "ASP.NET Razor", 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 5, 65
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Parto\Detalles.cshtml", "ASP.NET Razor", 0, 0, 162, 0, 0, 0, 0, 0, 0, 0, 9, 171
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Parto\Editar.cshtml", "ASP.NET Razor", 0, 0, 378, 0, 0, 0, 0, 0, 0, 0, 23, 401
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Parto\Index.cshtml", "ASP.NET Razor", 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 4, 92
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Parto\RegistrarParto.cshtml", "ASP.NET Razor", 0, 0, 562, 0, 0, 0, 0, 0, 0, 0, 44, 606
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Citas.cshtml", "ASP.NET Razor", 0, 0, 184, 0, 0, 0, 0, 0, 0, 0, 26, 210
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Contacto.cshtml", "ASP.NET Razor", 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 5, 73
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Index.cshtml", "ASP.NET Razor", 0, 0, 157, 0, 0, 0, 0, 0, 0, 0, 5, 162
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Login.cshtml", "ASP.NET Razor", 0, 0, 161, 0, 0, 0, 0, 0, 0, 0, 19, 180
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Register.cshtml", "ASP.NET Razor", 0, 0, 122, 0, 0, 0, 0, 0, 0, 0, 19, 141
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\RegistrarPaciente.cshtml", "ASP.NET Razor", 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 9, 99
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Portal\Servicios.cshtml", "ASP.NET Razor", 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 10, 131
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ProfesionalSalud\DetallesProfesional.cshtml", "ASP.NET Razor", 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 14, 84
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ProfesionalSalud\EditarProfesional.cshtml", "ASP.NET Razor", 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 15, 90
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ProfesionalSalud\Index.cshtml", "ASP.NET Razor", 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 9, 102
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ProfesionalSalud\Inhabilitar.cshtml", "ASP.NET Razor", 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 17, 92
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ProfesionalSalud\InsertarProfesional.cshtml", "ASP.NET Razor", 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 13, 86
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Actualizar.cshtml", "ASP.NET Razor", 0, 0, 110, 0, 0, 0, 0, 0, 0, 1, 11, 122
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Anular.cshtml", "ASP.NET Razor", 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 7, 81
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Detalles.cshtml", "ASP.NET Razor", 0, 0, 168, 0, 0, 0, 0, 0, 0, 2, 8, 178
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Listar.cshtml", "ASP.NET Razor", 0, 0, 272, 0, 0, 0, 0, 0, 0, 1, 14, 287
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Modificar.cshtml", "ASP.NET Razor", 0, 0, 110, 0, 0, 0, 0, 0, 0, 1, 11, 122
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\ResultadoDiagnostico\Registrar.cshtml", "ASP.NET Razor", 0, 0, 276, 0, 0, 0, 0, 0, 0, 0, 28, 304
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\SeguimientoPuerperio\Detalles.cshtml", "ASP.NET Razor", 0, 0, 84, 0, 0, 0, 0, 0, 0, 0, 5, 89
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\SeguimientoPuerperio\Editar.cshtml", "ASP.NET Razor", 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 8, 118
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\SeguimientoPuerperio\Inhabilitar.cshtml", "ASP.NET Razor", 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 5, 65
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\SeguimientoPuerperio\Listar.cshtml", "ASP.NET Razor", 0, 0, 102, 0, 0, 0, 0, 0, 0, 0, 4, 106
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\SeguimientoPuerperio\Registrar.cshtml", "ASP.NET Razor", 0, 0, 400, 0, 0, 0, 0, 0, 0, 0, 35, 435
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Shared\Error.cshtml", "ASP.NET Razor", 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 4, 26
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Shared\_Layout.cshtml", "ASP.NET Razor", 0, 0, 205, 0, 0, 0, 0, 0, 0, 18, 18, 241
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Shared\_Layout.cshtml.css", "PostCSS", 0, 0, 0, 0, 0, 38, 0, 0, 0, 2, 9, 49
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Shared\_LayoutPublic.cshtml", "ASP.NET Razor", 0, 0, 501, 0, 0, 0, 0, 0, 0, 0, 62, 563
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Shared\_ValidationScriptsPartial.cshtml", "ASP.NET Razor", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\UserValidation\Login.cshtml", "ASP.NET Razor", 0, 0, 161, 0, 0, 0, 0, 0, 0, 0, 18, 179
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Usuario\Create.cshtml", "ASP.NET Razor", 0, 0, 138, 0, 0, 0, 0, 0, 0, 0, 16, 154
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Usuario\Delete.cshtml", "ASP.NET Razor", 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 15, 143
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Usuario\Edit.cshtml", "ASP.NET Razor", 0, 0, 169, 0, 0, 0, 0, 0, 0, 0, 22, 191
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Usuario\Index.cshtml", "ASP.NET Razor", 0, 0, 141, 0, 0, 0, 0, 0, 0, 0, 11, 152
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\Usuario\Listar.cshtml", "ASP.NET Razor", 0, 0, 78, 0, 0, 0, 0, 0, 0, 0, 4, 82
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\_ViewImports.cshtml", "ASP.NET Razor", 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 4
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\_ViewStart.cshtml", "ASP.NET Razor", 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 4
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\bebeController1\listar.cshtml", "ASP.NET Razor", 0, 0, 104, 0, 0, 0, 0, 0, 0, 0, 4, 108
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\bebe\Registrar.cshtml", "ASP.NET Razor", 0, 0, 133, 0, 0, 0, 0, 0, 0, 0, 4, 137
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\Views\bebe\listar.cshtml", "ASP.NET Razor", 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 3, 77
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\appsettings.Development.json", "JSON", 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\appsettings.json", "JSON", 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\ProyectoCalidadSoftware.deps.json", "JSON", 0, 0, 0, 0, 2508, 0, 0, 0, 0, 0, 0, 2508
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\ProyectoCalidadSoftware.runtimeconfig.json", "JSON", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\ProyectoCalidadSoftware.staticwebassets.endpoints.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\ProyectoCalidadSoftware.staticwebassets.runtime.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\appsettings.Development.json", "JSON", 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1, 9
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\bin\Debug\net8.0\appsettings.json", "JSON", 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 1, 10
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ApiEndpoints.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ProyectoCalidadSoftware.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ProyectoCalidadSoftware.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 287, 0, 0, 87, 374
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ProyectoCalidadSoftware.GlobalUsings.g.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 1, 1, 18
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ProyectoCalidadSoftware.RazorAssemblyInfo.cs", "C#", 0, 4, 0, 0, 0, 0, 0, 0, 0, 10, 5, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\ProyectoCalidadSoftware.sourcelink.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\rjimswa.dswa.cache.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\rjsmrazor.dswa.cache.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\rpswa.dswa.cache.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css", "PostCSS", 0, 0, 0, 0, 0, 38, 0, 0, 0, 2, 9, 49
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\scopedcss\bundle\ProyectoCalidadSoftware.styles.css", "PostCSS", 0, 0, 0, 0, 0, 38, 0, 0, 0, 3, 9, 50
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\scopedcss\projectbundle\ProyectoCalidadSoftware.bundle.scp.css", "PostCSS", 0, 0, 0, 0, 0, 38, 0, 0, 0, 3, 9, 50
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\staticwebassets.build.endpoints.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\staticwebassets.build.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Debug\net8.0\staticwebassets.development.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\ProyectoCalidadSoftware.csproj.nuget.dgspec.json", "JSON", 0, 0, 0, 0, 321, 0, 0, 0, 0, 0, 0, 321
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\ProyectoCalidadSoftware.csproj.nuget.g.props", "XML", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\ProyectoCalidadSoftware.csproj.nuget.g.targets", "XML", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Release\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs", "C#", 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Release\net8.0\ProyectoCalidadSoftware.AssemblyInfo.cs", "C#", 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 5, 24
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Release\net8.0\ProyectoCalidadSoftware.GeneratedMSBuildEditorConfig.editorconfig", "Properties", 0, 0, 0, 0, 0, 0, 0, 129, 0, 0, 37, 166
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Release\net8.0\ProyectoCalidadSoftware.GlobalUsings.g.cs", "C#", 0, 16, 0, 0, 0, 0, 0, 0, 0, 1, 1, 18
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\Release\net8.0\ProyectoCalidadSoftware.RazorAssemblyInfo.cs", "C#", 0, 4, 0, 0, 0, 0, 0, 0, 0, 10, 5, 19
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\obj\project.assets.json", "JSON", 0, 0, 0, 0, 5994, 0, 0, 0, 0, 0, 0, 5994
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\css\site.css", "PostCSS", 0, 0, 0, 0, 0, 91, 0, 0, 0, 4, 18, 113
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\css\staff-styles.css", "PostCSS", 0, 0, 0, 0, 0, 737, 0, 0, 0, 21, 117, 875
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\css\styles.css", "PostCSS", 0, 0, 0, 0, 0, 1201, 0, 0, 0, 42, 194, 1437
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\js\script.js", "JavaScript", 0, 0, 0, 333, 0, 0, 0, 0, 0, 37, 72, 442
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\js\site.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 5
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\js\staff-script.js", "JavaScript", 0, 0, 0, 300, 0, 0, 0, 0, 0, 24, 64, 388
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css", "PostCSS", 0, 0, 0, 0, 0, 3855, 0, 0, 0, 7, 1135, 4997
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 3855, 0, 0, 0, 7, 1134, 4996
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css", "PostCSS", 0, 0, 0, 0, 0, 347, 0, 0, 0, 16, 64, 427
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 0, 8
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 353, 0, 0, 0, 8, 63, 424
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 0, 8
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css", "PostCSS", 0, 0, 0, 0, 0, 3729, 0, 0, 0, 9, 1128, 4866
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 3725, 0, 0, 0, 7, 1125, 4857
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap.css", "PostCSS", 0, 0, 0, 0, 0, 9453, 0, 0, 0, 27, 1741, 11221
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css", "PostCSS", 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 9455, 0, 0, 0, 7, 1735, 11197
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 6, 0, 0, 0, 1, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js", "JavaScript", 0, 0, 0, 4846, 0, 0, 0, 0, 0, 584, 1351, 6781
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js", "JavaScript", 0, 0, 0, 3418, 0, 0, 0, 0, 0, 495, 1065, 4978
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.js", "JavaScript", 0, 0, 0, 3457, 0, 0, 0, 0, 0, 501, 1069, 5027
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 6, 0, 7
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js", "JavaScript", 0, 0, 0, 306, 0, 0, 0, 0, 0, 76, 54, 436
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 8
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation\LICENSE.md", "Markdown", 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 5, 23
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation\dist\additional-methods.js", "JavaScript", 0, 0, 0, 1113, 0, 0, 0, 0, 0, 258, 141, 1512
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation\dist\additional-methods.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 4
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation\dist\jquery.validate.js", "JavaScript", 0, 0, 0, 1235, 0, 0, 0, 0, 0, 184, 242, 1661
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 4
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery\dist\jquery.js", "JavaScript", 0, 0, 0, 6895, 0, 0, 0, 0, 0, 1911, 2076, 10882
+"d:\Calidad\ProyectoCalidadSoftware\ProyectoCalidadSoftware\ProyectoCalidadSoftware\wwwroot\lib\jquery\dist\jquery.min.js", "JavaScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"Total", "-", 138, 10054, 12907, 21910, 15324, 36971, 18, 506, 16, 5096, 17733, 120673

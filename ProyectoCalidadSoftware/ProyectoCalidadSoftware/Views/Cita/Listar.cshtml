@@ -82,6 +82,11 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
+                                            <!-- Botón PDF NUEVO -->
+                                            <a asp-action="DescargarPdf" asp-route-id="@item.IdCita" class="btn btn-sm btn-outline-success" title="Descargar PDF">
+                                                <i class="bi bi-file-pdf"></i>
+                                            </a>
+
                                             <a asp-action="DetallesCita" asp-route-id="@item.IdCita" class="btn btn-sm btn-outline-info" title="Ver Detalles">
                                                 <i class="bi bi-search"></i>
                                             </a>

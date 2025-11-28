@@ -73,6 +73,9 @@
                                 <a asp-action="DetallesEmbarazo" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-primary" title="Detalles">
                                     <i class="bi bi-search"></i> Detalles
                                 </a>
+                                <a asp-action="DescargarPdf" asp-route-id="@item.IdEmbarazo" class="btn btn-sm btn-outline-success" title="Descargar PDF">
+                                    <i class="bi bi-file-pdf"></i>
+                                </a>
 
                                 @if (item.Estado)
                                 {
