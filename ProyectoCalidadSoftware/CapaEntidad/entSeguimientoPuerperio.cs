@@ -32,7 +32,7 @@ namespace CapaEntidad
 
         public string? InvolucionUterina { get; set; }
 
-        public bool HemorragiaResidual { get; set; }
+        public bool? HemorragiaResidual{ get; set; }
 
         [Display(Name = "Signos de Infección")]
         public bool SignosInfeccion { get; set; }
