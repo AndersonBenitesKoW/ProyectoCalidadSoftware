@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entEmbarazo
     {
@@ -16,5 +10,8 @@ namespace CapaEntidad
         public DateTime FechaApertura { get; set; }
         public DateTime? FechaCierre { get; set; }
         public bool Estado { get; set; }
+
+        public string NombrePaciente { get; set; } = string.Empty;
+        public string DNIPaciente { get; set; } = string.Empty;
     }
 }

@@ -1,0 +1,178 @@
+@model CapaEntidad.entResultadoDiagnostico
+
+@{
+    ViewData["Title"] = "Detalles del Resultado Diagnóstico";
+}
+
+<div class="container-fluid bg-light py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-1"><i class="bi bi-eye"></i> Detalles del Resultado Diagnóstico</h1>
+                    <p class="mb-0">Información completa del resultado de examen diagnóstico</p>
+                </div>
+                <div class="card-body bg-white">
+                    @* Información del Control Prenatal Relacionado *@
+                    @if (Model.IdControlPrenatal.HasValue)
+                    {
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="bi bi-info-circle"></i> Información del Control Prenatal Relacionado</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <strong>ID Control:</strong> @Model.IdControlPrenatal
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Fecha:</strong> @(Model.FechaControlPrenatal?.ToString("dd/MM/yyyy") ?? "No disponible")
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Paciente:</strong> @(Model.NombrePaciente ?? "No disponible")
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Profesional:</strong> @(Model.NombreProfesional ?? "No disponible")
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.TipoAyuda))
+                            {
+                                <div class="mt-2">
+                                    <strong>Tipo de Ayuda:</strong> @Model.TipoAyuda
+                                    @if (!string.IsNullOrEmpty(Model.DescripcionAyuda))
+                                    {
+                                        <br /><strong>Descripción:</strong> @Model.DescripcionAyuda
+                                    }
+                                    @if (Model.Urgente.HasValue && Model.Urgente.Value)
+                                    {
+                                        <span class="badge bg-danger ms-2">Urgente</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">
+                                    <i class="bi bi-hash"></i> ID Resultado
+                                </label>
+                                <p class="form-control-plaintext">@Model.IdResultado</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">
+                                    <i class="bi bi-clipboard-data"></i> ID Ayuda Diagnóstica
+                                </label>
+                                <p class="form-control-plaintext">@Model.IdAyuda</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">
+                                    <i class="bi bi-calendar-date"></i> Fecha del Resultado
+                                </label>
+                                <p class="form-control-plaintext">@Model.FechaResultado.ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">
+                                    <i class="bi bi-check-circle"></i> Estado
+                                </label>
+                                <p class="form-control-plaintext">
+                                    @if (string.Equals(Model.Estado, "Activo", StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(Model.Estado, "1", StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(Model.Estado, "ACTIVO", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">
+                            <i class="bi bi-chat-text"></i> Resumen del Resultado
+                        </label>
+                        <p class="form-control-plaintext">@(Model.Resumen ?? "Sin resumen")</p>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="control-label">
+                            <i class="bi bi-exclamation-triangle"></i> Resultado Crítico
+                        </label>
+                        <p class="form-control-plaintext">
+                            @if (Model.Critico)
+                            {
+                                <span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill"></i> SÍ - Requiere atención inmediata</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> NO - Resultado normal</span>
+                            }
+                        </p>
+                    </div>
+
+                    @* Mostrar Items del Resultado *@
+                    @if (Model.Items != null && Model.Items.Any())
+                    {
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0"><i class="bi bi-list-check"></i> Items del Resultado</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th><i class="bi bi-hash"></i> ID Item</th>
+                                                <th><i class="bi bi-clipboard-data"></i> Parámetro</th>
+                                                <th><i class="bi bi-bar-chart"></i> Valor Numérico</th>
+                                                <th><i class="bi bi-chat-text"></i> Valor Texto</th>
+                                                <th><i class="bi bi-rulers"></i> Unidad</th>
+                                                <th><i class="bi bi-exclamation-triangle"></i> Rango Referencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Items)
+                                            {
+                                                <tr>
+                                                    <td>@item.IdResultadoItem</td>
+                                                    <td>@(item.Parametro ?? "Sin parámetro")</td>
+                                                    <td>@(item.ValorNumerico?.ToString() ?? "N/A")</td>
+                                                    <td>@(item.ValorTexto ?? "N/A")</td>
+                                                    <td>@(item.Unidad ?? "N/A")</td>
+                                                    <td>@(item.RangoRef ?? "N/A")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle"></i> No hay items específicos registrados para este resultado.
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a la Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

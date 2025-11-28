@@ -1,0 +1,154 @@
+﻿@model CapaEntidad.entUsuario
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+}
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <h3 class="mb-0 font-weight-bold">
+                        <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                        Crear Nuevo Usuario
+                    </h3>
+                    <p class="mb-0 small">Complete todos los campos para registrar un nuevo usuario en el sistema</p>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Create" method="post" novalidate class="needs-validation">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i> Por favor, corrija los errores a continuación.
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="NombreUsuario" class="form-control form-control-lg" placeholder="Nombre de usuario" required />
+                                    <label asp-for="NombreUsuario" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Nombre de Usuario
+                                    </label>
+                                    <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="ClaveHash" type="password" class="form-control form-control-lg" placeholder="Contraseña" required id="passwordInput" />
+                                    <label asp-for="ClaveHash" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Contraseña
+                                    </label>
+                                    <span asp-validation-for="ClaveHash" class="text-danger small"></span>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="showPassword">
+                                    <label class="form-check-label small" for="showPassword">
+                                        Mostrar contraseña
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="Email" required />
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="fas fa-envelope me-2"></i>Email
+                                    </label>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <select asp-for="NombreRol" class="form-select form-select-lg" asp-items="@(new SelectList(ViewBag.Roles, "NombreRol", "NombreRol"))" required>
+                                        <option value="">Seleccione un rol</option>
+                                    </select>
+                                    <label asp-for="NombreRol" class="form-label">
+                                        <i class="fas fa-user-tag me-2"></i>Rol
+                                    </label>
+                                    <span asp-validation-for="NombreRol" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-check">
+                                    <input asp-for="Estado" class="form-check-input" type="checkbox" id="estadoCheck" />
+                                    <label class="form-check-label" for="estadoCheck">
+                                        <i class="fas fa-toggle-on me-2"></i>Usuario Activo
+                                    </label>
+                                    <span asp-validation-for="Estado" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-save me-2"></i>Crear Usuario
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-5">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // Solo mantener la funcionalidad básica del toggle de contraseña
+            $('#showPassword').on('change', function () {
+                var passwordInput = $('#passwordInput');
+                if ($(this).is(':checked')) {
+                    passwordInput.attr('type', 'text');
+                } else {
+                    passwordInput.attr('type', 'password');
+                }
+            });
+        });
+    </script>
+}

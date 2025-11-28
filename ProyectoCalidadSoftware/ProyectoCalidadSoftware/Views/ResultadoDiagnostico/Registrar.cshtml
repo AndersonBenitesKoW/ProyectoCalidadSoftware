@@ -4,82 +4,300 @@
     ViewData["Title"] = "Registrar Resultado Diagnóstico";
 }
 
-<div class="form-container">
-    <div class="form-header">
-        <h1><i class="bi bi-file-earmark-medical"></i> Registrar Resultado Diagnóstico</h1>
-        <h4>Ingreso de resultados de exámenes diagnósticos</h4>
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-clipboard2-pulse me-2"></i> @ViewData["Title"]
+                </h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form asp-action="Registrar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="IdAyuda" />
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <!-- Bloque 1: Orden diagnóstica -->
+                    <h5><i class="bi bi-search me-2"></i>Orden diagnóstica</h5>
+                    <hr class="mt-0" />
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" id="txtDNI" class="form-control" placeholder="DNI del paciente" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                <label for="txtDNI">DNI del paciente</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" id="btnBuscarAyudas" class="btn btn-outline-primary">
+                                <i class="bi bi-search me-2"></i>Buscar ayudas
+                            </button>
+                        </div>
+                    </div>
+                    <div id="resumenAyuda" class="bg-light p-3 rounded mb-4" style="display: none;">
+                        <strong>Paciente:</strong> <span id="lblPaciente"></span><br />
+                        <strong>Tipo de ayuda:</strong> <span id="lblTipoAyuda"></span><br />
+                        <strong>Descripción:</strong> <span id="lblDescripcionAyuda"></span><br />
+                        <strong>Urgente:</strong> <span id="lblUrgente"></span><br />
+                        <strong>Fecha de control prenatal:</strong> <span id="lblControlPrenatal"></span>
+                    </div>
+
+                    <!-- Bloque 2: Cabecera del resultado -->
+                    <h5 class="mt-4"><i class="bi bi-file-earmark-text me-2"></i>Cabecera del resultado</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="FechaResultado" class="form-control" type="datetime-local" />
+                                <label asp-for="FechaResultado">Fecha y hora del resultado</label>
+                                <span asp-validation-for="FechaResultado" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input asp-for="Critico" class="form-check-input" type="checkbox" />
+                                <label asp-for="Critico" class="form-check-label">Resultado crítico</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select asp-for="Estado" class="form-select">
+                                    <option value="ACTIVO">ACTIVO</option>
+                                    <option value="Validado">Validado</option>
+                                    <option value="Borrador">Borrador</option>
+                                </select>
+                                <label asp-for="Estado">Estado</label>
+                                <span asp-validation-for="Estado" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Resumen" class="form-control" placeholder="Resumen / Impresión diagnóstica" style="height: 100px"></textarea>
+                                <label asp-for="Resumen">Resumen / Impresión diagnóstica</label>
+                                <span asp-validation-for="Resumen" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloque 3: Items del resultado -->
+                    <h5 class="mt-4"><i class="bi bi-list-check me-2"></i>Parámetros del examen</h5>
+                    <hr class="mt-0" />
+                    <div class="mb-3">
+                        <button type="button" id="btnAgregarParametro" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-plus-circle"></i> Agregar parámetro
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tablaItems">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Parámetro</th>
+                                    <th>Valor numérico</th>
+                                    <th>Unidad</th>
+                                    <th>Rango ref.</th>
+                                    <th>Valor texto / comentario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Items != null)
+                                {
+                                    for (int i = 0; i < Model.Items.Count; i++)
+                                    {
+                                        <tr>
+                                            <td><input asp-for="Items[i].Parametro" class="form-control" /></td>
+                                            <td><input asp-for="Items[i].ValorNumerico" class="form-control" type="number" step="0.0001" /></td>
+                                            <td><input asp-for="Items[i].Unidad" class="form-control" /></td>
+                                            <td><input asp-for="Items[i].RangoRef" class="form-control" /></td>
+                                            <td><input asp-for="Items[i].ValorTexto" class="form-control" /></td>
+                                            <td><button type="button" class="btn btn-outline-danger btn-sm btnEliminarFila"><i class="bi bi-trash"></i></button></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i> Guardar resultado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <form asp-action="Registrar">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdResultado" class="control-label">
-                        <i class="bi bi-hash"></i> ID Resultado
-                    </label>
-                    <input asp-for="IdResultado" class="form-control" />
-                    <span asp-validation-for="IdResultado" class="text-danger"></span>
-                </div>
+<!-- Modal para seleccionar ayuda si hay varias -->
+<div class="modal fade" id="modalAyudas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Ayuda Diagnóstica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdAyuda" class="control-label">
-                        <i class="bi bi-clipboard-data"></i> ID Ayuda Diagnóstica
-                    </label>
-                    <input asp-for="IdAyuda" class="form-control" />
-                    <span asp-validation-for="IdAyuda" class="text-danger"></span>
-                </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Tipo</th>
+                            <th>Fecha Orden</th>
+                            <th>Urgente</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAyudas">
+                        <!-- Filas dinámicas -->
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="FechaResultado" class="control-label">
-                        <i class="bi bi-calendar-date"></i> Fecha del Resultado
-                    </label>
-                    <input asp-for="FechaResultado" class="form-control" type="date" />
-                    <span asp-validation-for="FechaResultado" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="Estado" class="control-label">
-                        <i class="bi bi-check-circle"></i> Estado
-                    </label>
-                    <input asp-for="Estado" class="form-control" />
-                    <span asp-validation-for="Estado" class="text-danger"></span>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="Resumen" class="control-label">
-                <i class="bi bi-chat-text"></i> Resumen del Resultado
-            </label>
-            <textarea asp-for="Resumen" class="form-control" rows="4" placeholder="Describa los resultados del examen diagnóstico..."></textarea>
-            <span asp-validation-for="Resumen" class="text-danger"></span>
-        </div>
-
-        <div class="form-group form-check mb-4">
-            <input class="form-check-input" asp-for="Critico" />
-            <label class="form-check-label" asp-for="Critico">
-                <i class="bi bi-exclamation-triangle"></i> Resultado Crítico
-            </label>
-            <small class="form-text text-muted">Marque si el resultado requiere atención médica inmediata</small>
-        </div>
-
-        <div class="d-flex justify-content-between">
-            <a asp-action="Listar" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Volver a la Lista
-            </a>
-            <input type="submit" value="Registrar Resultado" class="btn btn-primary" />
-        </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        let indexItems = @(Model.Items?.Count ?? 0);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Botón buscar ayudas
+            document.getElementById('btnBuscarAyudas').addEventListener('click', buscarAyudas);
+
+            // Botón agregar parámetro
+            document.getElementById('btnAgregarParametro').addEventListener('click', agregarFilaItem);
+
+            // Delegado para eliminar filas
+            document.getElementById('tablaItems').addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnEliminarFila') || e.target.closest('.btnEliminarFila')) {
+                    e.target.closest('tr').remove();
+                }
+            });
+
+            // Delegado para seleccionar ayuda en modal
+            document.getElementById('tbodyAyudas').addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnSeleccionarAyuda')) {
+                    const id = e.target.getAttribute('data-id');
+                    const descripcion = e.target.getAttribute('data-descripcion');
+                    const tipoAyuda = e.target.getAttribute('data-tipo');
+                    const urgente = e.target.getAttribute('data-urgente');
+                    const nombrePaciente = e.target.getAttribute('data-paciente');
+                    const fechaControl = e.target.getAttribute('data-fecha-control');
+
+                    seleccionarAyuda(id, descripcion, tipoAyuda, urgente, nombrePaciente, fechaControl);
+
+                    const modalEl = document.getElementById('modalAyudas');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            });
+        });
+
+        async function buscarAyudas() {
+            const dni = document.getElementById('txtDNI').value.trim();
+            if (!dni) {
+                alert('Ingrese un DNI válido.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/ResultadoDiagnostico/BuscarAyudaPorPacienteDNI?dni=${encodeURIComponent(dni)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.ayudas.length === 1) {
+                        // Seleccionar directamente
+                        const ayuda = data.ayudas[0];
+                        seleccionarAyuda(ayuda.id, ayuda.descripcion, ayuda.tipoAyuda, ayuda.urgente, ayuda.nombrePaciente, ''); // fechaControl no en JSON
+                    } else if (data.ayudas.length > 1) {
+                        // Mostrar modal
+                        mostrarModalAyudas(data.ayudas);
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al buscar ayudas.');
+            }
+        }
+
+        function seleccionarAyuda(id, descripcion, tipoAyuda, urgente, nombrePaciente, fechaControl) {
+            document.getElementById('IdAyuda').value = id;
+            document.getElementById('lblPaciente').textContent = nombrePaciente;
+            document.getElementById('lblTipoAyuda').textContent = tipoAyuda;
+            document.getElementById('lblDescripcionAyuda').textContent = descripcion;
+            document.getElementById('lblUrgente').textContent = urgente ? 'Sí' : 'No';
+            document.getElementById('lblControlPrenatal').textContent = fechaControl || 'N/A';
+            document.getElementById('resumenAyuda').style.display = 'block';
+        }
+
+        function mostrarModalAyudas(ayudas) {
+            const tbody = document.getElementById('tbodyAyudas');
+            tbody.innerHTML = '';
+
+            ayudas.forEach(ayuda => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ayuda.descripcion}</td>
+                    <td>${ayuda.tipoAyuda}</td>
+                    <td>${ayuda.fechaOrden}</td>
+                    <td>${ayuda.urgente ? 'Sí' : 'No'}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary btnSeleccionarAyuda"
+                                data-id="${ayuda.id}"
+                                data-descripcion="${ayuda.descripcion}"
+                                data-tipo="${ayuda.tipoAyuda}"
+                                data-urgente="${ayuda.urgente}"
+                                data-paciente="${ayuda.nombrePaciente}">
+                            Seleccionar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const modal = new bootstrap.Modal(document.getElementById('modalAyudas'));
+            modal.show();
+        }
+
+        function agregarFilaItem() {
+            const tbody = document.getElementById('tablaItems').querySelector('tbody');
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td><input name="Items[${indexItems}].Parametro" class="form-control" required /></td>
+                <td><input name="Items[${indexItems}].ValorNumerico" class="form-control" type="number" step="0.0001" /></td>
+                <td><input name="Items[${indexItems}].Unidad" class="form-control" /></td>
+                <td><input name="Items[${indexItems}].RangoRef" class="form-control" /></td>
+                <td><input name="Items[${indexItems}].ValorTexto" class="form-control" /></td>
+                <td><button type="button" class="btn btn-outline-danger btn-sm btnEliminarFila"><i class="bi bi-trash"></i></button></td>
+            `;
+
+            tbody.appendChild(row);
+            indexItems++;
+        }
+    </script>
 }

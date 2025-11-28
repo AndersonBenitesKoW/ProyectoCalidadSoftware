@@ -63,7 +63,7 @@
                     <label asp-for="DNI" class="control-label">
                         <i class="bi bi-card-text"></i> DNI
                     </label>
-                    <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" />
+                    <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span asp-validation-for="DNI" class="text-danger"></span>
                     <small class="form-text text-muted">Documento Nacional de Identidad</small>
                 </div>

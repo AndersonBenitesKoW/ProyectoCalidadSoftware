@@ -10,8 +10,17 @@
         <h4>Editar Información del Paciente</h4>
     </div>
 
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>¡Error al actualizar!</strong> @ViewBag.Error
+        </div>
+    }
     <form asp-action="Modificar">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <input type="hidden" asp-for="IdPaciente" />
 
         <div class="row">
             <div class="col-md-6">
@@ -26,9 +35,9 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     <label asp-for="IdUsuario" class="control-label">
-                        <i class="bi bi-person-badge"></i> ID Usuario (Opcional)
+                        <i class="bi bi-person-badge"></i> ID Usuario (Asignado)
                     </label>
-                    <input asp-for="IdUsuario" class="form-control" type="number" />
+                    <input asp-for="IdUsuario" class="form-control" readonly />
                     <span asp-validation-for="IdUsuario" class="text-danger"></span>
                 </div>
             </div>
@@ -63,7 +72,7 @@
                     <label asp-for="DNI" class="control-label">
                         <i class="bi bi-card-text"></i> DNI
                     </label>
-                    <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" />
+                    <input asp-for="DNI" class="form-control" placeholder="Ingrese el DNI del paciente" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span asp-validation-for="DNI" class="text-danger"></span>
                     <small class="form-text text-muted">Documento Nacional de Identidad</small>
                 </div>
@@ -80,6 +89,28 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="EmailPrincipal" class="control-label">
+                        <i class="bi bi-envelope-at"></i> Email Principal
+                    </label>
+                    <input asp-for="EmailPrincipal" class="form-control" placeholder="ejemplo@correo.com" type="email" />
+                    <span asp-validation-for="EmailPrincipal" class="text-danger"></span>
+                    <small class="form-text text-muted">Email de contacto principal</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label asp-for="TelefonoPrincipal" class="control-label">
+                        <i class="bi bi-phone"></i> Teléfono Principal
+                    </label>
+                    <input asp-for="TelefonoPrincipal" class="form-control" placeholder="987654321" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <span asp-validation-for="TelefonoPrincipal" class="text-danger"></span>
+                    <small class="form-text text-muted">Teléfono o celular de contacto</small>
+                </div>
+            </div>
+        </div>
         <div class="form-group form-check mb-4">
             <input class="form-check-input" asp-for="Estado" />
             <label class="form-check-label" asp-for="Estado">
@@ -97,5 +128,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -1,9 +1,4 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 namespace CapaLogica
 {
@@ -26,7 +21,7 @@ namespace CapaLogica
         }
 
         // INSERTAR
-        public bool InsertarResultadoDiagnostico(entResultadoDiagnostico entidad)
+        public int InsertarResultadoDiagnostico(entResultadoDiagnostico entidad)
         {
             return DA_ResultadoDiagnostico.Instancia.Insertar(entidad);
         }

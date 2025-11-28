@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CapaEntidad;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -16,14 +16,11 @@ namespace CapaAccesoDatos
         }
         #endregion
 
-        #region Métodos
-
         public List<entAyudaDiagnosticaOrden> Listar()
         {
             List<entAyudaDiagnosticaOrden> lista = new List<entAyudaDiagnosticaOrden>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarAyudaDiagnosticaOrden", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarAyudaDiagnostica", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cn.Open();
@@ -31,117 +28,111 @@ namespace CapaAccesoDatos
                 {
                     while (dr.Read())
                     {
-                        var ayuda = new entAyudaDiagnosticaOrden
+                        lista.Add(new entAyudaDiagnosticaOrden
                         {
                             IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
                             IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                            IdEmbarazo = dr["IdEmbarazo"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdEmbarazo"]) : null,
-                            IdProfesional = dr["IdProfesional"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdProfesional"]) : null,
-                            IdTipoAyuda = dr["IdTipoAyuda"] != DBNull.Value ? (short?)Convert.ToInt16(dr["IdTipoAyuda"]) : null,
+                            IdEmbarazo = dr["IdEmbarazo"] != DBNull.Value ? Convert.ToInt32(dr["IdEmbarazo"]) : (int?)null,
+                            IdProfesional = dr["IdProfesional"] != DBNull.Value ? Convert.ToInt32(dr["IdProfesional"]) : (int?)null,
+                            IdTipoAyuda = dr["IdTipoAyuda"] != DBNull.Value ? Convert.ToInt16(dr["IdTipoAyuda"]) : (short?)null,
                             Descripcion = dr["Descripcion"].ToString(),
                             Urgente = Convert.ToBoolean(dr["Urgente"]),
                             FechaOrden = Convert.ToDateTime(dr["FechaOrden"]),
-                            Estado = dr["Estado"].ToString()
-                        };
-
-                        lista.Add(ayuda);
+                            Estado = dr["Estado"].ToString(),
+                            NombrePaciente = dr["NombrePaciente"].ToString(),
+                            NombreProfesional = dr["NombreProfesional"].ToString(),
+                            NombreTipoAyuda = dr["NombreTipoAyuda"].ToString()
+                        });
                     }
                 }
             }
-
             return lista;
         }
 
-        public bool Insertar(entAyudaDiagnosticaOrden entidad)
+        public int Insertar(entAyudaDiagnosticaOrden entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_InsertarAyudaDiagnosticaOrden", cn);
+                SqlCommand cmd = new SqlCommand("sp_InsertarAyudaDiagnostica", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
                 cmd.Parameters.AddWithValue("@IdEmbarazo", (object)entidad.IdEmbarazo ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@IdTipoAyuda", (object)entidad.IdTipoAyuda ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Descripcion", (object)entidad.Descripcion ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Urgente", entidad.Urgente);
-                cmd.Parameters.AddWithValue("@FechaOrden", entidad.FechaOrden);
+                cn.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
+        public bool Editar(entAyudaDiagnosticaOrden entidad)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_EditarAyudaDiagnostica", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdAyuda", entidad.IdAyuda);
+                cmd.Parameters.AddWithValue("@IdPaciente", entidad.IdPaciente);
+                cmd.Parameters.AddWithValue("@IdEmbarazo", (object)entidad.IdEmbarazo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdProfesional", (object)entidad.IdProfesional ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdTipoAyuda", (object)entidad.IdTipoAyuda ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Descripcion", (object)entidad.Descripcion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Urgente", entidad.Urgente);
                 cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
-
                 cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                cmd.ExecuteNonQuery();
+                return true;
             }
         }
 
-
-        public bool Inhabilitar(int idAyuda)
+        public entAyudaDiagnosticaOrden? BuscarPorId(int idAyuda)
         {
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_InhabilitarAyudaDiagnosticaOrden", cn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
-
-
-
-        public bool Editar(int idAyuda, int idPaciente, int? idEmbarazo, int? idProfesional, short? idTipoAyuda,
-                           string descripcion, bool urgente, DateTime? fechaOrden, string estado)
-        {
+            entAyudaDiagnosticaOrden? entidad = null;
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_EditarAyudaDiagnosticaOrden", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cmd.Parameters.AddWithValue("@IdEmbarazo", (object)idEmbarazo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdProfesional", (object)idProfesional ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdTipoAyuda", (object)idTipoAyuda ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Descripcion", (object)descripcion ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Urgente", urgente);
-                cmd.Parameters.AddWithValue("@FechaOrden", (object)fechaOrden ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
-
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlCommand cmd = new SqlCommand("sp_BuscarAyudaDiagnostica", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
+                    cn.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            entidad = new entAyudaDiagnosticaOrden
+                            {
+                                IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
+                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                                IdEmbarazo = dr["IdEmbarazo"] != DBNull.Value ? Convert.ToInt32(dr["IdEmbarazo"]) : (int?)null,
+                                IdProfesional = dr["IdProfesional"] != DBNull.Value ? Convert.ToInt32(dr["IdProfesional"]) : (int?)null,
+                                IdTipoAyuda = dr["IdTipoAyuda"] != DBNull.Value ? Convert.ToInt16(dr["IdTipoAyuda"]) : (short?)null,
+                                Descripcion = dr["Descripcion"].ToString(),
+                                Urgente = Convert.ToBoolean(dr["Urgente"]),
+                                FechaOrden = Convert.ToDateTime(dr["FechaOrden"]),
+                                Estado = dr["Estado"].ToString(),
+                                NombrePaciente = dr["NombrePaciente"].ToString(),
+                                NombreProfesional = dr["NombreProfesional"].ToString(),
+                                NombreTipoAyuda = dr["NombreTipoAyuda"].ToString()
+                            };
+                        }
+                    }
+                }
             }
+            return entidad;
         }
 
-        public DataTable BuscarPorId(int idAyuda)
-        {
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
-            {
-                SqlCommand cmd = new SqlCommand("sp_BuscarAyudaDiagnosticaOrden", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
-
-                cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-            }
-            return dt;
-        }
-
-        public bool Eliminar(int idAyuda)
+        public bool Anular(int idAyuda)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarAyudaDiagnosticaOrden", cn);
+                SqlCommand cmd = new SqlCommand("sp_AnularAyudaDiagnostica", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdAyuda", idAyuda);
-
                 cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                cmd.ExecuteNonQuery();
+                return true;
             }
         }
-
-        #endregion
     }
-
-
 }

@@ -1,10 +1,7 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
 
 namespace CapaLogica
 {
@@ -19,20 +16,80 @@ namespace CapaLogica
         private logEncuentro() { }
         #endregion
 
-        // LISTAR
-        public List<entEncuentro> ListarEncuentro()
+        public List<entEncuentro> ListarEncuentros()
         {
-            return DA_Encuentro.Instancia.Listar();
+            try
+            {
+                return DA_Encuentro.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar encuentros: " + ex.Message, ex);
+            }
         }
 
-        // INSERTAR
-        public bool InsertarEncuentro(entEncuentro entidad)
+        public int InsertarEncuentro(entEncuentro entidad)
         {
-            return DA_Encuentro.Instancia.Insertar(entidad);
+            try
+            {
+                if (entidad.IdEmbarazo <= 0)
+                    throw new ApplicationException("El IdEmbarazo es obligatorio.");
+                if (entidad.IdTipoEncuentro <= 0)
+                    throw new ApplicationException("El Tipo de Encuentro es obligatorio.");
+
+                return DA_Encuentro.Instancia.Insertar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al insertar encuentro: " + ex.Message, ex);
+            }
         }
 
+        public bool EditarEncuentro(entEncuentro entidad)
+        {
+            try
+            {
+                return DA_Encuentro.Instancia.Editar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al editar encuentro: " + ex.Message, ex);
+            }
+        }
 
+        public entEncuentro? BuscarEncuentro(int id)
+        {
+            try
+            {
+                return DA_Encuentro.Instancia.BuscarPorId(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al buscar encuentro: " + ex.Message, ex);
+            }
+        }
 
-
+        public bool AnularEncuentro(int id)
+        {
+            try
+            {
+                return DA_Encuentro.Instancia.Eliminar(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al anular encuentro: " + ex.Message, ex);
+            }
+        }
+        public List<object> ListarEncuentrosPorEmbarazo(int idEmbarazo)
+        {
+            try
+            {
+                return DA_Encuentro.Instancia.ListarPorEmbarazo(idEmbarazo);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar encuentros por embarazo: " + ex.Message, ex);
+            }
+        }
     }
 }

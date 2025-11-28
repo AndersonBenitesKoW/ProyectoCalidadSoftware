@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "Agendar una Cita";
+    Layout = "~/Views/Shared/_LayoutPublic.cshtml";
+}
+
+<section class="hero-public text-center py-5 mb-4">
+    <div class="container">
+        <h1 class="fw-bold">Agenda tu Cita Médica</h1>
+        <p class="lead">Reserva una cita con nuestros especialistas en control prenatal, parto o puerperio.</p>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h4 class="fw-semibold mb-3 text-primary">
+                        <i class="bi bi-calendar-check"></i> Formulario de Cita
+                    </h4>
+
+                    <form method="post" action="/Portal/Citas" id="citaForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombreCompleto" placeholder="Ej: María López" required maxlength="100" />
+                                <div class="invalid-feedback">
+                                    El nombre completo es obligatorio y debe tener al menos 2 caracteres.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="email" placeholder="Ej: maria@gmail.com" required />
+                                <div class="invalid-feedback">
+                                    Debe ingresar un email válido.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" placeholder="Ej: 987654321" maxlength="15" />
+                                <div class="invalid-feedback">
+                                    El teléfono debe tener entre 7 y 15 dígitos.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Especialidad</label>
+                                <select class="form-select" id="especialidad" required>
+                                    <option selected disabled value="">Seleccione...</option>
+                                    <option>Control Prenatal</option>
+                                    <option>Atención del Parto</option>
+                                    <option>Seguimiento del Puerperio</option>
+                                    <option>Planificación Familiar</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Debe seleccionar una especialidad.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de cita</label>
+                                <input type="date" class="form-control" id="fechaCita" required />
+                                <div class="invalid-feedback">
+                                    Debe seleccionar una fecha futura.
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Comentarios adicionales</label>
+                                <textarea class="form-control" id="comentarios" rows="3" placeholder="¿Deseas dejar alguna observación?" maxlength="500"></textarea>
+                                <div class="form-text">
+                                    Máximo 500 caracteres.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-send"></i> Enviar solicitud
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('citaForm');
+        const nombreInput = document.getElementById('nombreCompleto');
+        const emailInput = document.getElementById('email');
+        const telefonoInput = document.getElementById('telefono');
+        const especialidadSelect = document.getElementById('especialidad');
+        const fechaInput = document.getElementById('fechaCita');
+        const comentariosTextarea = document.getElementById('comentarios');
+
+        // Validación de nombre completo
+        nombreInput.addEventListener('input', function() {
+            const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+            if (this.value && !regex.test(this.value)) {
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+            }
+            if (this.value.length > 100) {
+                this.value = this.value.substring(0, 100);
+            }
+        });
+
+
+        // Validación de teléfono
+        telefonoInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, ''); // Solo números
+            if (this.value.length > 15) {
+                this.value = this.value.substring(0, 15);
+            }
+        });
+
+        // Validación de comentarios
+        comentariosTextarea.addEventListener('input', function() {
+            if (this.value.length > 500) {
+                this.value = this.value.substring(0, 500);
+            }
+        });
+
+        // Validación de fecha
+        fechaInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                this.setCustomValidity('La fecha debe ser futura');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Validación del formulario
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const errors = [];
+
+            // Validar nombre
+            if (!nombreInput.value || nombreInput.value.length < 2) {
+                nombreInput.classList.add('is-invalid');
+                errors.push('El nombre debe tener al menos 2 caracteres');
+                isValid = false;
+            } else {
+                nombreInput.classList.remove('is-invalid');
+            }
+
+
+            // Validar email
+            const emailRegex = new RegExp('^[^\s@@]+\@@[^\s@@]+\.[^\s@@]+$');
+            if (!emailInput.value || !emailRegex.test(emailInput.value)) {
+                emailInput.classList.add('is-invalid');
+                errors.push('Debe ingresar un email válido');
+                isValid = false;
+            } else {
+                emailInput.classList.remove('is-invalid');
+            }
+
+            // Validar teléfono (opcional pero si está, debe ser válido)
+            if (telefonoInput.value && (telefonoInput.value.length < 7 || telefonoInput.value.length > 15)) {
+                telefonoInput.classList.add('is-invalid');
+                errors.push('El teléfono debe tener entre 7 y 15 dígitos');
+                isValid = false;
+            } else {
+                telefonoInput.classList.remove('is-invalid');
+            }
+
+            // Validar especialidad
+            if (!especialidadSelect.value) {
+                especialidadSelect.classList.add('is-invalid');
+                errors.push('Debe seleccionar una especialidad');
+                isValid = false;
+            } else {
+                especialidadSelect.classList.remove('is-invalid');
+            }
+
+            // Validar fecha
+            if (!fechaInput.value) {
+                fechaInput.classList.add('is-invalid');
+                errors.push('Debe seleccionar una fecha');
+                isValid = false;
+            } else {
+                const selectedDate = new Date(fechaInput.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate < today) {
+                    fechaInput.classList.add('is-invalid');
+                    errors.push('La fecha debe ser futura');
+                    isValid = false;
+                } else {
+                    fechaInput.classList.remove('is-invalid');
+                }
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Por favor, corrija los siguientes errores:\n\n' + errors.join('\n'));
+            }
+        });
+    });
+</script>

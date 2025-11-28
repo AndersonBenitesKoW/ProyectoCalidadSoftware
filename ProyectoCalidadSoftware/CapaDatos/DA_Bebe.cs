@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -64,8 +62,10 @@ namespace CapaAccesoDatos
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@IdParto", entidad.IdParto);
+                cmd.Parameters.AddWithValue("@NumeroBebe", entidad.NumeroBebe);
                 cmd.Parameters.AddWithValue("@EstadoBebe", entidad.EstadoBebe);
                 cmd.Parameters.AddWithValue("@Sexo", (object)entidad.Sexo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaHoraNacimiento", (object)entidad.FechaHoraNacimiento ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apgar1", (object)entidad.Apgar1 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apgar5", (object)entidad.Apgar5 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PesoGr", (object)entidad.PesoGr ?? DBNull.Value);
@@ -81,10 +81,10 @@ namespace CapaAccesoDatos
             }
         }
 
-        public bool Editar(int idBebe, int idParto, string estadoBebe, string sexo,
-                           byte? apgar1, byte? apgar5, int? pesoGr, decimal? tallaCm,
-                           decimal? perimetroCefalico, decimal? egSemanas,
-                           bool? reanimacion, string observaciones, bool estado)
+        public bool Editar(int idBebe, int idParto, int numeroBebe, string estadoBebe, string sexo,
+                            DateTime? fechaHoraNacimiento, byte? apgar1, byte? apgar5, int? pesoGr, decimal? tallaCm,
+                            decimal? perimetroCefalico, decimal? egSemanas,
+                            bool? reanimacion, string observaciones, bool estado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
@@ -93,8 +93,10 @@ namespace CapaAccesoDatos
 
                 cmd.Parameters.AddWithValue("@IdBebe", idBebe);
                 cmd.Parameters.AddWithValue("@IdParto", idParto);
+                cmd.Parameters.AddWithValue("@NumeroBebe", numeroBebe);
                 cmd.Parameters.AddWithValue("@EstadoBebe", estadoBebe);
                 cmd.Parameters.AddWithValue("@Sexo", (object)sexo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaHoraNacimiento", (object)fechaHoraNacimiento ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apgar1", (object)apgar1 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apgar5", (object)apgar5 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PesoGr", (object)pesoGr ?? DBNull.Value);

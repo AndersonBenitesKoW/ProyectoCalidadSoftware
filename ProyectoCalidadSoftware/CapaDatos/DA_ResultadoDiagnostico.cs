@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapaEntidad;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -14,34 +12,34 @@ namespace CapaAccesoDatos
         {
             get { return DA_ResultadoDiagnostico._instancia; }
         }
+
+        private DA_ResultadoDiagnostico() { }
         #endregion
 
         #region Métodos
 
+        /// <summary>
+        /// Lista resultados diagnósticos usando el SP detallado (JOINs en el SP).
+        /// </summary>
         public List<entResultadoDiagnostico> Listar()
         {
-            List<entResultadoDiagnostico> lista = new List<entResultadoDiagnostico>();
+            var lista = new List<entResultadoDiagnostico>();
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_ListarResultadoDiagnostico", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarResultadoDiagnosticoDetallado", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
+
+                // Para listar todos → @IdResultado = NULL
+                var p = cmd.Parameters.Add("@IdResultado", SqlDbType.Int);
+                p.Value = DBNull.Value;
+
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        var resultado = new entResultadoDiagnostico
-                        {
-                            IdResultado = Convert.ToInt32(dr["IdResultado"]),
-                            IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
-                            FechaResultado = Convert.ToDateTime(dr["FechaResultado"]),
-                            Resumen = dr["Resumen"].ToString(),
-                            Critico = Convert.ToBoolean(dr["Critico"]),
-                            Estado = dr["Estado"].ToString()
-                        };
-
-                        lista.Add(resultado);
+                        lista.Add(MapDetallado(dr));
                     }
                 }
             }
@@ -49,25 +47,44 @@ namespace CapaAccesoDatos
             return lista;
         }
 
-        public bool Insertar(entResultadoDiagnostico entidad)
+        /// <summary>
+        /// Inserta cabecera de resultado usando el SP.
+        /// Devuelve el IdResultado generado.
+        /// </summary>
+        public int Insertar(entResultadoDiagnostico entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
+            using (SqlCommand cmd = new SqlCommand("sp_InsertarResultadoDiagnostico", cn))
             {
-                SqlCommand cmd = new SqlCommand("sp_InsertarResultadoDiagnostico", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@IdEncuentro", entidad.IdAyuda);
-                cmd.Parameters.AddWithValue("@Diagnostico", (object)entidad.Resumen ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Observaciones", entidad.Estado);
-                cmd.Parameters.AddWithValue("@Estado", entidad.Critico);
+                cmd.Parameters.AddWithValue("@IdAyuda", entidad.IdAyuda);
+
+                if (entidad.FechaResultado == default(DateTime))
+                    cmd.Parameters.AddWithValue("@FechaResultado", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("@FechaResultado", entidad.FechaResultado);
+
+                cmd.Parameters.AddWithValue("@Resumen",
+                    (object?)entidad.Resumen ?? DBNull.Value);
+
+                cmd.Parameters.AddWithValue("@Critico", entidad.Critico);
+
+                if (string.IsNullOrWhiteSpace(entidad.Estado))
+                    cmd.Parameters.AddWithValue("@Estado", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                // El SP devuelve SCOPE_IDENTITY()
+                object? escalar = cmd.ExecuteScalar();
+                return escalar != null && escalar != DBNull.Value ? Convert.ToInt32(escalar) : 0;
             }
         }
 
-
-        // UPDATE/Modificar con OBJETO
+        /// <summary>
+        /// Actualiza un resultado diagnóstico usando SP.
+        /// </summary>
         public bool Actualizar(entResultadoDiagnostico entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
@@ -77,38 +94,57 @@ namespace CapaAccesoDatos
 
                 cmd.Parameters.AddWithValue("@IdResultado", entidad.IdResultado);
                 cmd.Parameters.AddWithValue("@IdAyuda", entidad.IdAyuda);
-                cmd.Parameters.AddWithValue("@FechaResultado", entidad?.FechaResultado ?? DateTime.Now);
-                cmd.Parameters.AddWithValue("@Resumen", (object)entidad.Resumen ?? DBNull.Value);
+
+                var fecha = entidad.FechaResultado == default(DateTime)
+                    ? DateTime.UtcNow
+                    : entidad.FechaResultado;
+                cmd.Parameters.AddWithValue("@FechaResultado", fecha);
+
+                cmd.Parameters.AddWithValue("@Resumen",
+                    (object?)entidad.Resumen ?? DBNull.Value);
+
                 cmd.Parameters.AddWithValue("@Critico", entidad.Critico);
-                cmd.Parameters.AddWithValue("@Estado", (object)entidad.Estado ?? "ACTIVO");
+
+                if (string.IsNullOrWhiteSpace(entidad.Estado))
+                    cmd.Parameters.AddWithValue("@Estado", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
 
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
-        // Buscar por Id -> ENTIDAD
-        public entResultadoDiagnostico BuscarPorId(int idResultado)
+        /// <summary>
+        /// Busca un resultado por Id usando el SP detallado (JOINs en el SP).
+        /// </summary>
+        public entResultadoDiagnostico? BuscarPorId(int idResultado)
         {
-            entResultadoDiagnostico entidad = null;
+            entResultadoDiagnostico? entidad = null;
 
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("sp_BuscarResultadoDiagnostico", cn))
+            using (SqlCommand cmd = new SqlCommand("sp_ListarResultadoDiagnosticoDetallado", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdResultado", idResultado);
+
+                cmd.Parameters.Add("@IdResultado", SqlDbType.Int).Value = idResultado;
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     if (dr.Read())
-                        entidad = Map(dr);
+                    {
+                        entidad = MapDetallado(dr);
+                    }
                 }
             }
+
             return entidad;
         }
 
-        // Soft delete por estado
+        /// <summary>
+        /// Soft delete: marca Estado = 'INACTIVO' usando SP.
+        /// </summary>
         public bool Anular(int idResultado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
@@ -122,7 +158,9 @@ namespace CapaAccesoDatos
             }
         }
 
-        // (Opcional) Eliminar físico si aún lo usas:
+        /// <summary>
+        /// Eliminación física (si la sigues usando).
+        /// </summary>
         public bool Eliminar(int idResultado)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
@@ -130,32 +168,51 @@ namespace CapaAccesoDatos
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdResultado", idResultado);
+
                 cn.Open();
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
-        // ---------- Helper de mapeo ----------
-        private static entResultadoDiagnostico Map(SqlDataReader dr)
+        // ---------- Helper para mapear resultado detallado ----------
+        private static entResultadoDiagnostico MapDetallado(SqlDataReader dr)
         {
-            int Ord(string n) => dr.GetOrdinal(n);
-            bool Nul(string n) => dr.IsDBNull(Ord(n));
-
-            return new entResultadoDiagnostico
+            entResultadoDiagnostico e = new entResultadoDiagnostico
             {
-                IdResultado = Nul("IdResultado") ? 0 : dr.GetInt32(Ord("IdResultado")),
-                IdAyuda = Nul("IdAyuda") ? 0 : dr.GetInt32(Ord("IdAyuda")),
-                FechaResultado = Nul("FechaResultado") ? DateTime.MinValue : Convert.ToDateTime(dr["FechaResultado"]),
-                Resumen = Nul("Resumen") ? null : dr.GetString(Ord("Resumen")),
-                Critico = !Nul("Critico") && Convert.ToBoolean(dr["Critico"]),
-                Estado = Nul("Estado") ? "ACTIVO" : dr.GetString(Ord("Estado"))
+                IdResultado = Convert.ToInt32(dr["IdResultado"]),
+                IdAyuda = Convert.ToInt32(dr["IdAyuda"]),
+                FechaResultado = Convert.ToDateTime(dr["FechaResultado"]),
+                Resumen = dr["Resumen"] != DBNull.Value ? dr["Resumen"].ToString() : null,
+                Critico = Convert.ToBoolean(dr["Critico"]),
+                Estado = dr["Estado"].ToString()
             };
+
+            if (dr["IdControlPrenatal"] != DBNull.Value)
+                e.IdControlPrenatal = Convert.ToInt32(dr["IdControlPrenatal"]);
+
+            if (dr["FechaControlPrenatal"] != DBNull.Value)
+                e.FechaControlPrenatal = Convert.ToDateTime(dr["FechaControlPrenatal"]);
+
+            if (dr["NombrePaciente"] != DBNull.Value)
+                e.NombrePaciente = dr["NombrePaciente"].ToString();
+
+            if (dr["NombreProfesional"] != DBNull.Value)
+                e.NombreProfesional = dr["NombreProfesional"].ToString();
+
+            if (dr["DescripcionAyuda"] != DBNull.Value)
+                e.DescripcionAyuda = dr["DescripcionAyuda"].ToString();
+
+            if (dr["TipoAyuda"] != DBNull.Value)
+                e.TipoAyuda = dr["TipoAyuda"].ToString();
+
+            if (dr["Urgente"] != DBNull.Value)
+                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
+                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
+                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
+
+            return e;
         }
-
-
 
         #endregion
     }
-
-
 }

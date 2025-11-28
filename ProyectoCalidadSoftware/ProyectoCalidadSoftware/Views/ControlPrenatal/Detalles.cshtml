@@ -1,0 +1,180 @@
+﻿@model CapaEntidad.entControlPrenatal
+
+@{
+    ViewData["Title"] = "Detalles del Control Prenatal";
+    string clase = Model.Estado ? "text-success" : "text-danger";
+    string texto = Model.Estado ? "Activo" : "Inhabilitado";
+}
+
+<style>
+    .details-list dt {
+        font-weight: 600;
+    }
+
+    .details-list dd {
+        color: #333;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="display-6"><i class="bi bi-file-earmark-medical text-primary"></i> @ViewData["Title"]</h1>
+        <hr />
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Control #@Model.IdControlPrenatal</h5>
+                <span class="badge bg-@clase fs-6">@texto</span>
+            </div>
+            <div class="card-body">
+
+                <h5 class="mt-2"><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Paciente</dt>
+                    <dd class="col-sm-9">@Model.NombrePaciente</dd>
+
+                    <dt class="col-sm-3">Profesional</dt>
+                    <dd class="col-sm-9">@Model.NombreProfesional</dd>
+
+                    <dt class="col-sm-3">Fecha del Control</dt>
+                    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-heart-pulse me-2"></i>Signos Vitales y Medidas</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Peso (Kg)</dt>
+                    <dd class="col-sm-3">@Model.PesoKg</dd>
+
+                    <dt class="col-sm-3">Peso Pre-Gestacional (Kg)</dt>
+                    <dd class="col-sm-3">@Model.PesoPreGestacionalKg</dd>
+
+                    <dt class="col-sm-3">Talla (m)</dt>
+                    <dd class="col-sm-3">@Model.TallaM</dd>
+
+                    <dt class="col-sm-3">IMC Pre-Gestacional</dt>
+                    <dd class="col-sm-3">@Model.IMCPreGestacional</dd>
+
+                    <dt class="col-sm-3">PA Sistólica</dt>
+                    <dd class="col-sm-3">@Model.PA_Sistolica mmHg</dd>
+
+                    <dt class="col-sm-3">PA Diastólica</dt>
+                    <dd class="col-sm-3">@Model.PA_Diastolica mmHg</dd>
+
+                    <dt class="col-sm-3">Pulso (lpm)</dt>
+                    <dd class="col-sm-3">@Model.Pulso</dd>
+
+                    <dt class="col-sm-3">Frecuencia Respiratoria</dt>
+                    <dd class="col-sm-3">@Model.FrecuenciaRespiratoria</dd>
+
+                    <dt class="col-sm-3">Temperatura (°C)</dt>
+                    <dd class="col-sm-3">@Model.Temperatura</dd>
+
+                    <dt class="col-sm-3">Número de Control</dt>
+                    <dd class="col-sm-3">@Model.NumeroControl</dd>
+
+                    <dt class="col-sm-3">Edad Gestacional (Semanas)</dt>
+                    <dd class="col-sm-3">@Model.EdadGestSemanas</dd>
+
+                    <dt class="col-sm-3">Edad Gestacional (Días)</dt>
+                    <dd class="col-sm-3">@Model.EdadGestDias</dd>
+
+                    <dt class="col-sm-3">Método Edad Gestacional</dt>
+                    <dd class="col-sm-3">@Model.MetodoEdadGest</dd>
+
+                    <dt class="col-sm-3">Tipo de Embarazo</dt>
+                    <dd class="col-sm-3">@Model.TipoEmbarazo</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Evaluación Fetal</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Altura Uterina</dt>
+                    <dd class="col-sm-3">@Model.AlturaUterina_cm cm</dd>
+
+                    <dt class="col-sm-3">FCF (lpm)</dt>
+                    <dd class="col-sm-3">@Model.FCF_bpm</dd>
+
+                    <dt class="col-sm-3">Presentación Fetal</dt>
+                    <dd class="col-sm-3">@Model.Presentacion</dd>
+
+                    <dt class="col-sm-3">Dinámica Uterina</dt>
+                    <dd class="col-sm-3">@Model.DinamicaUterina</dd>
+
+                    <dt class="col-sm-3">Líquido Amniótico</dt>
+                    <dd class="col-sm-3">@Model.LiquidoAmniotico</dd>
+
+                    <dt class="col-sm-3">Índice Líquido Amniótico</dt>
+                    <dd class="col-sm-3">@Model.IndiceLiquidoAmniotico</dd>
+
+                    <dt class="col-sm-3">Perfil Biofísico</dt>
+                    <dd class="col-sm-3">@Model.PerfilBiofisico</dd>
+
+                    <dt class="col-sm-3">Proteinuria</dt>
+                    <dd class="col-sm-3">@Model.Proteinuria</dd>
+
+                    <dt class="col-sm-3">Edemas</dt>
+                    <dd class="col-sm-3">@Model.Edemas</dd>
+
+                    <dt class="col-sm-3">Reflejos</dt>
+                    <dd class="col-sm-3">@Model.Reflejos</dd>
+
+                    <dt class="col-sm-3">Hemoglobina (g/dL)</dt>
+                    <dd class="col-sm-3">@Model.Hemoglobina</dd>
+
+                    <dt class="col-sm-3">Resultado VIH</dt>
+                    <dd class="col-sm-3">@Model.ResultadoVIH</dd>
+
+                    <dt class="col-sm-3">Resultado Sífilis</dt>
+                    <dd class="col-sm-3">@Model.ResultadoSifilis</dd>
+
+                    <dt class="col-sm-3">Grupo Sanguíneo Rh</dt>
+                    <dd class="col-sm-3">@Model.GrupoSanguineoRh</dd>
+
+                    <dt class="col-sm-3">Ecografía Realizada</dt>
+                    <dd class="col-sm-3">@(Model.EcografiaRealizada == true ? "Sí" : "No")</dd>
+
+                    <dt class="col-sm-3">Fecha Ecografía</dt>
+                    <dd class="col-sm-3">@Model.FechaEcografia?.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-3">Lugar Ecografía</dt>
+                    <dd class="col-sm-3">@Model.LugarEcografia</dd>
+
+                    <dt class="col-sm-3">Plan Parto Entregado</dt>
+                    <dd class="col-sm-3">@(Model.PlanPartoEntregado == true ? "Sí" : "No")</dd>
+
+                    <dt class="col-sm-3">Micronutrientes Entregados</dt>
+                    <dd class="col-sm-3">@Model.MicronutrientesEntregados</dd>
+
+                    <dt class="col-sm-3">Viajó Últimas Semanas</dt>
+                    <dd class="col-sm-3">@(Model.ViajoUltSemanas == true ? "Sí" : "No")</dd>
+
+                    <dt class="col-sm-3">Referencia Obstétrica</dt>
+                    <dd class="col-sm-3">@(Model.ReferenciaObstetrica == true ? "Sí" : "No")</dd>
+
+                    <dt class="col-sm-3">Próxima Cita Fecha</dt>
+                    <dd class="col-sm-3">@Model.ProximaCitaFecha?.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-3">Establecimiento de Atención</dt>
+                    <dd class="col-sm-9">@Model.EstablecimientoAtencion</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-sticky me-2"></i>Notas Adicionales</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Consejerías</dt>
+                    <dd class="col-sm-9">@Model.Consejerias</dd>
+
+                    <dt class="col-sm-3">Observaciones</dt>
+                    <dd class="col-sm-9">@Model.Observaciones</dd>
+                </dl>
+
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver a la Lista
+                </a>
+                <a asp-action="Editar" asp-route-id="@Model.IdControlPrenatal" class="btn btn-warning">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

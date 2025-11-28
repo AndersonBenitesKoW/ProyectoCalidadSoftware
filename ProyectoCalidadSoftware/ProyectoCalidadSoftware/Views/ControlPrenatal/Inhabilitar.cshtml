@@ -4,125 +4,74 @@
     ViewData["Title"] = "Inhabilitar Control Prenatal";
 }
 
+<style>
+    .delete-confirmation {
+        max-width: 700px;
+        margin: 2rem auto;
+        border: 1px solid #dee2e6;
+        border-radius: .5rem;
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    }
+
+    .delete-header {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 1.5rem;
+        border-bottom: 1px solid #f5c6cb;
+        border-top-left-radius: .5rem;
+        border-top-right-radius: .5rem;
+    }
+
+        .delete-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+    .details-list dt {
+        font-weight: 600;
+    }
+</style>
+
 <div class="delete-confirmation">
     <div class="delete-header">
-        <h1><i class="bi bi-exclamation-triangle"></i> Confirmar Inhabilitación</h1>
-        <h3>¿Está seguro de que desea inhabilitar este control prenatal?</h3>
+        <h1><i class="bi bi-exclamation-triangle-fill"></i> Confirmar Inhabilitación</h1>
+        <h3 class_fs-5>¿Está seguro de que desea inhabilitar este control?</h3>
     </div>
 
     <div class="p-4">
-        <h4 class="mb-4"><i class="bi bi-info-circle"></i> Detalles del Control Prenatal</h4>
-        <dl class="row">
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-hash"></i> ID Control
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.IdControl)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-heart-pulse"></i> ID Embarazo
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.IdEmbarazo)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-calendar-event"></i> ID Encuentro
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.IdEncuentro)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-person-badge"></i> ID Profesional
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.IdProfesional)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-calendar-date"></i> Fecha del Control
-            </dt>
-            <dd class="col-sm-9">
-                @Model.Fecha.ToString("dd/MM/yyyy")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-speedometer"></i> Peso (Kg)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.PesoKg.HasValue ? Model.PesoKg.Value.ToString("N2") : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-rulers"></i> Talla (m)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.TallaM.HasValue ? Model.TallaM.Value.ToString("N2") : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-heart-half"></i> Presión Arterial
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.PA_Sistolica.HasValue && Model.PA_Diastolica.HasValue ?
-                  $"{Model.PA_Sistolica}/{Model.PA_Diastolica} mmHg" : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-bullseye"></i> Altura Uterina (cm)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.AlturaUterina_cm.HasValue ? Model.AlturaUterina_cm.Value.ToString("N1") : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-activity"></i> FCF (bpm)
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.FCF_bpm.HasValue ? Model.FCF_bpm.Value.ToString() : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-body-text"></i> Presentación
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Presentacion)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-droplet"></i> Proteinuria
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Proteinuria)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-check-circle"></i> Movimientos Fetales
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.MovFetales.HasValue ? (Model.MovFetales.Value ? "Presentes" : "Ausentes") : "No registrado")
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-chat-quote"></i> Consejerías
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Consejerias)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-chat-text"></i> Observaciones
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Observaciones)
-            </dd>
-            <dt class="col-sm-3 fw-bold">
-                <i class="bi bi-check-circle"></i> Estado
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Estado)
+        <h4 class="mb-4"><i class="bi bi-info-circle"></i> Detalles del Control</h4>
+        <dl class="row details-list">
+
+            <dt class="col-sm-4"><i class="bi bi-person"></i> Paciente</dt>
+            <dd class="col-sm-8">@Model.NombrePaciente</dd>
+
+            <dt class="col-sm-4"><i class="bi bi-calendar-event"></i> Fecha</dt>
+            <dd class="col-sm-8">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-4"><i class="bi bi-person-lines-fill"></i> Profesional</dt>
+            <dd class="col-sm-8">@Model.NombreProfesional</dd>
+
+            <dt classs="col-sm-4"><i class="bi bi-check-circle"></i> Estado Actual</dt>
+            <dd class="col-sm-8">
+                <span class="badge bg-success">Activo</span>
             </dd>
         </dl>
 
         <div class="alert alert-warning mt-4" role="alert">
             <i class="bi bi-exclamation-triangle-fill"></i>
-            <strong>Advertencia:</strong> Esta acción inhabilitará el control prenatal. El registro quedará inactivo pero no se eliminará permanentemente.
+            <strong>Advertencia:</strong> Esta acción marcará el control como "Inhabilitado".
         </div>
 
-        <form asp-action="Inhabilitar" class="mt-4">
+        <form asp-action="Inhabilitar" method="post" class="mt-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdControlPrenatal" />
+
             <div class="d-flex justify-content-between">
                 <a asp-action="Listar" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Cancelar
                 </a>
-                <input type="submit" value="Inhabilitar Control" class="btn btn-danger" />
+                <input type="submit" value="Confirmar Inhabilitación" class="btn btn-danger" />
             </div>
         </form>
     </div>

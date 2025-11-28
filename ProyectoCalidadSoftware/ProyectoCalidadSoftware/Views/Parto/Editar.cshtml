@@ -1,0 +1,401 @@
+﻿@model CapaEntidad.entParto
+@{
+    ViewData["Title"] = "Editar Registro de Parto";
+}
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Editar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="IdParto" />
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <h5><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEmbarazo" class="form-select" asp-items="@ViewBag.ListaEmbarazos" required>
+                                    <option value="">-- Seleccione Embarazo --</option>
+                                </select>
+                                <label asp-for="IdEmbarazo">Embarazo (Paciente)</label>
+                                <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdEncuentro" class="form-select" disabled>
+                                    <option value="">-- Seleccione un embarazo --</option>
+                                </select>
+                                <label asp-for="IdEncuentro">Encuentro (Consulta)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdProfesional" class="form-select" asp-items="@ViewBag.ListaProfesionales">
+                                    <option value="">-- Seleccione Profesional --</option>
+                                </select>
+                                <label asp-for="IdProfesional">Profesional</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Fecha" class="form-control" type="date" />
+                                <label asp-for="Fecha">Fecha del Parto</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clock-history me-2"></i>Tiempos y Evaluación</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraIngreso" class="form-control" type="time" />
+                                <label asp-for="HoraIngreso">Hora Ingreso</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraInicioTrabajo" class="form-control" type="time" />
+                                <label asp-for="HoraInicioTrabajo">Hora Inicio Trabajo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="HoraExpulsion" class="form-control" type="time" />
+                                <label asp-for="HoraExpulsion">Hora Expulsión</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Membranas" class="form-control" maxlength="10" />
+                                <label asp-for="Membranas">Membranas</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TiempoRoturaMembranasHoras" class="form-control" type="number" />
+                                <label asp-for="TiempoRoturaMembranasHoras">Tiempo Rotura (horas)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdLiquido" class="form-select" asp-items="@ViewBag.ListaLiquidos">
+                                    <option value="">-- Líquido Amniótico --</option>
+                                </select>
+                                <label asp-for="IdLiquido"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="AspectoLiquido" class="form-control" maxlength="50" />
+                                <label asp-for="AspectoLiquido">Aspecto Líquido</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Detalles del Parto</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdViaParto" class="form-select" asp-items="@ViewBag.ListaViasParto">
+                                    <option value="">-- Vía de Parto --</option>
+                                </select>
+                                <label asp-for="IdViaParto"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="TipoParto" class="form-control" maxlength="50" />
+                                <label asp-for="TipoParto">Tipo de Parto</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Analgesia" class="form-control" maxlength="50" />
+                                <label asp-for="Analgesia">Analgesia</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PosicionMadre" class="form-control" maxlength="50" />
+                                <label asp-for="PosicionMadre">Posición Madre</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Acompanante" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Acompanante" class="form-check-label">Acompañante</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="LugarNacimiento" class="form-control" maxlength="100" />
+                                <label asp-for="LugarNacimiento">Lugar Nacimiento</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="DuracionSegundaEtapaMinutos" class="form-control" type="number" />
+                                <label asp-for="DuracionSegundaEtapaMinutos">Duración 2da Etapa (min)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input asp-for="PerdidasML" class="form-control" type="number" min="0" />
+                                <label asp-for="PerdidasML">Pérdidas (ml)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Episiotomia" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Episiotomia" class="form-check-label">Episiotomía</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input asp-for="IndicacionCesarea" class="form-control" maxlength="150" />
+                                <label asp-for="IndicacionCesarea">Indicación Cesárea (si aplica)</label>
+                                <span asp-validation-for="IndicacionCesarea" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
+                    <hr class="mt-0" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Desgarro" class="form-control" maxlength="10" />
+                                <label asp-for="Desgarro">Desgarro (Grado)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="ComplicacionesMaternas" class="form-control" style="height: 80px" maxlength="300"></textarea>
+                                <label asp-for="ComplicacionesMaternas">Complicaciones Maternas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="SeguroTipo" class="form-control" maxlength="50" />
+                                <label asp-for="SeguroTipo">Tipo de Seguro</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroHijosPrevios" class="form-control" type="number" />
+                                <label asp-for="NumeroHijosPrevios">Hijos Previos</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroCesareasPrevias" class="form-control" type="number" />
+                                <label asp-for="NumeroCesareasPrevias">Cesáreas Previas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="EmbarazoMultiple" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="EmbarazoMultiple" class="form-check-label">Embarazo Múltiple</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input asp-for="NumeroGemelos" class="form-control" type="number" />
+                                <label asp-for="NumeroGemelos">Número Gemelos</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check form-switch mb-3 d-flex align-items-center">
+                                <input asp-for="Derivacion" class="form-check-input me-2" type="checkbox" />
+                                <label asp-for="Derivacion" class="form-check-label">Derivación</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Observaciones" class="form-control" style="height: 80px" maxlength="500"></textarea>
+                                <label asp-for="Observaciones">Observaciones</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Intervenciones != null && Model.Intervenciones.Any())
+                    {
+                        <h5 class="mt-4"><i class="bi bi-clipboard-check me-2"></i>Intervenciones Registradas</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Intervención</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var interv in Model.Intervenciones)
+                                    {
+                                        <tr>
+                                            <td>@interv.Intervencion</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-muted small">Las intervenciones se gestionan automáticamente al guardar.</p>
+                    }
+
+                    @if (Model.Bebes != null && Model.Bebes.Any())
+                    {
+                        <h5 class="mt-4"><i class="bi bi-baby me-2"></i>Bebés Registrados</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Sexo</th>
+                                        <th>Fecha/Hora Nacimiento</th>
+                                        <th>Apgar 1</th>
+                                        <th>Apgar 5</th>
+                                        <th>Peso (gr)</th>
+                                        <th>Talla (cm)</th>
+                                        <th>Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var bebe in Model.Bebes)
+                                    {
+                                        <tr>
+                                            <td>@bebe.NumeroBebe</td>
+                                            <td>@bebe.Sexo</td>
+                                            <td>@bebe.FechaHoraNacimiento?.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@bebe.Apgar1</td>
+                                            <td>@bebe.Apgar5</td>
+                                            <td>@bebe.PesoGr</td>
+                                            <td>@bebe.TallaCm</td>
+                                            <td>@bebe.Observaciones</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-muted small">Los bebés se gestionan automáticamente al guardar.</p>
+                    }
+
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="Estado" class="form-check-input" type="checkbox" role="switch" />
+                        <label asp-for="Estado" class="form-check-label">Registro Activo</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save me-2"></i> Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // 1. Define los dropdowns
+            var embarazoSelect = $('#IdEmbarazo');
+            var encuentroSelect = $('#IdEncuentro');
+
+            // 2. Almacena el ID del encuentro que ya está guardado (si existe)
+            var initialEncuentroId = "@Model.IdEncuentro";
+
+            // 3. Define la función de carga
+            function cargarEncuentros() {
+                var selectedEmbarazoId = embarazoSelect.val();
+
+                encuentroSelect.empty();
+                encuentroSelect.attr('disabled', 'disabled');
+
+                if (selectedEmbarazoId) {
+                    encuentroSelect.append($('<option>', { value: '', text: 'Cargando...' }));
+
+                    $.ajax({
+                        url: '@Url.Action("GetEncuentrosPorEmbarazo", "Parto")',
+                        type: 'GET',
+                        data: { idEmbarazo: selectedEmbarazoId },
+                        success: function (data) {
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', { value: '', text: '-- Seleccione (Opcional) --' }));
+
+                            if (data.length > 0) {
+                                $.each(data, function (i, item) {
+                                    var option = $('<option>', {
+                                        value: item.idEncuentro,
+                                        text: item.encuentroDesc
+                                    });
+
+                                    // 4. Si este item es el que estaba guardado, lo seleccionamos
+                                    if (item.idEncuentro == initialEncuentroId) {
+                                        option.attr('selected', 'selected');
+                                    }
+
+                                    encuentroSelect.append(option);
+                                });
+                                encuentroSelect.removeAttr('disabled');
+                            } else {
+                                encuentroSelect.empty();
+                                encuentroSelect.append($('<option>', { value: '', text: 'No hay encuentros' }));
+                            }
+
+                            // 5. Limpiamos el ID inicial para que no interfiera si el usuario
+                            //    vuelve a cambiar el dropdown de embarazo
+                            initialEncuentroId = null;
+                        },
+                        error: function () {
+                            encuentroSelect.empty();
+                            encuentroSelect.append($('<option>', { value: '', text: 'Error al cargar' }));
+                        }
+                    });
+                } else {
+                    encuentroSelect.append($('<option>', { value: '', text: '-- Seleccione embarazo --' }));
+                }
+            }
+
+            // 6. Evento 'change' para el dropdown de Embarazo
+            embarazoSelect.on('change', cargarEncuentros);
+
+            // 7. Carga inicial (¡Importante para Editar!)
+            // Si hay un embarazo seleccionado al cargar la página,
+            // disparamos la función de carga inmediatamente.
+            if (embarazoSelect.val()) {
+                cargarEncuentros();
+            }
+        });
+    </script>
+}

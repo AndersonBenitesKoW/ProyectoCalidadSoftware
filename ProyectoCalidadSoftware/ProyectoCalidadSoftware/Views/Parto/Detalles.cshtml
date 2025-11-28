@@ -1,0 +1,171 @@
+﻿@model CapaEntidad.entParto
+@{
+    ViewData["Title"] = "Detalles del Parto";
+    string clase = Model.Estado ? "text-success" : "text-danger";
+    string texto = Model.Estado ? "Activo" : "Anulado";
+}
+<style>
+    .details-list dt {
+        font-weight: 600;
+    }
+
+    .details-list dd {
+        color: #333;
+    }</style>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="display-6"><i class="bi bi-gift-fill text-primary"></i> @ViewData["Title"]</h1>
+        <hr />
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Parto #@Model.IdParto</h5>
+                <span class="badge bg-@clase fs-6">@texto</span>
+            </div>
+            <div class="card-body">
+
+                <h5 class="mt-2"><i class="bi bi-info-circle me-2"></i>Información General</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Paciente</dt>
+                    <dd class="col-sm-9">@Model.NombrePaciente (Embarazo ID: @Model.IdEmbarazo)</dd>
+
+                    <dt class="col-sm-3">Encuentro Relacionado</dt>
+                    <dd class="col-sm-9">@(Model.IdEncuentro.HasValue? Model.IdEncuentro.Value.ToString() : "N/A")</dd>
+                    <dt class="col-sm-3">Profesional</dt>
+                    <dd class="col-sm-9">@Model.NombreProfesional</dd>
+                    <dt class="col-sm-3">Fecha del Parto</dt>
+                    <dd class="col-sm-9">@Model.Fecha.ToString("dd/MM/yyyy")</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-clock-history me-2"></i>Tiempos y Evaluación</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Hora Ingreso</dt>
+                    <dd class="col-sm-3">@Model.HoraIngreso?.ToString("HH:mm")</dd>
+                    <dt class="col-sm-3">Hora Inicio Trabajo</dt>
+                    <dd class="col-sm-3">@Model.HoraInicioTrabajo?.ToString("HH:mm")</dd>
+                    <dt class="col-sm-3">Hora Expulsión</dt>
+                    <dd class="col-sm-3">@Model.HoraExpulsion?.ToString("HH:mm")</dd>
+                    <dt class="col-sm-3">Membranas</dt>
+                    <dd class="col-sm-3">@Model.Membranas</dd>
+                    <dt class="col-sm-3">Tiempo Rotura (horas)</dt>
+                    <dd class="col-sm-3">@Model.TiempoRoturaMembranasHoras</dd>
+                    <dt class="col-sm-3">Líquido Amniótico</dt>
+                    <dd class="col-sm-3">@Model.NombreLiquido</dd>
+                    <dt class="col-sm-3">Aspecto Líquido</dt>
+                    <dd class="col-sm-3">@Model.AspectoLiquido</dd>
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-clipboard-pulse me-2"></i>Detalles del Parto</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Vía de Parto</dt>
+                    <dd class="col-sm-3">@Model.NombreViaParto</dd>
+                    <dt class="col-sm-3">Tipo de Parto</dt>
+                    <dd class="col-sm-3">@Model.TipoParto</dd>
+                    <dt class="col-sm-3">Analgesia</dt>
+                    <dd class="col-sm-3">@Model.Analgesia</dd>
+                    <dt class="col-sm-3">Posición Madre</dt>
+                    <dd class="col-sm-3">@Model.PosicionMadre</dd>
+                    <dt class="col-sm-3">Acompañante</dt>
+                    <dd class="col-sm-3">@(Model.Acompanante ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Lugar Nacimiento</dt>
+                    <dd class="col-sm-3">@Model.LugarNacimiento</dd>
+                    <dt class="col-sm-3">Duración 2da Etapa (min)</dt>
+                    <dd class="col-sm-3">@Model.DuracionSegundaEtapaMinutos</dd>
+                    <dt class="col-sm-3">Pérdida (ml)</dt>
+                    <dd class="col-sm-3">@Model.PerdidasML</dd>
+                    <dt class="col-sm-3">Episiotomía</dt>
+                    <dd class="col-sm-3">@(Model.Episiotomia ? "Sí" : "No")</dd>
+                    @if (!string.IsNullOrEmpty(Model.IndicacionCesarea))
+                    {
+                        <dt class="col-sm-3">Indicación Cesárea</dt>
+                        <dd class="col-sm-9">@Model.IndicacionCesarea</dd>
+                    }
+                </dl>
+
+                <h5 class="mt-4"><i class="bi bi-bandaid me-2"></i>Complicaciones</h5>
+                <dl class="row details-list bg-light p-3 rounded">
+                    <dt class="col-sm-3">Desgarro</dt>
+                    <dd class="col-sm-3">@Model.Desgarro</dd>
+                    <dt class="col-sm-3">Complicaciones Maternas</dt>
+                    <dd class="col-sm-3">@Model.ComplicacionesMaternas</dd>
+                    <dt class="col-sm-3">Tipo de Seguro</dt>
+                    <dd class="col-sm-3">@Model.SeguroTipo</dd>
+                    <dt class="col-sm-3">Hijos Previos</dt>
+                    <dd class="col-sm-3">@Model.NumeroHijosPrevios</dd>
+                    <dt class="col-sm-3">Cesáreas Previas</dt>
+                    <dd class="col-sm-3">@Model.NumeroCesareasPrevias</dd>
+                    <dt class="col-sm-3">Embarazo Múltiple</dt>
+                    <dd class="col-sm-3">@(Model.EmbarazoMultiple ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Número Gemelos</dt>
+                    <dd class="col-sm-3">@Model.NumeroGemelos</dd>
+                    <dt class="col-sm-3">Derivación</dt>
+                    <dd class="col-sm-3">@(Model.Derivacion ? "Sí" : "No")</dd>
+                    <dt class="col-sm-3">Observaciones</dt>
+                    <dd class="col-sm-9">@Model.Observaciones</dd>
+                </dl>
+
+                @if (Model.Intervenciones != null && Model.Intervenciones.Any())
+                {
+                    <h5 class="mt-4"><i class="bi bi-clipboard-check me-2"></i>Intervenciones</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Intervención</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var interv in Model.Intervenciones)
+                                {
+                                    <tr>
+                                        <td>@interv.Intervencion</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                @if (Model.Bebes != null && Model.Bebes.Any())
+                {
+                    <h5 class="mt-4"><i class="bi bi-baby me-2"></i>Bebés</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Sexo</th>
+                                    <th>Fecha/Hora Nacimiento</th>
+                                    <th>Apgar 1</th>
+                                    <th>Apgar 5</th>
+                                    <th>Peso (gr)</th>
+                                    <th>Talla (cm)</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bebe in Model.Bebes)
+                                {
+                                    <tr>
+                                        <td>@bebe.NumeroBebe</td>
+                                        <td>@bebe.Sexo</td>
+                                        <td>@bebe.FechaHoraNacimiento?.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@bebe.Apgar1</td>
+                                        <td>@bebe.Apgar5</td>
+                                        <td>@bebe.PesoGr</td>
+                                        <td>@bebe.TallaCm</td>
+                                        <td>@bebe.Observaciones</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+                <a asp-action="Editar" asp-route-id="@Model.IdParto" class="btn btn-warning"><i class="bi bi-pencil-fill"></i> Editar</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,16 +1,18 @@
 ﻿using CapaEntidad;
 using CapaLogica;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN")] // 👈 SOLO ADMIN
     public class FactorRiesgoCatController : Controller
     {
         // GET: /FactorRiesgoCat/Listar
         public IActionResult Listar()
         {
             var lista = logFactorRiesgoCat.Instancia.ListarFactorRiesgoCat();
-            return View(lista); // Vista: Listar.cshtml (Model: IEnumerable<entFactorRiesgoCat>)
+            return View(lista);
         }
 
         // GET: /FactorRiesgoCat/Insertar
@@ -33,7 +35,8 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (!ModelState.IsValid) return View(entidad);
 
                 bool ok = logFactorRiesgoCat.Instancia.InsertarFactorRiesgoCat(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (ok)
+                    return RedirectToAction(nameof(Listar));
 
                 ViewBag.Error = "No se pudo insertar la categoría de factor de riesgo.";
                 return View(entidad);
@@ -69,7 +72,8 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (!ModelState.IsValid) return View(entidad);
 
                 bool ok = logFactorRiesgoCat.Instancia.ActualizarFactorRiesgoCat(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (ok)
+                    return RedirectToAction(nameof(Listar));
 
                 ViewBag.Error = "No se pudo actualizar la categoría.";
                 return View(entidad);
@@ -88,7 +92,8 @@ namespace ProyectoCalidadSoftware.Controllers
             try
             {
                 bool ok = logFactorRiesgoCat.Instancia.EliminarFactorRiesgoCat(id);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (ok)
+                    return RedirectToAction(nameof(Listar));
 
                 TempData["Error"] = "No se pudo eliminar la categoría.";
                 return RedirectToAction(nameof(Listar));
@@ -99,9 +104,5 @@ namespace ProyectoCalidadSoftware.Controllers
                 return RedirectToAction(nameof(Listar));
             }
         }
-
-
-
-
     }
 }

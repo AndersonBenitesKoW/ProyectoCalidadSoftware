@@ -1,10 +1,8 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
+using System.Transactions;
 
 namespace CapaLogica
 {
@@ -19,20 +17,94 @@ namespace CapaLogica
         private logSeguimientoPuerperio() { }
         #endregion
 
-        // LISTAR
-        public List<entSeguimientoPuerperio> ListarSeguimientoPuerperio()
+        public List<entSeguimientoPuerperio> ListarSeguimiento(bool estado)
         {
-            return DA_SeguimientoPuerperio.Instancia.Listar();
+            try
+            {
+                return DA_SeguimientoPuerperio.Instancia.Listar(estado);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar seguimientos: " + ex.Message, ex);
+            }
         }
 
-        // INSERTAR
-        public bool InsertarSeguimientoPuerperio(entSeguimientoPuerperio entidad)
+        public bool InsertarSeguimiento(entSeguimientoPuerperio entidad)
         {
-            return DA_SeguimientoPuerperio.Instancia.Insertar(entidad);
+            using (var scope = new TransactionScope())
+            {
+                try
+                {
+                    if (entidad.IdEmbarazo <= 0)
+                        throw new ApplicationException("El IdEmbarazo es obligatorio.");
+
+                    entidad.Estado = true;
+
+                    // Crear encuentro automáticamente para el seguimiento puerperio
+                    short idTipoEncuentro = logTipoEncuentro.Instancia.ObtenerIdPorCodigo("PNC");
+                    if (idTipoEncuentro == 0)
+                        throw new ApplicationException("Tipo de encuentro 'PNC' no encontrado.");
+
+                    var encuentro = new entEncuentro
+                    {
+                        IdEmbarazo = entidad.IdEmbarazo,
+                        IdProfesional = entidad.IdProfesional,
+                        IdTipoEncuentro = idTipoEncuentro,
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado",
+                        Notas = $"Encuentro generado automáticamente al registrar el seguimiento puerperio - Fecha: {entidad.Fecha.ToShortDateString()}"
+                    };
+
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(encuentro);
+                    entidad.IdEncuentro = idEncuentro;
+
+                    // Insertar el seguimiento
+                    bool resultado = DA_SeguimientoPuerperio.Instancia.Insertar(entidad);
+
+                    scope.Complete();
+                    return resultado;
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Error al insertar seguimiento: " + ex.Message, ex);
+                }
+            }
         }
-        public bool Inhabilitar(int idPuerperio)
-            => DA_SeguimientoPuerperio.Instancia.Inhabilitar(idPuerperio);
 
+        public bool EditarSeguimiento(entSeguimientoPuerperio entidad)
+        {
+            try
+            {
+                return DA_SeguimientoPuerperio.Instancia.Editar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al editar seguimiento: " + ex.Message, ex);
+            }
+        }
 
+        public entSeguimientoPuerperio? BuscarSeguimiento(int id)
+        {
+            try
+            {
+                return DA_SeguimientoPuerperio.Instancia.BuscarPorId(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al buscar seguimiento: " + ex.Message, ex);
+            }
+        }
+
+        public bool InhabilitarSeguimiento(int id)
+        {
+            try
+            {
+                return DA_SeguimientoPuerperio.Instancia.Inhabilitar(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al inhabilitar seguimiento: " + ex.Message, ex);
+            }
+        }
     }
 }

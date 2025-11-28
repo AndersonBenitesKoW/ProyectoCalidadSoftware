@@ -1,10 +1,8 @@
 ﻿using CapaAccesoDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapaEntidad;
+using System.Transactions;
 
 namespace CapaLogica
 {
@@ -19,24 +17,138 @@ namespace CapaLogica
         private logControlPrenatal() { }
         #endregion
 
-        // LISTAR
         public List<entControlPrenatal> ListarControlPrenatal()
         {
-            return DA_ControlPrenatal.Instancia.Listar();
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Listar();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al listar controles: " + ex.Message, ex);
+            }
         }
 
-        // INSERTAR
-        public bool InsertarControlPrenatal(entControlPrenatal entidad)
+        public int InsertarControlPrenatal(entControlPrenatal entidad)
         {
-            return DA_ControlPrenatal.Instancia.Insertar(entidad);
+            using (var scope = new TransactionScope())
+            {
+                try
+                {
+                    // Aquí puedes añadir validaciones de negocio
+                    if (entidad.IdEmbarazo <= 0)
+                        throw new ApplicationException("El IdEmbarazo es obligatorio.");
+                    if (entidad.Fecha > DateTime.Now.AddDays(1))
+                        throw new ApplicationException("La fecha del control no puede ser futura.");
+
+                    entidad.Estado = true; // Aseguramos que se inserte como activo
+
+                    // Crear encuentro automáticamente para el control prenatal
+                    var encuentro = new entEncuentro
+                    {
+                        IdEmbarazo = entidad.IdEmbarazo,
+                        IdProfesional = entidad.IdProfesional,
+                        IdTipoEncuentro = 1, // Asumiendo que 1 es ANC (Atención prenatal)
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado",
+                        Notas = $"Control prenatal registrado - Fecha: {entidad.Fecha.ToShortDateString()}"
+                    };
+
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(encuentro);
+                    entidad.IdEncuentro = idEncuentro;
+
+                    // Insertar el control prenatal
+                    int idControl = DA_ControlPrenatal.Instancia.Insertar(entidad);
+
+                    scope.Complete();
+                    return idControl;
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Error al insertar control: " + ex.Message, ex);
+                }
+            }
         }
 
-        public bool Inhabilitar(int id)
+        public bool EditarControlPrenatal(entControlPrenatal entidad)
         {
-            return DA_ControlPrenatal.Instancia.Inhabilitar(id);
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Editar(entidad);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al editar control: " + ex.Message, ex);
+            }
         }
 
+        public entControlPrenatal? BuscarControlPrenatal(int id)
+        {
+            try
+            {
+                return DA_ControlPrenatal.Instancia.BuscarPorId(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al buscar control: " + ex.Message, ex);
+            }
+        }
 
+        public bool InhabilitarControlPrenatal(int id)
+        {
+            try
+            {
+                return DA_ControlPrenatal.Instancia.Inhabilitar(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al inhabilitar control: " + ex.Message, ex);
+            }
+        }
 
+        public int RegistrarControlPrenatalConEncuentro(entControlPrenatal control, int idProfesional)
+        {
+            Console.WriteLine("LOG LOGICA: Iniciando RegistrarControlPrenatalConEncuentro");
+            Console.WriteLine($"LOG LOGICA: IdEmbarazo={control.IdEmbarazo}, idProfesional={idProfesional}");
+            using (var scope = new TransactionScope())
+            {
+                try
+                {
+                    // 1. Obtener IdTipoEncuentro para "ANC"
+                    short idTipoEncuentro = logTipoEncuentro.Instancia.ObtenerIdPorCodigo("ANC");
+                    Console.WriteLine($"LOG LOGICA: idTipoEncuentro={idTipoEncuentro}");
+                    if (idTipoEncuentro == 0)
+                        throw new ApplicationException("Tipo de encuentro 'ANC' no encontrado.");
+
+                    // 2. Crear Encuentro
+                    var enc = new entEncuentro
+                    {
+                        IdEmbarazo = control.IdEmbarazo,
+                        IdProfesional = idProfesional,
+                        IdTipoEncuentro = idTipoEncuentro,
+                        FechaHoraInicio = DateTime.UtcNow,
+                        Estado = "Cerrado"
+                    };
+                    int idEncuentro = logEncuentro.Instancia.InsertarEncuentro(enc);
+                    Console.WriteLine($"LOG LOGICA: idEncuentro insertado={idEncuentro}");
+
+                    // 3. Asignar el IdEncuentro al control
+                    control.IdEncuentro = idEncuentro;
+
+                    // 4. Insertar el Control Prenatal
+                    int idControl = DA_ControlPrenatal.Instancia.Insertar(control);
+                    Console.WriteLine($"LOG LOGICA: idControl insertado={idControl}");
+
+                    scope.Complete();
+                    Console.WriteLine("LOG LOGICA: Transacción completada");
+                    return idControl;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"LOG LOGICA: Error en RegistrarControlPrenatalConEncuentro: {ex.Message}");
+                    throw new ApplicationException("Error al registrar control prenatal con encuentro: " + ex.Message, ex);
+                }
+            }
+        }
     }
 }

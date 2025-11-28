@@ -1,48 +1,238 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ProyectoCalidadSoftware</title>
+    <title>@ViewData["Title"] - Clínica Obstétrica</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoCalidadSoftware.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProyectoCalidadSoftware</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+    <nav class="navbar navbar-expand-lg navbar-custom shadow-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <div class="brand-icon me-2">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="brand-text">Clínica Obstétrica</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon-custom"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                @* Menú principal solo para roles internos (no PACIENTE) *@
+                @if (!User.IsInRole("PACIENTE"))
+                {
+                    <ul class="navbar-nav mx-auto">
+
+                        @* Inicio: disponible para todos los roles internos *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-link-custom" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                        @* Gestión Paciente: ADMIN, PERSONAL_SALUD, SECRETARIA *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD") || User.IsInRole("SECRETARIA"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownGestion" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-friends me-1"></i>Gestión Paciente
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Paciente" asp-action="Listar">
+                                            <i class="fas fa-list me-2"></i>Listar Pacientes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Paciente" asp-action="Insertar">
+                                            <i class="fas fa-plus-circle me-2"></i>Nuevo Paciente
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="AntecedenteObstetrico" asp-action="Listar">
+                                            <i class="fas fa-file-medical me-2"></i>Antecedentes Obstétricos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* Gestión Encuentro: ADMIN, PERSONAL_SALUD, SECRETARIA *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD") || User.IsInRole("SECRETARIA"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownGestionEncuentro" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-friends me-1"></i>Gestión Encuentro
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Encuentro" asp-action="Listar">
+                                            <i class="fas fa-file-medical-alt me-2"></i>Encuentros
+                                        </a>
+                                    </li>
+
+                                    @* 
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Encuentro" asp-action="Insertar">
+                                            <i class="fas fa-handshake me-2"></i>Registrar Encuentro
+                                        </a>
+                                    </li>
+                                    *@
+                                </ul>
+                            </li>
+                        }
+
+                        @* Core: ADMIN, PERSONAL_SALUD, SECRETARIA (para que al menos SECRETARIA pueda usar Citas) *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD") || User.IsInRole("SECRETARIA"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownCore" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-heartbeat me-1"></i>Core
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Cita" asp-action="Listar">
+                                            <i class="fas fa-calendar-check me-2"></i>Citas Medicas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="ControlPrenatal" asp-action="Listar">
+                                            <i class="fas fa-stethoscope me-2"></i>Controles Prenatales
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SeguimientoPuerperio" asp-action="Listar">
+                                            <i class="fas fa-heart me-2"></i>Seg. Puerperio
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Parto" asp-action="Index">
+                                            <i class="fas fa-birthday-cake me-2"></i>Listar Partos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* Ayudas Diagnósticas: ADMIN, PERSONAL_SALUD, LABORATORIO *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD") || User.IsInRole("LABORATORIO"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" asp-controller="AyudaDiagnostica" asp-action="Listar">
+                                    <i class="fas fa-microscope me-2"></i>Ayudas Diagnósticas
+                                </a>
+                            </li>
+                        }
+
+                        @* Resultados Diagnósticos: ADMIN, PERSONAL_SALUD, LABORATORIO *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD") || User.IsInRole("LABORATORIO"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" asp-controller="ResultadoDiagnostico" asp-action="Listar">
+                                    <i class="fas fa-file-medical me-2"></i>Resultados Diagnósticos
+                                </a>
+                            </li>
+                        }
+
+                        @* Atención Clínica (Embarazo): ADMIN, PERSONAL_SALUD *@
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("PERSONAL_SALUD"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownClinica" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-heart-pulse me-1"></i>Atención Clínica
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-header">Embarazo</li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Embarazo" asp-action="Index">
+                                            <i class="fas fa-baby me-2"></i>Listar Embarazos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Embarazo" asp-action="RegistrarEmbarazo">
+                                            <i class="fas fa-plus-circle me-2"></i>Registrar Embarazo
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* Administración: solo ADMIN *@
+                        @if (User.IsInRole("ADMIN"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-custom" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-cogs me-1"></i>Administración
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                            <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="ProfesionalSalud" asp-action="Index">
+                                            <i class="fas fa-user-md me-2"></i>Gestionar Personal
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
                     </ul>
+                }
+
+                <div class="navbar-actions d-flex gap-2">
+                    @* Bloque de acciones extra solo para ADMIN *@
+                    @if (User.IsInRole("ADMIN"))
+                    {
+                        <a class="btn btn-cta-primary" asp-controller="Portal" asp-action="Index">
+                            <i class="fas fa-globe me-1"></i>Portal Público
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-cta-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-cog me-1"></i>Admin
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Usuario" asp-action="Index">
+                                        <i class="fas fa-users me-2"></i>Gestionar Usuarios
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+
+                    @* Cerrar sesión disponible para cualquier usuario autenticado *@
+                    <form asp-controller="Portal" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-cta-outline">
+                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
+    </nav>
+
+    <div class="public-body" style="padding-top: 80px;">
+        @RenderBody()
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="bg-gradient-primary text-white py-4 mt-5">
         <div class="container">
-            &copy; 2025 - ProyectoCalidadSoftware - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

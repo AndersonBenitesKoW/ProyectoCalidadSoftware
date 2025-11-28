@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Actualizar Antecedente Obstétrico";
+    var pacientes = ViewBag.PacientesModal as IEnumerable<CapaEntidad.entPaciente>;
 }
 
 <div class="form-container">
@@ -14,21 +15,26 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="IdAntecedente" class="control-label">
-                        <i class="bi bi-hash"></i> ID Antecedente
-                    </label>
-                    <input asp-for="IdAntecedente" class="form-control" readonly />
-                    <span asp-validation-for="IdAntecedente" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group mb-3">
                     <label asp-for="IdPaciente" class="control-label">
-                        <i class="bi bi-person"></i> ID Paciente
+                        <i class="bi bi-person"></i> Paciente
                     </label>
-                    <input asp-for="IdPaciente" class="form-control" />
+                    <div class="input-group">
+                        <select asp-for="IdPaciente" class="form-select">
+                            <option value="">-- Seleccione Paciente --</option>
+                            @if (pacientes != null)
+                            {
+                                foreach (var p in pacientes)
+                                {
+                                    <option value="@p.IdPaciente">@(p.Nombres + " " + p.Apellidos + " - " + p.DNI)</option>
+                                }
+                            }
+                        </select>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPaciente">
+                            Buscar
+                        </button>
+                    </div>
                     <span asp-validation-for="IdPaciente" class="text-danger"></span>
                 </div>
             </div>
@@ -40,7 +46,7 @@
                     <label asp-for="Menarquia" class="control-label">
                         <i class="bi bi-calendar-event"></i> Menarquía
                     </label>
-                    <input asp-for="Menarquia" class="form-control" type="number" />
+                    <input asp-for="Menarquia" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span asp-validation-for="Menarquia" class="text-danger"></span>
                 </div>
             </div>
@@ -49,7 +55,7 @@
                     <label asp-for="CicloDias" class="control-label">
                         <i class="bi bi-clock"></i> Ciclo (Días)
                     </label>
-                    <input asp-for="CicloDias" class="form-control" type="number" />
+                    <input asp-for="CicloDias" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <span asp-validation-for="CicloDias" class="text-danger"></span>
                 </div>
             </div>
@@ -109,6 +115,93 @@
     </form>
 </div>
 
+<!-- ========= MODAL: PACIENTE ========= -->
+<div class="modal fade" id="modalPaciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button" id="btnBuscarPaciente" class="btn btn-primary btn-sm me-2">
+                        Buscar
+                    </button>
+                    <div style="max-width:150px;">
+                        <input type="text" id="buscarPaciente" class="form-control form-control-sm text-end" placeholder="DNI" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    </div>
+                </div>
+
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>DNI</th>
+                            <th>Paciente</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (pacientes != null)
+                        {
+                            foreach (var p in pacientes)
+                            {
+                                <tr>
+                                    <td>@p.IdPaciente</td>
+                                    <td>@p.DNI</td>
+                                    <td>@(p.Nombres + " " + p.Apellidos)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary btnSeleccionarPaciente" data-id="@p.IdPaciente" data-nombre="@(p.Nombres + " " + p.Apellidos + " - " + p.DNI)">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selección desde el modal
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnSeleccionarPaciente')) {
+                    const id = e.target.getAttribute('data-id');
+                    document.getElementById('IdPaciente').value = id;
+
+                    const modalEl = document.getElementById('modalPaciente');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            });
+
+            // Buscar Paciente por DNI
+            const btnBuscar = document.getElementById("btnBuscarPaciente");
+            const txtBuscar = document.getElementById("buscarPaciente");
+            if (btnBuscar && txtBuscar) {
+                btnBuscar.addEventListener("click", function () {
+                    const filtro = txtBuscar.value.trim();
+                    const filas = document.querySelectorAll("#modalPaciente tbody tr");
+
+                    filas.forEach(fila => {
+                        const dni = fila.children[1].innerText.trim();
+                        fila.style.display = (filtro === "" || dni === filtro) ? "" : "none";
+                    });
+                });
+            }
+        });
+    </script>
 }

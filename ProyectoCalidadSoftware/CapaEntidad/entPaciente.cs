@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entPaciente
     {
@@ -15,5 +9,8 @@ namespace CapaEntidad
         public string? DNI { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public bool Estado { get; set; }
+        public string NombreCompleto => $"{Apellidos}, {Nombres}";
+        public string EmailPrincipal { get; set; }
+        public string TelefonoPrincipal { get; set; }
     }
 }

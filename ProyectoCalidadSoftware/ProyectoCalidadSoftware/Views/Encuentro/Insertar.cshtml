@@ -1,0 +1,337 @@
+﻿@model CapaEntidad.entEncuentro
+
+@{
+    ViewData["Title"] = "Registrar Nuevo Encuentro";
+
+    var embarazos = ViewBag.EmbarazosModal as IEnumerable<CapaEntidad.entEmbarazo>;
+    var profesionales = ViewBag.ProfesionalesModal as IEnumerable<CapaEntidad.entProfesionalSalud>;
+}
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="card shadow-sm border-light-subtle">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-medical me-2"></i> @ViewData["Title"]</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form asp-action="Insertar" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <!-- === EMBARAZO: select + modal === -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-heart-pulse me-2"></i>Embarazo (Paciente)
+                        </label>
+                        <div class="input-group">
+                            <select asp-for="IdEmbarazo" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (embarazos != null)
+                                {
+                                    foreach (var e in embarazos)
+                                    {
+                                        <option value="@e.IdEmbarazo">@e.IdEmbarazo</option>
+                                    }
+                                }
+                            </select>
+                            <button type="button"
+                                    class="btn btn-outline-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEmbarazo">
+                                Buscar
+                            </button>
+                        </div>
+                        <span asp-validation-for="IdEmbarazo" class="text-danger small"></span>
+                    </div>
+
+                    <!-- === TIPO DE ENCUENTRO: sigue como combobox === -->
+                    <div class="form-floating mb-3">
+                        <select asp-for="IdTipoEncuentro"
+                                class="form-select"
+                                asp-items="@ViewBag.ListaTiposEncuentro"
+                                required>
+                            <option value="">-- Seleccione el Tipo de Encuentro --</option>
+                        </select>
+                        <label asp-for="IdTipoEncuentro">
+                            <i class="bi bi-clipboard-pulse me-2"></i>Tipo de Encuentro
+                        </label>
+                        <span asp-validation-for="IdTipoEncuentro" class="text-danger small"></span>
+                    </div>
+
+                    <!-- === PROFESIONAL: select + modal === -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud
+                        </label>
+                        <div class="input-group">
+                            <select asp-for="IdProfesional" class="form-select">
+                                <option value="">-- Seleccione --</option>
+                                @if (profesionales != null)
+                                {
+                                    foreach (var p in profesionales)
+                                    {
+                                        <option value="@p.IdProfesional">@p.IdProfesional</option>
+                                    }
+                                }
+                            </select>
+                            <button type="button"
+                                    class="btn btn-outline-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalProfesional">
+                                Buscar
+                            </button>
+                        </div>
+                        <span asp-validation-for="IdProfesional" class="text-danger small"></span>
+                    </div>
+
+                    <!-- NOTAS -->
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="Notas"
+                                  class="form-control"
+                                  placeholder="Notas"
+                                  style="height: 120px"></textarea>
+                        <label asp-for="Notas">
+                            <i class="bi bi-sticky me-2"></i>Notas (Opcional)
+                        </label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Listar" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a la Lista
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i> Registrar Encuentro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== MODAL: EMBARAZO ================== -->
+<div class="modal fade" id="modalEmbarazo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Embarazo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="d-flex justify-content-end mb-2">
+
+                <!-- Botón CONFIRMAR búsqueda -->
+                <button type="button"
+                        id="btnBuscarEmbarazo"
+                        class="btn btn-primary btn-sm me-2">
+                    Buscar
+                </button>
+
+                <!-- Input de ID (cortito, a la derecha) -->
+                <div style="max-width: 150px;">
+                    <input type="text"
+                           id="buscarEmbarazo"
+                           class="form-control form-control-sm text-end"
+                           placeholder="DNI"
+                           maxlength="8"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+
+            </div>
+
+
+            <div class="modal-body">
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>DNI</th>
+                            <th>Paciente</th>
+                            <th>FUR</th>
+                            <th>FPP</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (embarazos != null)
+                        {
+                            foreach (var e in embarazos)
+                            {
+                                <tr>
+                                    <td>@e.IdEmbarazo</td>
+                                    <td>@e.DNIPaciente</td>
+                                    <td>@e.NombrePaciente</td>
+                                    <td>@e.FUR?.ToString("dd/MM/yyyy")</td>
+                                    <td>@e.FPP?.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btnSeleccionarEmbarazo"
+                                                data-id="@e.IdEmbarazo"
+                                                data-nombre="@e.NombrePaciente">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== MODAL: PROFESIONAL ================== -->
+<div class="modal fade" id="modalProfesional" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Profesional de Salud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="d-flex justify-content-end mb-2">
+
+                <button type="button"
+                        id="btnBuscarProfesional"
+                        class="btn btn-primary btn-sm me-2">
+                    Buscar
+                </button>
+
+                <div style="max-width: 150px;">
+                    <input type="number"
+                           id="buscarProfesional"
+                           class="form-control form-control-sm text-end"
+                           placeholder="ID">
+                </div>
+
+            </div>
+
+
+            <div class="modal-body">
+                <table class="table table-hover table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>CMP</th>
+                            <th>Nombre</th>
+                            <th>Especialidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (profesionales != null)
+                        {
+                            foreach (var p in profesionales)
+                            {
+                                <tr>
+                                    <td>@p.IdProfesional</td>
+                                    <td>@p.CMP</td>
+                                    <td>@(p.Nombres + " " + p.Apellidos)</td>
+                                    <td>@p.Especialidad</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btnSeleccionarProfesional"
+                                                data-id="@p.IdProfesional"
+                                                data-nombre="@(p.Nombres + " " + p.Apellidos)">
+                                            Seleccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // CLICK: selección de Embarazo / Profesional (delegado)
+            document.addEventListener('click', function (e) {
+
+                // Selección de Embarazo
+                if (e.target.classList.contains('btnSeleccionarEmbarazo')) {
+                    const id     = e.target.getAttribute('data-id');
+
+                    document.getElementById('IdEmbarazo').value = id;
+
+                    const modalEl = document.getElementById('modalEmbarazo');
+                    const modal   = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+
+                // Selección de Profesional
+                if (e.target.classList.contains('btnSeleccionarProfesional')) {
+                    const id     = e.target.getAttribute('data-id');
+
+                    document.getElementById('IdProfesional').value = id;
+
+                    const modalEl = document.getElementById('modalProfesional');
+                    const modal   = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            });
+
+            // === BOTÓN BUSCAR EMBARAZO POR ID ===
+            const btnEmb = document.getElementById("btnBuscarEmbarazo");
+            const txtEmb = document.getElementById("buscarEmbarazo");
+
+            if (btnEmb && txtEmb) {
+                btnEmb.addEventListener("click", function () {
+                    const filtro = txtEmb.value.trim();
+                    const filas = document.querySelectorAll("#modalEmbarazo tbody tr");
+
+                    filas.forEach(fila => {
+                        const dni = fila.children[1].innerText.trim();
+                        // muestra solo el DNI exacto, o todo si está vacío
+                        fila.style.display = (filtro === "" || dni === filtro) ? "" : "none";
+                    });
+                });
+            }
+
+            // === BOTÓN BUSCAR PROFESIONAL POR ID ===
+            const btnProf = document.getElementById("btnBuscarProfesional");
+            const txtProf = document.getElementById("buscarProfesional");
+
+            if (btnProf && txtProf) {
+                btnProf.addEventListener("click", function () {
+                    const filtro = txtProf.value.trim();
+                    const filas = document.querySelectorAll("#modalProfesional tbody tr");
+
+                    filas.forEach(fila => {
+                        const id = fila.children[0].innerText.trim();
+                        fila.style.display = (filtro === "" || id === filtro) ? "" : "none";
+                    });
+                });
+            }
+        });
+    </script>
+}
+
+

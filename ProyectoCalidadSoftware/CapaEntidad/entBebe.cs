@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entBebe
     {
         public int IdBebe { get; set; }
         public int IdParto { get; set; }
+        public int NumeroBebe { get; set; } = 1;
         public string EstadoBebe { get; set; } = null!;
         public string? Sexo { get; set; } // 'F' / 'M'
+        public DateTime? FechaHoraNacimiento { get; set; }
         public byte? Apgar1 { get; set; }
         public byte? Apgar5 { get; set; }
         public int? PesoGr { get; set; }

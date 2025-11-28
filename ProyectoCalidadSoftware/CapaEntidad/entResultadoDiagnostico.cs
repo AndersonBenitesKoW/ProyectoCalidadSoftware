@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CapaEntidad
+﻿namespace CapaEntidad
 {
     public class entResultadoDiagnostico
     {
@@ -14,5 +8,17 @@ namespace CapaEntidad
         public string? Resumen { get; set; }
         public bool Critico { get; set; }
         public string Estado { get; set; } = null!;
+
+        // --- Propiedades de JOINs para mostrar información del control prenatal ---
+        public int? IdControlPrenatal { get; set; }
+        public string? NombrePaciente { get; set; }
+        public string? NombreProfesional { get; set; }
+        public DateTime? FechaControlPrenatal { get; set; }
+        public string? DescripcionAyuda { get; set; }
+        public string? TipoAyuda { get; set; }
+        public bool? Urgente { get; set; }
+
+        // Detalle de parámetros del examen
+        public List<entResultadoItem> Items { get; set; } = new();
     }
 }

@@ -1,9 +1,4 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 namespace CapaLogica
 {
@@ -28,6 +23,12 @@ namespace CapaLogica
         public bool InsertarResultadoItem(entResultadoItem entidad)
         {
             return DA_ResultadoItem.Instancia.Insertar(entidad);
+        }
+
+        // ELIMINAR POR RESULTADO
+        public bool EliminarResultadoItemPorResultado(int idResultado)
+        {
+            return DA_ResultadoItem.Instancia.EliminarPorResultado(idResultado);
         }
 
     }

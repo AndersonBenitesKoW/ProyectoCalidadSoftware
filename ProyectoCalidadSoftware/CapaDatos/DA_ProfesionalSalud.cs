@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CapaEntidad;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using CapaEntidad;
 
 namespace CapaAccesoDatos
 {
@@ -18,78 +18,63 @@ namespace CapaAccesoDatos
 
         #region Métodos
 
-        public List<entProfesionalSalud> Listar()
+        public List<entProfesionalSalud> Listar(bool estado)
         {
             List<entProfesionalSalud> lista = new List<entProfesionalSalud>();
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             using (SqlCommand cmd = new SqlCommand("sp_ListarProfesionalSalud", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Estado", estado);
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        var profesional = new entProfesionalSalud
+                        lista.Add(new entProfesionalSalud
                         {
                             IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
+                            CMP = dr["CMP"].ToString(), // CMP nunca es nulo
                             IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
-                            CMP = dr["CMP"].ToString(),
-                            Especialidad = dr["Especialidad"].ToString(),
                             Nombres = dr["Nombres"].ToString(),
                             Apellidos = dr["Apellidos"].ToString(),
-                            Estado = Convert.ToBoolean(dr["Estado"])
-                        };
-
-                        lista.Add(profesional);
+                            Especialidad = dr["Especialidad"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            // --- CAMPOS AÑADIDOS ---
+                            EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                            TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                        });
                     }
                 }
             }
-
             return lista;
         }
 
-        public bool Insertar(entProfesionalSalud entidad)
+        public int Insertar(entProfesionalSalud entidad)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_InsertarProfesionalSalud", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombres", entidad.Nombres);
-                cmd.Parameters.AddWithValue("@Apellidos", entidad.Apellidos);
+                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Apellidos", (object)entidad.Apellidos ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Especialidad", (object)entidad.Especialidad ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Colegiatura", entidad.CMP);
-                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+                cmd.Parameters.AddWithValue("@CMP", entidad.CMP);
+
+                // --- PARÁMETROS AÑADIDOS ---
+                cmd.Parameters.AddWithValue("@EmailPrincipal", entidad.EmailPrincipal);
+                cmd.Parameters.AddWithValue("@TelefonoPrincipal", entidad.TelefonoPrincipal);
 
                 cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                object idGenerado = cmd.ExecuteScalar(); // SP devuelve el nuevo ID
+                return (idGenerado != null && idGenerado != DBNull.Value) ? Convert.ToInt32(idGenerado) : 0;
             }
         }
 
-        public bool Editar(int idProfesional, string nombres, string apellidos, string especialidad, string colegiatura, bool estado)
+        public entProfesionalSalud BuscarPorId(int idProfesional)
         {
-            using (SqlConnection cn = Conexion.Instancia.Conectar())
-            {
-                SqlCommand cmd = new SqlCommand("sp_EditarProfesionalSalud", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@IdProfesional", idProfesional);
-                cmd.Parameters.AddWithValue("@Nombres", (object)nombres ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Apellidos", (object)apellidos ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Especialidad", (object)especialidad ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Colegiatura", (object)colegiatura ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Estado", estado);
-
-                cn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
-
-        public DataTable BuscarPorId(int idProfesional)
-        {
-            DataTable dt = new DataTable();
+            entProfesionalSalud profesional = null;
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
                 SqlCommand cmd = new SqlCommand("sp_BuscarProfesionalSalud", cn);
@@ -97,17 +82,60 @@ namespace CapaAccesoDatos
                 cmd.Parameters.AddWithValue("@IdProfesional", idProfesional);
 
                 cn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    profesional = new entProfesionalSalud
+                    {
+                        IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
+                        IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
+                        Nombres = dr["Nombres"].ToString(),
+                        Apellidos = dr["Apellidos"].ToString(),
+                        Especialidad = dr["Especialidad"].ToString(),
+                        Estado = Convert.ToBoolean(dr["Estado"]),
+                        CMP = dr["CMP"].ToString(),
+                        // --- CAMPOS AÑADIDOS ---
+                        EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                        TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
+                    };
+                }
             }
-            return dt;
+            return profesional;
         }
 
+        public bool Editar(entProfesionalSalud entidad)
+        {
+            using (SqlConnection cn = Conexion.Instancia.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand("sp_EditarProfesionalSalud", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@IdProfesional", entidad.IdProfesional);
+                cmd.Parameters.AddWithValue("@Nombres", (object)entidad.Nombres ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Apellidos", (object)entidad.Apellidos ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Especialidad", (object)entidad.Especialidad ?? DBNull.Value);
+
+                // --- CORRECCIÓN DE PARÁMETRO ---
+                cmd.Parameters.AddWithValue("@CMP", (object)entidad.CMP ?? DBNull.Value); // Era @Colegiatura
+
+                cmd.Parameters.AddWithValue("@Estado", entidad.Estado);
+
+                // --- PARÁMETROS AÑADIDOS ---
+                cmd.Parameters.AddWithValue("@EmailPrincipal", (object)entidad.EmailPrincipal ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TelefonoPrincipal", (object)entidad.TelefonoPrincipal ?? DBNull.Value);
+
+                cn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        // --- MÉTODO NUEVO ---
         public bool Eliminar(int idProfesional)
         {
             using (SqlConnection cn = Conexion.Instancia.Conectar())
             {
-                SqlCommand cmd = new SqlCommand("sp_EliminarProfesionalSalud", cn);
+                SqlCommand cmd = new SqlCommand("sp_InhabilitarProfesionalSalud", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdProfesional", idProfesional);
 
@@ -116,14 +144,14 @@ namespace CapaAccesoDatos
             }
         }
 
-        public entProfesionalSalud VerificarProfesionalPorUsuario(int idUsuario)
+        public entProfesionalSalud BuscarPorCMP(string cmp)
         {
             entProfesionalSalud profesional = null;
-
             using (SqlConnection cn = Conexion.Instancia.Conectar())
-            using (SqlCommand cmd = new SqlCommand("SELECT IdProfesional, IdUsuario, CMP, Especialidad, Nombres, Apellidos, Estado FROM ProfesionalSalud WHERE IdUsuario = @IdUsuario AND Estado = 1", cn))
             {
-                cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                SqlCommand cmd = new SqlCommand("sp_BuscarProfesionalPorCMP", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CMP", cmp);
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -134,21 +162,21 @@ namespace CapaAccesoDatos
                         {
                             IdProfesional = Convert.ToInt32(dr["IdProfesional"]),
                             IdUsuario = dr["IdUsuario"] != DBNull.Value ? (int?)Convert.ToInt32(dr["IdUsuario"]) : null,
-                            CMP = dr["CMP"].ToString(),
-                            Especialidad = dr["Especialidad"].ToString(),
                             Nombres = dr["Nombres"].ToString(),
                             Apellidos = dr["Apellidos"].ToString(),
-                            Estado = Convert.ToBoolean(dr["Estado"])
+                            Especialidad = dr["Especialidad"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            CMP = dr["CMP"].ToString(),
+                            EmailPrincipal = dr["EmailPrincipal"].ToString(),
+                            TelefonoPrincipal = dr["TelefonoPrincipal"].ToString()
                         };
                     }
                 }
             }
-
             return profesional;
         }
 
+
         #endregion
     }
-
-
 }

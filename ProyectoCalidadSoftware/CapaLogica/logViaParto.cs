@@ -1,36 +1,19 @@
 ﻿using CapaAccesoDatos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
+using System.Collections.Generic;
 
 namespace CapaLogica
 {
     public class logViaParto
     {
-
         #region Singleton
-        private static readonly logViaParto UnicaInstancia = new logViaParto();
-        public static logViaParto Instancia
-        {
-            get { return logViaParto.UnicaInstancia; }
-        }
-        private logViaParto() { }
+        private static readonly logViaParto _instancia = new logViaParto();
+        public static logViaParto Instancia { get { return _instancia; } }
         #endregion
 
-        // LISTAR
-        public List<entViaParto> ListarViaParto()
+        public List<entViaParto> ListarViasParto()
         {
             return DA_ViaParto.Instancia.Listar();
         }
-
-        // INSERTAR
-        public bool InsertarViaParto(entViaParto entidad)
-        {
-            return DA_ViaParto.Instancia.Insertar(entidad);
-        }
-
     }
 }

@@ -1,0 +1,74 @@
+﻿@model CapaEntidad.entCita
+
+@{
+    ViewData["Title"] = "Detalles de la Cita";
+
+    // Usamos el NombreEstado (que viene del SP) para la lógica
+    string clase = Model.NombreEstado == "Cita anulada" ? "text-danger" :
+                   Model.NombreEstado == "Cita atendida" ? "text-success" :
+                   "text-primary";
+}
+
+<style>
+    .details-list dt {
+        font-weight: 600;
+    }
+
+    .details-list dd {
+        color: #333;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+
+        <h1 class="display-6"><i class="bi bi-calendar-check-fill text-primary"></i> @ViewData["Title"]</h1>
+        <hr />
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Cita #@Model.IdCita</h5>
+                <span class="badge @clase fs-6">@Model.NombreEstado</span>
+            </div>
+            <div class="card-body">
+                <dl class="row details-list">
+                    <dt class="col-sm-4"><i class="bi bi-person"></i> Paciente</dt>
+                    <dd class="col-sm-8">@Model.NombrePaciente</dd>
+
+                    <dt class="col-sm-4"><i class="bi bi-person-lines-fill"></i> Profesional Asignado</dt>
+                    <dd class="col-sm-8">@Model.NombreProfesional</dd>
+
+                    <dt class="col-sm-4"><i class="bi bi-calendar-event"></i> Fecha y Hora</dt>
+                    <dd class="col-sm-8">@Model.FechaCita.ToString("dd/MM/yyyy 'a las' HH:mm 'hrs.'")</dd>
+
+                    <dt class="col-sm-4"><i class="bi bi-chat-text"></i> Motivo</dt>
+                    <dd class="col-sm-8">@Model.Motivo</dd>
+
+                    <dt class="col-sm-4"><i class="bi bi-sticky"></i> Observación</dt>
+                    <dd class="col-sm-8">@Model.Observacion</dd>
+
+                    @if (Model.IdEmbarazo.HasValue)
+                    {
+                        <dt class="col-sm-4"><i class="bi bi-heart-pulse"></i> Embarazo Relacionado</dt>
+                        <dd class="col-sm-8">ID Embarazo: @Model.IdEmbarazo</dd>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.MotivoAnulacion))
+                    {
+                        <hr class="my-3" />
+                        <dt class="col-sm-4 text-danger"><i class="bi bi-x-circle-fill"></i> Fecha Anulación</dt>
+                        <dd class="col-sm-8 text-danger">@Model.FechaAnulacion?.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-4 text-danger"><i class="bi bi-x-circle-fill"></i> Motivo Anulación</dt>
+                        <dd class="col-sm-8 text-danger">@Model.MotivoAnulacion</dd>
+                    }
+                </dl>
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver a la Lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

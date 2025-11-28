@@ -1,21 +1,38 @@
 ﻿using CapaEntidad;
 using CapaLogica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoCalidadSoftware.Controllers
 {
+    [Authorize(Roles = "ADMIN,PERSONAL_SALUD")]
+    //[Route("core/ayudas/resultados")]
     public class ResultadoDiagnosticoController : Controller
     {
-
-        // GET: /ResultadoDiagnostico/Listar
-        public IActionResult Listar()
+        // GET: /core/ayudas/resultados
+        [HttpGet]
+        public IActionResult Listar(string? dni)
         {
             var lista = logResultadoDiagnostico.Instancia.ListarResultadoDiagnostico();
+
+            if (!string.IsNullOrWhiteSpace(dni))
+            {
+                // Filtrar por DNI del paciente asociado a la ayuda
+                var ayudasPaciente = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden()
+                    .Where(a => logPaciente.Instancia.ListarPacientesActivos()
+                        .Any(p => p.IdPaciente == a.IdPaciente && p.DNI == dni.Trim()))
+                    .Select(a => a.IdAyuda)
+                    .ToHashSet();
+
+                lista = lista.Where(r => ayudasPaciente.Contains(r.IdAyuda)).ToList();
+            }
+
             return View(lista);
         }
 
-        // GET: /ResultadoDiagnostico/Registrar
+        // GET: /core/ayudas/resultados/registrar
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Registrar(int? idAyuda)
         {
             var modelo = new entResultadoDiagnostico
@@ -23,14 +40,15 @@ namespace ProyectoCalidadSoftware.Controllers
                 IdAyuda = idAyuda ?? 0,
                 FechaResultado = DateTime.Now,
                 Critico = false,
-                Estado = "ACTIVO" // ajusta a tu catálogo
+                Estado = "ACTIVO"
             };
             return View(modelo);
         }
 
-        // POST: /ResultadoDiagnostico/Registrar
+        // POST: /core/ayudas/resultados/registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Registrar(entResultadoDiagnostico entidad)
         {
             try
@@ -44,8 +62,20 @@ namespace ProyectoCalidadSoftware.Controllers
 
                 if (!ModelState.IsValid) return View(entidad);
 
-                bool ok = logResultadoDiagnostico.Instancia.InsertarResultadoDiagnostico(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                int idResultado = logResultadoDiagnostico.Instancia.InsertarResultadoDiagnostico(entidad);
+                if (idResultado > 0)
+                {
+                    // Insertar items si existen
+                    if (entidad.Items != null && entidad.Items.Any())
+                    {
+                        foreach (var item in entidad.Items)
+                        {
+                            item.IdResultado = idResultado;
+                            logResultadoItem.Instancia.InsertarResultadoItem(item);
+                        }
+                    }
+                    return RedirectToAction(nameof(Listar));
+                }
 
                 ViewBag.Error = "No se pudo registrar el resultado.";
                 return View(entidad);
@@ -57,14 +87,21 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // GET: /ResultadoDiagnostico/Modificar/5
+        // GET: /core/ayudas/resultados/modificar/5
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Modificar(int id)
         {
             try
             {
                 var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
-                if (entidad == null) return NotFound();
+                if (entidad == null)
+                {
+                    TempData["Error"] = "Resultado no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
+                // Cargar items
+                entidad.Items = logResultadoItem.Instancia.ListarResultadoItem().Where(i => i.IdResultado == id).ToList();
                 return View(entidad);
             }
             catch (Exception ex)
@@ -74,9 +111,10 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // POST: /ResultadoDiagnostico/Modificar  (update con entidad)
+        // POST: /core/ayudas/resultados/modificar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Modificar(entResultadoDiagnostico entidad)
         {
             try
@@ -92,7 +130,20 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (!ModelState.IsValid) return View(entidad);
 
                 bool ok = logResultadoDiagnostico.Instancia.ActualizarResultadoDiagnostico(entidad);
-                if (ok) return RedirectToAction(nameof(Listar));
+                if (ok)
+                {
+                    // Manejar items: eliminar existentes e insertar nuevos
+                    logResultadoItem.Instancia.EliminarResultadoItemPorResultado(entidad.IdResultado);
+                    if (entidad.Items != null && entidad.Items.Any())
+                    {
+                        foreach (var item in entidad.Items)
+                        {
+                            item.IdResultado = entidad.IdResultado;
+                            logResultadoItem.Instancia.InsertarResultadoItem(item);
+                        }
+                    }
+                    return RedirectToAction(nameof(Listar));
+                }
 
                 ViewBag.Error = "No se pudo actualizar el resultado.";
                 return View(entidad);
@@ -104,24 +155,63 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
-        // Alias: /ResultadoDiagnostico/Actualizar (si quieres tener ambas rutas)
+        // Alias opcional: /core/ayudas/resultados/actualizar
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Actualizar(entResultadoDiagnostico entidad)
         {
             return Modificar(entidad);
         }
+        // GET: /core/ayudas/resultados/{id}/detalles
+        [HttpGet]
+        public IActionResult Detalles(int id)
+        {
+            try
+            {
+                var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
+                if (entidad == null)
+                {
+                    TempData["Error"] = "Resultado no encontrado.";
+                    return RedirectToAction(nameof(Listar));
+                }
+                // Cargar items del resultado
+                entidad.Items = logResultadoItem.Instancia.ListarResultadoItem().Where(i => i.IdResultado == id).ToList();
+                return View(entidad);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar detalles: " + ex.Message;
+                return RedirectToAction(nameof(Listar));
+            }
+        }
 
-        // POST: /ResultadoDiagnostico/Anular/5  (soft delete por estado)
-        [HttpPost]
+        // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
+
+        // GET: /core/ayudas/resultados/{id}/anular  -> confirmación
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Anular(int id)
+        {
+            var entidad = logResultadoDiagnostico.Instancia.BuscarResultadoDiagnostico(id);
+            if (entidad == null)
+            {
+                TempData["Error"] = "Resultado no encontrado.";
+                return RedirectToAction(nameof(Listar));
+            }
+            return View(entidad); // Views/ResultadoDiagnostico/Anular.cshtml
+        }
+
+        // POST: /core/ayudas/resultados/{id}/anular
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult AnularConfirmado(int id)
         {
             try
             {
                 bool ok = logResultadoDiagnostico.Instancia.AnularResultadoDiagnostico(id);
-                if (ok) return RedirectToAction(nameof(Listar));
-
-                TempData["Error"] = "No se pudo anular el resultado.";
+                TempData[ok ? "Ok" : "Error"] = ok ? "Resultado anulado." : "No se pudo anular el resultado.";
                 return RedirectToAction(nameof(Listar));
             }
             catch (Exception ex)
@@ -131,7 +221,93 @@ namespace ProyectoCalidadSoftware.Controllers
             }
         }
 
+        // GET: /ResultadoDiagnostico/BuscarPacientePorDNI
+        [HttpGet]
+        public IActionResult BuscarPacientePorDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+            {
+                return Json(new { success = false, message = "DNI requerido." });
+            }
 
+            try
+            {
+                // Buscar paciente por DNI
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.DNI == dni.Trim());
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado con ese DNI." });
+                }
 
+                return Json(new
+                {
+                    success = true,
+                    paciente = new
+                    {
+                        id = paciente.IdPaciente,
+                        nombre = paciente.Nombres + " " + paciente.Apellidos,
+                        dni = paciente.DNI
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al buscar paciente: " + ex.Message });
+            }
+        }
+
+        // GET: /ResultadoDiagnostico/BuscarAyudaPorPacienteDNI
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult BuscarAyudaPorPacienteDNI(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+            {
+                return Json(new { success = false, message = "DNI requerido." });
+            }
+
+            try
+            {
+                // Buscar paciente por DNI
+                var paciente = logPaciente.Instancia.ListarPacientesActivos().FirstOrDefault(p => p.DNI == dni.Trim());
+                if (paciente == null)
+                {
+                    return Json(new { success = false, message = "Paciente no encontrado con ese DNI." });
+                }
+
+                // Buscar ayudas diagnósticas para ese paciente
+                var ayudas = logAyudaDiagnosticaOrden.Instancia.ListarAyudaDiagnosticaOrden()
+                    .Where(a => a.IdPaciente == paciente.IdPaciente && a.Estado != "Anulada")
+                    .ToList();
+
+                if (!ayudas.Any())
+                {
+                    return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
+                }
+
+                // Crear la lista de ayudas con información básica por ahora
+                // La información completa del control prenatal se cargará desde la vista de listado
+                var ayudasData = ayudas.Select(a => new
+                {
+                    id = a.IdAyuda,
+                    descripcion = a.Descripcion ?? "Sin descripción",
+                    tipoAyuda = a.NombreTipoAyuda,
+                    fechaOrden = a.FechaOrden.ToString("dd/MM/yyyy"),
+                    urgente = a.Urgente,
+                    nombrePaciente = paciente.Nombres + " " + paciente.Apellidos
+                }).ToList();
+
+                if (!ayudasData.Any())
+                {
+                    return Json(new { success = false, message = "No se encontraron ayudas diagnósticas activas para este paciente." });
+                }
+
+                return Json(new { success = true, ayudas = ayudasData });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al buscar ayudas: " + ex.Message });
+            }
+        }
     }
 }

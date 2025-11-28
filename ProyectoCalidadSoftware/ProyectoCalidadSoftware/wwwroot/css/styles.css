@@ -1,26 +1,26 @@
-/* CSS Variables - Medical Blue Palette */
+/* CSS Variables - Matching Home Page Palette */
 :root {
-  --primary-blue: #1e40af;
-  --primary-blue-light: #3b82f6;
+  --primary-blue: #667eea;
+  --primary-blue-light: #764ba2;
   --primary-blue-dark: #1e3a8a;
-  --secondary-blue: #60a5fa;
-  --accent-blue: #93c5fd;
+  --secondary-blue: #f093fb;
+  --accent-pink: #f5576c;
   --light-blue: #dbeafe;
   --very-light-blue: #eff6ff;
 
   --white: #ffffff;
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
   --gray-300: #cbd5e1;
   --gray-400: #94a3b8;
   --gray-500: #64748b;
-  --gray-600: #475569;
+  --gray-600: #4b5563;
   --gray-700: #334155;
-  --gray-800: #1e293b;
+  --gray-800: #1f2937;
   --gray-900: #0f172a;
 
-  --success: #10b981;
+  --success: #4ade80;
   --error: #ef4444;
   --warning: #f59e0b;
 
@@ -35,6 +35,12 @@
   --border-radius-xl: 20px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Navbar Variables */
+  --navbar-height: 70px;
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --navbar-blur: blur(20px);
+  --navbar-border: rgba(102, 126, 234, 0.1);
 }
 
 * {
@@ -45,17 +51,199 @@
 
 body {
   font-family: "Inter", sans-serif;
-  /* Modern background with medical image and overlay */
-  background: linear-gradient(
-      135deg,
-      rgba(76, 85, 112, 0.85) 0%,
-      rgba(115, 140, 182, 0.75) 50%,
-      rgba(147, 197, 253, 0.65) 100%    
-    ), url("assets/medical-bg.png") center / cover no-repeat fixed;
+  /* Matching home page hero gradient with pink and purple tones */
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 50%, var(--secondary-blue) 100%);
   min-height: 100vh;
   color: var(--gray-800);
   line-height: 1.6;
   position: relative;
+}
+
+/* Professional Navbar Styles */
+.navbar-custom {
+  background: var(--navbar-bg);
+  backdrop-filter: var(--navbar-blur);
+  border-bottom: 1px solid var(--navbar-border);
+  height: var(--navbar-height);
+  padding: 0;
+  transition: var(--transition);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-custom:hover {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+}
+
+.navbar-brand {
+  padding: 0;
+  margin: 0;
+  transition: var(--transition);
+}
+
+.brand-icon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+  transition: var(--transition);
+}
+
+.navbar-brand:hover .brand-icon {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-blue);
+  margin-left: 0.5rem;
+  transition: var(--transition);
+}
+
+.navbar-brand:hover .brand-text {
+  color: var(--primary-blue-dark);
+}
+
+.navbar-toggler-icon-custom {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.navbar-toggler-icon-custom:hover {
+  color: var(--primary-blue-light);
+}
+
+.nav-link-custom {
+  color: var(--gray-700) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  margin: 0 0.25rem;
+  border-radius: 8px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link-custom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nav-link-custom:hover::before {
+  left: 100%;
+}
+
+.nav-link-custom:hover {
+  color: var(--primary-blue) !important;
+  background: rgba(59, 130, 246, 0.05);
+  transform: translateY(-1px);
+}
+
+.navbar-actions {
+  gap: 0.5rem !important;
+}
+
+.btn-cta-primary {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-cta-primary:hover::before {
+  left: 100%;
+}
+
+.btn-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+  background: linear-gradient(135deg, var(--primary-blue-dark), var(--primary-blue));
+}
+
+.btn-cta-secondary {
+  background: linear-gradient(135deg, var(--secondary-blue), var(--accent-blue));
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
+.btn-cta-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4);
+  background: linear-gradient(135deg, var(--primary-blue-light), var(--secondary-blue));
+}
+
+.btn-cta-outline {
+  background: transparent;
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta-outline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-blue);
+  transition: left 0.5s;
+  z-index: -1;
+}
+
+.btn-cta-outline:hover::before {
+  left: 0;
+}
+
+.btn-cta-outline:hover {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
 }
 
 /* Added animated background overlay for depth */
@@ -930,6 +1118,25 @@ body::before {
   }
 }
 
+/* Register Page Specific Styles */
+.register-main .branding-section {
+  display: block !important;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: var(--border-radius-xl);
+}
+
 /* Responsive Design */
 @media (min-width: 1024px) {
   .branding-section {
@@ -967,50 +1174,263 @@ body::before {
 }
 
 @media (max-width: 480px) {
-  .main-content {
-    padding: 0.5rem;
-  }
+    .main-content {
+        padding: 0.5rem;
+    }
 
-  .auth-card {
-    padding: 1.5rem;
-  }
+    .auth-card {
+        padding: 1.5rem;
+    }
 
-  .tab-btn span {
-    display: none;
-  }
+    .tab-btn span {
+        display: none;
+    }
 
-  .tab-btn {
-    padding: 0.75rem 0.5rem;
-  }
+    .tab-btn {
+        padding: 0.75rem 0.5rem;
+    }
 
-  .back-btn span,
-  .submit-btn span {
-    display: inline;
-  }
+    .back-btn span,
+    .submit-btn span {
+        display: inline;
+    }
 
-  .form-group label {
-    font-size: 0.875rem;
-  }
+    .form-group label {
+        font-size: 0.875rem;
+    }
 
-  .captcha-container {
-    padding: 0.75rem;
-  }
+    .captcha-container {
+        padding: 0.75rem;
+    }
 
-  #captcha-canvas {
-    max-width: 100%;
-    height: 70px;
-  }
+    #captcha-canvas {
+        max-width: 100%;
+        height: 70px;
+    }
 
-  .captcha-input-group {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+    .captcha-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 
-  .captcha-input-group input {
-    width: 100%;
-  }
+    .captcha-input-group input {
+        width: 100%;
+    }
 
-  .refresh-captcha {
-    width: 100%;
-  }
+    .refresh-captcha {
+        width: 100%;
+    }
+}
+
+/* Professional Home Page Animations - Using CSS transitions instead of keyframes */
+.hero-clinica {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.hero-clinica h1 {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInLeft 1.2s ease-out 0.3s forwards;
+}
+
+.hero-clinica p {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInLeft 1.2s ease-out 0.5s forwards;
+}
+
+.hero-actions {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInLeft 1.2s ease-out 0.7s forwards;
+}
+
+.hero-side-card {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: fadeInRight 1s ease-out 0.8s forwards;
+}
+
+.stat-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: calc(var(--card-index, 0) * 0.1s);
+}
+
+.quick-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: calc(var(--quick-index, 0) * 0.1s + 0.5s);
+}
+
+h4 {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out 1.2s forwards;
+}
+
+h4::after {
+    animation: growWidth 1s ease-out 1.5s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes growWidth {
+    to {
+        width: 60px;
+    }
+}
+/*
+  ================================================================
+  PARCHE PARA ARREGLAR EL MENÚ DESPLEGABLE TRANSPARENTE
+  (Añadir al final de wwwroot/css/styles.css)
+  ================================================================
+*/
+
+/* 1. Asegura que la barra de navegación (navbar) esté siempre encima */
+.navbar-custom {
+    /* Un z-index (capa) alto es crucial para que esté sobre el @RenderBody() */
+    z-index: 1030;
+}
+
+    /* 2. Arregla el menú desplegable (EL PROBLEMA PRINCIPAL) */
+    .navbar-custom .dropdown-menu {
+        background-color: #ffffff; /* ¡Fondo sólido blanco, no transparente! */
+        backdrop-filter: none; /* Quita cualquier filtro de vidrio heredado */
+        border: 1px solid rgba(0, 0, 0, 0.15); /* Borde estándar de Bootstrap */
+        z-index: 1031; /* Se asegura que el menú esté sobre la navbar */
+    }
+
+    /* 3. (Opcional) Arregla el color del texto del dropdown si se vuelve ilegible */
+    .navbar-custom .dropdown-item {
+        color: #212529; /* Color de texto oscuro estándar */
+    }
+
+        .navbar-custom .dropdown-item:hover {
+            background-color: #f8f9fa; /* Un fondo suave al pasar el mouse */
+        }
+
+    /* 4. Arregla las cabeceras del menú (ej. "Embarazo", "Seguimiento") */
+    .navbar-custom .dropdown-header {
+        color: #6c757d; /* Color de cabecera estándar */
+    }
+
+/* Improved Admin Forms and Tables Typography and Design */
+.table-container h1 {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.table-container p.text-muted {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gray-600) !important;
+}
+
+.table th {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-800);
+    border-bottom: 2px solid var(--primary-blue-light);
+}
+
+.table td {
+    font-size: 0.95rem;
+    vertical-align: middle;
+    color: var(--gray-700);
+}
+
+.form-container h1 {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-container h4 {
+    color: var(--gray-700);
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
 }

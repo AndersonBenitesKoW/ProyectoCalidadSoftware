@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CapaEntidad.entParto>
+@{
+    ViewData["Title"] = "Listado de Partos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-0"><i class="bi bi-gift-fill"></i> @ViewData["Title"]</h1>
+        <p class="text-muted mb-0">Listado de partos registrados en el sistema.</p>
+    </div>
+    <a asp-action="RegistrarParto" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Registrar Parto
+    </a>
+</div>
+
+@if (TempData["Ok"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Ok"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5"><h4 class="text-muted">No hay partos registrados</h4></div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Fecha</th>
+                            <th>Vía de Parto</th>
+                            <th>Líquido</th>
+                            <th>Profesional</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NombrePaciente</td>
+                                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@item.NombreViaParto</td>
+                                <td>@item.NombreLiquido</td>
+                                <td>@item.NombreProfesional</td>
+                                <td class="text-center">
+                                    @{
+                                        string clase = item.Estado ? "bg-success" : "bg-danger";
+                                        string texto = item.Estado ? "Activo" : "Anulado";
+                                    }
+                                    <span class="badge @clase">@texto</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="DescargarPdf" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-success" title="Descargar PDF">
+                                            <i class="bi bi-file-pdf"></i> PDF
+                                        </a>
+
+                                        <a asp-action="Detalles" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-info" title="Detalles">
+                                            <i class="bi bi-search"></i>
+                                        </a>
+                                        @if (item.Estado && (ViewBag.IdProfesionalActual == null || item.IdProfesional == ViewBag.IdProfesionalActual))
+                                        {
+                                            <a asp-action="Anular" asp-route-id="@item.IdParto" class="btn btn-sm btn-outline-danger" title="Anular">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
