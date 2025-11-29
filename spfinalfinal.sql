@@ -2627,19 +2627,60 @@ BEGIN
 END
 GO
  
-
-
-
- CREATE OR ALTER PROCEDURE sp_InsertarResultadoDiagnostico
+CREATE OR ALTER PROCEDURE sp_ListarResultadoDiagnosticoDetallado
 (
-    @IdAyuda INT,
-    @FechaResultado DATE,
-    @Resumen NVARCHAR(500) = NULL,
-    @Critico BIT,
-    @Estado NVARCHAR(20)
+    @IdResultado INT = NULL
 )
 AS
 BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        rd.IdResultado,
+        rd.IdAyuda,
+        rd.FechaResultado,
+        rd.Resumen,
+        rd.Critico,
+        rd.Estado,
+        cp_ad.IdControl AS IdControlPrenatal,
+        cp.Fecha AS FechaControlPrenatal,
+        p.Nombres + ' ' + p.Apellidos AS NombrePaciente,
+        prof.Nombres + ' ' + prof.Apellidos AS NombreProfesional,
+        ado.Descripcion AS DescripcionAyuda,
+        tad.Nombre AS TipoAyuda,
+        ado.Urgente
+    FROM ResultadoDiagnostico rd
+    INNER JOIN AyudaDiagnosticaOrden ado 
+        ON rd.IdAyuda = ado.IdAyuda
+    LEFT JOIN ControlPrenatal_AyudaDiagnostica cp_ad 
+        ON ado.IdAyuda = cp_ad.IdAyuda
+    LEFT JOIN ControlPrenatal cp 
+        ON cp_ad.IdControl = cp.IdControl      -- OJO: IdControl, no IdControlPrenatal
+    LEFT JOIN Paciente p 
+        ON ado.IdPaciente = p.IdPaciente
+    LEFT JOIN ProfesionalSalud prof 
+        ON cp.IdProfesional = prof.IdProfesional
+    LEFT JOIN TipoAyudaDiagnostica tad 
+        ON ado.IdTipoAyuda = tad.IdTipoAyuda
+    WHERE (@IdResultado IS NULL OR rd.IdResultado = @IdResultado)
+      AND rd.Estado <> 'INACTIVO'
+    ORDER BY rd.FechaResultado DESC;
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE sp_InsertarResultadoDiagnostico
+(
+    @IdAyuda        INT,
+    @FechaResultado DATETIME2 = NULL,
+    @Resumen        NVARCHAR(500) = NULL,
+    @Critico        BIT,
+    @Estado         NVARCHAR(20) = NULL
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
     INSERT INTO ResultadoDiagnostico
     (
         IdAyuda,
@@ -2651,36 +2692,41 @@ BEGIN
     VALUES 
     (
         @IdAyuda,
-        @FechaResultado,
+        ISNULL(@FechaResultado, SYSUTCDATETIME()),  -- si viene NULL, usa default
         @Resumen,
         @Critico,
-        @Estado
+        ISNULL(@Estado, N'Validado')                -- o 'ACTIVO', según tu negocio
     );
 
     SELECT SCOPE_IDENTITY() AS IdResultado;
 END
 GO
+
+
 CREATE OR ALTER PROCEDURE sp_ActualizarResultadoDiagnostico
 (
-    @IdResultado INT,
-    @IdAyuda INT,
-    @FechaResultado DATE,
-    @Resumen NVARCHAR(500) = NULL,
-    @Critico BIT,
-    @Estado NVARCHAR(20)
+    @IdResultado    INT,
+    @IdAyuda        INT,
+    @FechaResultado DATETIME2,
+    @Resumen        NVARCHAR(500) = NULL,
+    @Critico        BIT,
+    @Estado         NVARCHAR(20)
 )
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     UPDATE ResultadoDiagnostico
     SET
-        IdAyuda = @IdAyuda,
+        IdAyuda        = @IdAyuda,
         FechaResultado = @FechaResultado,
-        Resumen = @Resumen,
-        Critico = @Critico,
-        Estado = @Estado
+        Resumen        = @Resumen,
+        Critico        = @Critico,
+        Estado         = @Estado
     WHERE IdResultado = @IdResultado;
 END
 GO
+
 CREATE OR ALTER PROCEDURE sp_BuscarResultadoDiagnostico
 (
     @IdResultado INT
@@ -2709,6 +2755,158 @@ BEGIN
     WHERE IdResultado = @IdResultado;
 END
 GO
+
+
+-- items reaultados --
+CREATE OR ALTER PROCEDURE sp_ListarResultadoItem
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        IdResultadoItem,
+        IdResultado,
+        Parametro,
+        ValorNumerico,
+        ValorTexto,
+        Unidad,
+        RangoRef
+    FROM ResultadoItem
+    ORDER BY IdResultado, IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_ListarResultadoItemPorResultado
+(
+    @IdResultado INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        IdResultadoItem,
+        IdResultado,
+        Parametro,
+        ValorNumerico,
+        ValorTexto,
+        Unidad,
+        RangoRef
+    FROM ResultadoItem
+    WHERE IdResultado = @IdResultado
+    ORDER BY IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_InsertarResultadoItem
+(
+    @IdResultado   INT,
+    @Parametro     NVARCHAR(100),
+    @ValorNumerico DECIMAL(12,4) = NULL,
+    @ValorTexto    NVARCHAR(200) = NULL,
+    @Unidad        NVARCHAR(40) = NULL,
+    @RangoRef      NVARCHAR(60) = NULL
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO ResultadoItem
+    (
+        IdResultado,
+        Parametro,
+        ValorNumerico,
+        ValorTexto,
+        Unidad,
+        RangoRef
+    )
+    VALUES
+    (
+        @IdResultado,
+        @Parametro,
+        @ValorNumerico,
+        @ValorTexto,
+        @Unidad,
+        @RangoRef
+    );
+
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_ActualizarResultadoItem
+(
+    @IdResultadoItem INT,
+    @IdResultado     INT,
+    @Parametro       NVARCHAR(100),
+    @ValorNumerico   DECIMAL(12,4) = NULL,
+    @ValorTexto      NVARCHAR(200) = NULL,
+    @Unidad          NVARCHAR(40) = NULL,
+    @RangoRef        NVARCHAR(60) = NULL
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE ResultadoItem
+    SET
+        IdResultado   = @IdResultado,
+        Parametro     = @Parametro,
+        ValorNumerico = @ValorNumerico,
+        ValorTexto    = @ValorTexto,
+        Unidad        = @Unidad,
+        RangoRef      = @RangoRef
+    WHERE IdResultadoItem = @IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_BuscarResultadoItem
+(
+    @IdResultadoItem INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        IdResultadoItem,
+        IdResultado,
+        Parametro,
+        ValorNumerico,
+        ValorTexto,
+        Unidad,
+        RangoRef
+    FROM ResultadoItem
+    WHERE IdResultadoItem = @IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EliminarResultadoItem
+(
+    @IdResultadoItem INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM ResultadoItem
+    WHERE IdResultadoItem = @IdResultadoItem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_EliminarResultadoItemPorResultado
+(
+    @IdResultado INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM ResultadoItem
+    WHERE IdResultado = @IdResultado;
+END
+GO
+
+
+
+
 
 -- Antecedentes Obstétricos --
 

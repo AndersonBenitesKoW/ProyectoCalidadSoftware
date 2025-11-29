@@ -54,13 +54,13 @@
                         <span asp-validation-for="IdPaciente" class="text-danger small"></span>
                     </div>
 
-                    <!-- PROFESIONAL (select con modal, opcional) -->
+                    <!-- PROFESIONAL (select con modal, obligatorio) -->
                     <div class="mb-3">
                         <label class="form-label">
-                            <i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud (Opcional)
+                            <i class="bi bi-person-lines-fill me-2"></i>Profesional de Salud *
                         </label>
                         <div class="input-group">
-                            <select asp-for="IdProfesional" class="form-select">
+                            <select asp-for="IdProfesional" class="form-select" required>
                                 <option value="">-- Seleccione --</option>
                                 @if (profesionalesModal != null)
                                 {
@@ -77,6 +77,7 @@
                                 Buscar
                             </button>
                         </div>
+                        <span asp-validation-for="IdProfesional" class="text-danger small"></span>
                     </div>
 
                     <!-- EMBARAZO (select con modal, opcional) -->
@@ -107,16 +108,24 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input asp-for="FechaCita" class="form-control" type="datetime-local" />
-                                <label asp-for="FechaCita"><i class="bi bi-calendar-event me-2"></i>Fecha de la Cita</label>
-                                <span asp-validation-for="FechaCita" class="text-danger small"></span>
+                                <input type="date" id="fechaSeleccionada" class="form-control" />
+                                <label><i class="bi bi-calendar-event me-2"></i>Fecha de la Cita</label>
                             </div>
+                            <input asp-for="FechaCita" type="hidden" />
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input asp-for="Motivo" class="form-control" placeholder="Motivo de la Cita" />
                                 <label asp-for="Motivo"><i class="bi bi-chat-text me-2"></i>Motivo de la Cita</label>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- GRILLA DE SLOTS -->
+                    <div id="slotsContainer" class="mb-3" style="display: none;">
+                        <h5>Horarios Disponibles</h5>
+                        <div id="slotsGrid" class="row g-2">
+                            <!-- Los slots se cargarán aquí dinámicamente -->
                         </div>
                     </div>
 
@@ -346,6 +355,62 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
+            // Cargar slots al cambiar profesional o fecha
+            const profesionalSelect = document.getElementById('IdProfesional');
+            const fechaInput = document.getElementById('fechaSeleccionada');
+            const slotsContainer = document.getElementById('slotsContainer');
+            const slotsGrid = document.getElementById('slotsGrid');
+
+            function cargarSlots() {
+                const idProfesional = profesionalSelect.value;
+                const fecha = fechaInput.value;
+                const idPaciente = document.getElementById('IdPaciente').value;
+                if (!idProfesional || !fecha || !idPaciente) {
+                    slotsContainer.style.display = 'none';
+                    return;
+                }
+
+                fetch(`/Cita/ObtenerSlotsDisponibles?idProfesional=${idProfesional}&fecha=${fecha}&idPaciente=${idPaciente}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            slotsGrid.innerHTML = '';
+                            data.slots.forEach(slot => {
+                                const col = document.createElement('div');
+                                col.className = 'col-6 col-md-3';
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.className = `btn ${slot.disponible ? 'btn-success' : 'btn-danger'} w-100`;
+                                btn.textContent = slot.hora;
+                                btn.disabled = !slot.disponible;
+                                if (slot.disponible) {
+                                    btn.addEventListener('click', () => seleccionarSlot(fecha, slot.hora));
+                                }
+                                col.appendChild(btn);
+                                slotsGrid.appendChild(col);
+                            });
+                            slotsContainer.style.display = 'block';
+                        } else {
+                            alert(data.message);
+                            slotsContainer.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar slots:', error);
+                        slotsContainer.style.display = 'none';
+                    });
+            }
+
+            function seleccionarSlot(fecha, hora) {
+                const fechaHora = `${fecha}T${hora}:00`;
+                document.getElementById('FechaCita').value = fechaHora;
+                // Opcional: marcar el botón como seleccionado
+            }
+
+            profesionalSelect.addEventListener('change', cargarSlots);
+            fechaInput.addEventListener('change', cargarSlots);
+            document.getElementById('IdPaciente').addEventListener('change', cargarSlots);
+
             // Selección desde los modals
             document.addEventListener('click', function (e) {
 
@@ -353,7 +418,9 @@
                 if (e.target.classList.contains('btnSeleccionarPaciente')) {
                     const id     = e.target.getAttribute('data-id');
 
-                    document.getElementById('IdPaciente').value = id;
+                    const pacienteInput = document.getElementById('IdPaciente');
+                    pacienteInput.value = id;
+                    pacienteInput.dispatchEvent(new Event('change'));
 
                     const modalEl = document.getElementById('modalPaciente');
                     const modal   = bootstrap.Modal.getInstance(modalEl);
@@ -364,7 +431,9 @@
                 if (e.target.classList.contains('btnSeleccionarProfesionalCita')) {
                     const id     = e.target.getAttribute('data-id');
 
-                    document.getElementById('IdProfesional').value = id;
+                    const profesionalSelect = document.getElementById('IdProfesional');
+                    profesionalSelect.value = id;
+                    profesionalSelect.dispatchEvent(new Event('change'));
 
                     const modalEl = document.getElementById('modalProfesionalCita');
                     const modal   = bootstrap.Modal.getInstance(modalEl);

@@ -60,6 +60,26 @@ INSERT INTO Rol (NombreRol, Descripcion) VALUES
 ('LABORATORIO', 'Encargado de laboratorio');  
 GO
 
+--////////////////////////////////////////////////////////////////////////////////////
+--//////////////////////////////////////////////////////////////////////////////////////
+--USUARIO PARA USTED INGENIERO CHIRINOS-- SU INGRESO SERA COMO ADMINISTRADOR-- 
+--USURIO: ADMIN_CHIRINOS
+--PASSWORD:CHIRINOS123
+--EMAIL:chirinos@gmail.com
+
+--INSERT INTO Usuario (NombreUsuario, ClaveHash, email)
+--VALUES (
+--    'ADMIN_CHIRINOS',
+--    '9d5630276cbb713c87c86e13b949df0e904519b0c9135ed6e8b95e98a6a61e6b',
+--    'chirinos@gmail.com'
+--);
+-- select * from usuario
+
+----------------
+--//////////////////////////////////////
+
+
+
 --DBCC CHECKIDENT ('Rol', RESEED, 4);
 
 --ALTER TABLE ROL 
@@ -82,7 +102,7 @@ GO
 --WHERE NombreUsuario = 'ADMIN_anderson';
 
 
---select * from usuario
+
 
 
 CREATE TABLE Auditoria(
@@ -97,7 +117,7 @@ CREATE TABLE Auditoria(
   FechaHora DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
 );
 GO
-
+select*	from paciente
 /* ================  CAT�LOGOS  ================== */
 CREATE TABLE TipoEncuentro(
   IdTipoEncuentro SMALLINT IDENTITY(1,1) PRIMARY KEY,
@@ -310,6 +330,9 @@ CREATE TABLE PacienteFactorRiesgo(
   CONSTRAINT UQ_PacienteFactor UNIQUE(IdPaciente, IdFactorCat)
 );
 GO
+
+select *from Usuario
+
 
 CREATE TABLE ControlPrenatal (
   IdControl INT IDENTITY(1,1) PRIMARY KEY,

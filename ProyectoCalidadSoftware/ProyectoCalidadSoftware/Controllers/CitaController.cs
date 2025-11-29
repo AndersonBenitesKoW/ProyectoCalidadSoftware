@@ -82,8 +82,22 @@ namespace ProyectoCalidadSoftware.Controllers
                 if (entidad.IdPaciente <= 0)
                     ModelState.AddModelError(nameof(entidad.IdPaciente), "Seleccione un paciente válido.");
 
+                if (entidad.IdProfesional <= 0)
+                    ModelState.AddModelError(nameof(entidad.IdProfesional), "Seleccione un profesional de salud válido.");
+
                 if (entidad.FechaCita < DateTime.Now.AddMinutes(-5))
                     ModelState.AddModelError(nameof(entidad.FechaCita), "La fecha de la cita no puede ser en el pasado.");
+
+                // Validar conflictos de horario
+                var citaProfesionalExistente = logCita.Instancia.ListarCita()
+                    .Any(c => c.IdProfesional == entidad.IdProfesional && c.FechaCita == entidad.FechaCita);
+                if (citaProfesionalExistente)
+                    ModelState.AddModelError(nameof(entidad.FechaCita), "Este horario ya está ocupado por este profesional.");
+
+                var citaPacienteMismoHorario = logCita.Instancia.ListarCita()
+                    .Any(c => c.IdPaciente == entidad.IdPaciente && c.FechaCita == entidad.FechaCita);
+                if (citaPacienteMismoHorario)
+                    ModelState.AddModelError(nameof(entidad.FechaCita), "Ya tienes una cita programada en este horario con otro profesional.");
 
                 // Estado "Pendiente"
                 entidad.IdEstadoCita = 1;
@@ -377,7 +391,7 @@ namespace ProyectoCalidadSoftware.Controllers
 
         // GET: /Cita/ObtenerSlotsDisponibles
         [HttpGet]
-        [Authorize(Roles = "PACIENTE")]
+        [Authorize(Roles = "PERSONAL_SALUD,SECRETARIA,ADMIN,PACIENTE")]
         public IActionResult ObtenerSlotsDisponibles(int idProfesional, string fecha, int idPaciente)
         {
             if (idProfesional <= 0 || string.IsNullOrWhiteSpace(fecha) || idPaciente <= 0)

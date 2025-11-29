@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 namespace CapaAccesoDatos
-{
+{ 
     public class DA_ResultadoDiagnostico
     {
         #region Singleton
@@ -187,31 +187,17 @@ namespace CapaAccesoDatos
                 Estado = dr["Estado"].ToString()
             };
 
-            if (dr["IdControlPrenatal"] != DBNull.Value)
-                e.IdControlPrenatal = Convert.ToInt32(dr["IdControlPrenatal"]);
-
-            if (dr["FechaControlPrenatal"] != DBNull.Value)
-                e.FechaControlPrenatal = Convert.ToDateTime(dr["FechaControlPrenatal"]);
-
-            if (dr["NombrePaciente"] != DBNull.Value)
-                e.NombrePaciente = dr["NombrePaciente"].ToString();
-
-            if (dr["NombreProfesional"] != DBNull.Value)
-                e.NombreProfesional = dr["NombreProfesional"].ToString();
-
-            if (dr["DescripcionAyuda"] != DBNull.Value)
-                e.DescripcionAyuda = dr["DescripcionAyuda"].ToString();
-
-            if (dr["TipoAyuda"] != DBNull.Value)
-                e.TipoAyuda = dr["TipoAyuda"].ToString();
-
-            if (dr["Urgente"] != DBNull.Value)
-                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
-                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
-                e.Urgente = Convert.ToBoolean(dr["Urgente"]);
+            if (dr["IdControlPrenatal"] != DBNull.Value) e.IdControlPrenatal = Convert.ToInt32(dr["IdControlPrenatal"]);
+            if (dr["FechaControlPrenatal"] != DBNull.Value) e.FechaControlPrenatal = Convert.ToDateTime(dr["FechaControlPrenatal"]);
+            if (dr["NombrePaciente"] != DBNull.Value) e.NombrePaciente = dr["NombrePaciente"].ToString();
+            if (dr["NombreProfesional"] != DBNull.Value) e.NombreProfesional = dr["NombreProfesional"].ToString();
+            if (dr["DescripcionAyuda"] != DBNull.Value) e.DescripcionAyuda = dr["DescripcionAyuda"].ToString();
+            if (dr["TipoAyuda"] != DBNull.Value) e.TipoAyuda = dr["TipoAyuda"].ToString();
+            if (dr["Urgente"] != DBNull.Value) e.Urgente = Convert.ToBoolean(dr["Urgente"]);
 
             return e;
         }
+
 
         #endregion
     }
